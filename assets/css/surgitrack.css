@@ -1,0 +1,383 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 16, 2017, 11:34:56 AM
+    Author     : isayaopondo
+*/
+.dataTable tbody .blocked {
+    background: rgba(231, 55, 26, 0.45) !important
+}
+
+.patients-display h2  {
+    letter-spacing: -1px;
+    font-size: 22px;
+    margin: 0px !important;
+    line-height: normal;
+}
+
+#booking-mobile {
+    display: none
+}
+@media only screen and (min-width:320px) and (max-width:479px) {
+#booking-mobile {
+         display: block;
+        margin-left: 3px;
+        margin-right: 3px
+    }
+}
+@media (max-width:767px) {
+    #search-mobile {
+        display: block
+    }
+}
+    .booking-mobile {
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 49px;
+        background: #333;
+        padding: 0 2px;
+        box-sizing: border-box;
+        left: 0
+    }
+    .search-mobile button {
+        height: 29px;
+        line-height: 29px;
+        background: #DDD;
+        right: 44px
+    }
+    
+    
+.top-login-info {
+    display: block;
+    font-size: 12px;
+    height: 39px;
+    color: #fff;
+    border: solid transparent;
+    border-width: 1px 0;
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1), inset 0 -1px 0 rgba(0, 0, 0, .07);
+    width: 100%;
+    margin: 0!important;
+    border-bottom: 1px solid #525151
+}
+
+.top-login-info a {
+    text-decoration: none!important;
+    color: #c0bbb7;
+    display: inline-block;
+    margin-top: 6px
+}
+
+.top-login-info a span {
+    text-transform: capitalize;
+    font-size: 14px;
+    display: inline-block;
+    text-decoration: none;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle
+}
+
+.top-login-info a span+i {
+    vertical-align: middle
+}
+
+.top-login-info a:hover {
+    color: #fff
+}
+
+.top-login-info>span {
+    height: 38px;
+    display: block;
+    padding: 0 10px;
+    border-bottom: 1px solid #1A1817
+}
+
+.top-login-info img {
+    width: 25px;
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 1px;
+    margin-right: 5px;
+    margin-left: 0;
+    border-left: 3px solid #fff
+}
+
+#main-profile-img {
+    display: block !important;
+    padding-right: 2px!important;
+    padding-left: 2px!important
+}
+
+.menu-on-top #main-profile-img {
+    display: none!important
+}
+
+#main-profile-img a.userdropdown img {
+    width: 30px;
+    margin-top: 5px;
+    margin-left: 2px;
+    border-radius: 3px;
+    border: 1px solid #797979!important
+}
+
+/* Activity stream */
+.stream {
+  position: relative;
+  padding: 10px 0;
+}
+.stream:first-child .stream-badge:before {
+  top: 10px;
+}
+.stream:last-child .stream-badge:before {
+  height: 30px;
+}
+.stream .stream-badge {
+  width: 50px;
+}
+.stream .stream-badge i {
+  border: 1px solid #e7eaec;
+  border-radius: 50%;
+  padding: 6px;
+  color: #808486;
+  position: absolute;
+  background-color: #ffffff;
+  left: 8px;
+}
+.stream .stream-badge i.fa-circle {
+  color: #ced0d1;
+}
+.stream .stream-badge i.bg-success {
+  color: #ffffff;
+  background-color: #1c84c6;
+  border-color: #1c84c6;
+}
+.stream .stream-badge i.bg-primary {
+  color: #ffffff;
+  background-color: #1ab394;
+  border-color: #1ab394;
+}
+.stream .stream-badge i.bg-warning {
+  color: #ffffff;
+  background-color: #f8ac59;
+  border-color: #f8ac59;
+}
+.stream .stream-badge i.bg-info {
+  color: #ffffff;
+  background-color: #23c6c8;
+  border-color: #23c6c8;
+}
+.stream .stream-badge i.bg-danger {
+  color: #ffffff;
+  background-color: #ed5565;
+  border-color: #ed5565;
+}
+.stream .stream-badge:before {
+  content: '';
+  width: 1px;
+  background-color: #e7eaec;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 20px;
+}
+.stream .stream-info {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.stream .stream-info img {
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+  margin-top: -4px;
+}
+.stream .stream-info .date {
+  color: #9a9d9f;
+  font-size: 80%;
+}
+.stream .stream-panel {
+  margin-left: 55px;
+}
+.stream-small {
+  margin: 10px 0;
+}
+.stream-small .label {
+  padding: 2px 6px;
+  margin-right: 2px;
+}
+
+.itembank-side-bar {
+    padding: 10px;
+    height: 100%;
+    background: #fefefe;
+    display: block;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    z-index: 200;
+    border:solid #05B2D2 1px;
+    font-size: 0.9em;
+}
+
+.itembank-side-bar ul {
+   padding: 1px;
+}
+
+/*
+ * CSS3 Treeview. No JavaScript
+ * @version 1.0
+ * @author Martin Ivanov
+ * @url developer's website: http://wemakesites.net/
+ * @url developer's twitter: https://twitter.com/#!/wemakesitesnet
+ * @url developer's blog http://acidmartin.wordpress.com/
+ **/
+ 
+/*
+ * This solution works with all modern browsers and Internet Explorer 9+. 
+ * If you are interested in purchasing a JavaScript enabler for IE8 
+ * for the CSS3 Treeview, please, check this link:
+ * http://experiments.wemakesites.net/miscellaneous/acidjs-css3-treeview/
+ **/
+ 
+.css-treeview ul,
+.css-treeview li
+{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+ 
+.css-treeview input
+{
+    position: absolute;
+    opacity: 0;
+}
+ 
+.css-treeview
+{
+    font: normal 11px "Segoe UI", Arial, Sans-serif;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+ 
+.css-treeview a
+{
+    color: #00f;
+    text-decoration: none;
+}
+ 
+.css-treeview a:hover
+{
+    text-decoration: underline;
+}
+ 
+.css-treeview input + label + ul
+{
+    margin: 0 0 0 22px;
+}
+ 
+.css-treeview input ~ ul
+{
+    display: none;
+}
+ 
+.css-treeview label,
+.css-treeview label::before
+{
+    cursor: pointer;
+}
+ 
+.css-treeview input:disabled + label
+{
+    cursor: default;
+    opacity: .6;
+}
+ 
+.css-treeview input:checked:not(:disabled) ~ ul
+{
+    display: block;
+}
+ 
+.css-treeview label,
+.css-treeview label::before
+{
+    background: url("../pages/css3-treeview/example/icons.png") no-repeat;
+}
+ 
+.css-treeview label,
+.css-treeview a,
+.css-treeview label::before
+{
+    display: inline-block;
+    height: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+}
+ 
+.css-treeview label
+{
+    background-position: 18px 0;
+}
+ 
+.css-treeview label::before
+{
+    content: "";
+    width: 16px;
+    margin: 0 22px 0 0;
+    vertical-align: middle;
+    background-position: 0 -32px;
+}
+ 
+.css-treeview input:checked + label::before
+{
+    background-position: 0 -16px;
+}
+ 
+/* webkit adjacent element selector bugfix */
+@media screen and (-webkit-min-device-pixel-ratio:0)
+{
+    .css-treeview 
+    {
+        -webkit-animation: webkit-adjacent-element-selector-bugfix infinite 1s;
+    }
+ 
+    @-webkit-keyframes webkit-adjacent-element-selector-bugfix 
+    {
+        from 
+        { 
+            padding: 0;
+        } 
+        to 
+        { 
+            padding: 0;
+        }
+    }
+}
+
+
+.dashboard-sparks {
+    min-height: 20px;
+padding: 19px;
+margin-bottom: 20px;
+
+    
+}
+
+.dashboard-spark {
+    color: #555;
+    float: left;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-transform: uppercase;
+}
