@@ -182,10 +182,8 @@ class User_model extends MY_Model {
     }
 
     public function get_user($userid) {
-        $this->db->select('users.*,groups.*')
+        $this->db->select('users.*')
             ->from('users')
-            ->join("users_groups", "users.user_id=users_groups.user_id")
-            ->join("groups", "users_groups.group_id=groups.group_id")
             ->where(array('users.user_id' => $userid));
         $query = $this->db->get();
         $result = $query->row();
@@ -210,118 +208,14 @@ class User_model extends MY_Model {
         return $result;
     }
 
-    public function get_user_unit_table($id) {
-        $userlevel = $this->get_user_level($id);
-        $level = $userlevel->user_group;
-        $this->db->select('users_table,users_unit_id,users_unit_name,assign_transunit')
-            ->from('groups')
-            ->where(array('group_id' => $level));
-        $query = $this->db->get();
-        $result = $query->row();
-        return $result;
-    }
-
-    public function get_user_units_specifics($id) {
-        $userttable = $this->get_user_unit_table($id);
-        if ($userttable->assign_transunit == 'yes') {
-            $unittable_name = $userttable->users_table;
-            $users_unit_id = $userttable->users_unit_id;
-            $users_unit_name = $userttable->users_unit_name;
-
-            $userttable_name = $unittable_name . '_users';
-
-            $this->db->select($users_unit_id . ' AS unit_id')
-                ->from($unittable_name)
-                ->join($userttable_name, $unittable_name . '.' . $users_unit_id . '=' . $userttable_name . '.unit_id')
-                ->where(array($userttable_name . '.user_id' => $id));
-
-            $query = $this->db->get();
-            $result = $query->result();
-            return $result;
-        }
-    }
-
-    public function get_user_units($id) {
-
-        $userttable = $this->get_user_unit_table($id);
-        if ($userttable->assign_transunit == 'yes') {
-            $unittable_name = $userttable->users_table;
-            $users_unit_id = $userttable->users_unit_id;
-            $users_unit_name = $userttable->users_unit_name;
-
-            $userttable_name = $unittable_name . '_users';
-
-            $this->db->select($unittable_name . '.' . $users_unit_id . ' AS unit_id, ' . $users_unit_name . ' AS unit_name , current_user')
-                ->from($unittable_name)
-                ->join($userttable_name, $unittable_name . '.' . $users_unit_id . '=' . $userttable_name . '.' . $users_unit_id)
-                ->where(array($userttable_name . '.user_id' => $id, $userttable_name . '.current_user' => '1'));
-
-            $query = $this->db->get();
-            $result = $query->result();
-            return $result;
-        }
-    }
-
-    public function get_past_user_units($id) {
-
-        $userttable = $this->get_user_unit_table($id);
-        if ($userttable->assign_transunit == 'yes') {
-            $unittable_name = $userttable->users_table;
-            $users_unit_id = $userttable->users_unit_id;
-            $users_unit_name = $userttable->users_unit_name;
-
-            $userttable_name = $unittable_name . '_users';
-
-            $this->db->select($unittable_name . '.' . $users_unit_id . ' AS unit_id, ' . $users_unit_name . ' AS unit_name , current_user')
-                ->from($unittable_name)
-                ->join($userttable_name, $unittable_name . '.' . $users_unit_id . '=' . $userttable_name . '.' . $users_unit_id)
-                ->where(array($userttable_name . '.user_id' => $id, $userttable_name . '.current_user' => '0'));
-
-            $query = $this->db->get();
-            $result = $query->result();
-            return $result;
-        }
-    }
-
-    function unassign_unit($id, $unit_id) {
-        $userttable = $this->get_user_unit_table($id);
-        $unittable_name = $userttable->users_table . '_users';
-        $data = array(
-            'unit_current_user' => '0',
-            'date_updated' => date('Y-m-d H:i:s', strtotime('now')),
-        );
-        $this->db->where(array('user_id' => $id, 'unit_id' => $unit_id));
-        $this->db->update($unittable_name, $data);
-    }
-
-    function reassign_unit($id, $unit_id) {
-
-
-        $userttable = $this->get_user_unit_table($id);
-        $unittable_name = $userttable->users_table . '_users';
-        $data = array(
-            'unit_current_user' => '1',
-            'date_updated' => date('Y-m-d H:i:s', strtotime('now')),
-        );
-        $this->db->where(array('user_id' => $id, 'unit_id' => $unit_id));
-        if ($this->db->update($unittable_name, $data)) {
-            $this->logger->logAction('User Re-assigned', (array) $this);
-        }
-    }
-
-    public function get_user_groups() {
-        $query = $this->db->query('SELECT * FROM groups  ');
-        return $query->result();
-    }
 
 //get users
     function get_Users() {
         $this->db->select('*')
-            ->from('users')
-            ->where('isdelete', '0')
-            ->join("strack_departments", "users.department_id=strack_departments.department_id", 'LEFT')
-            ->join("users_groups", "users.user_id=users_groups.user_id")
-            ->join("groups", "users_groups.group_id=groups.group_id");
+            ->from('users u')
+            ->where('d.isdeleted', '0')
+            ->join("strack_department_users du", "u.user_id=du.user_id", 'LEFT')
+            ->join("strack_departments d", "du.department_id=d.department_id", 'LEFT');
         $query = $this->db->get();
         $result = $query->result();
         return $result;

@@ -166,3 +166,5 @@ defined('TYGERBERG_GEOCODES') or define('TYGERBERG_GEOCODES','-33.910212,18.6092
 
 
 defined('SYSTEM_NAME') or define('SYSTEM_NAME', 'SurgiTrack ');
+
+defined('NOREPLY') or define('NOREPLY', 'noreply@surgitrack.co.za');

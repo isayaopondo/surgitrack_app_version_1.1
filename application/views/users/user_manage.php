@@ -92,11 +92,11 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td class="text-left">Role</td>
-                                                                    <td class="text-right"><?= $users->description ?></td>
+                                                                    <td class="text-right"><?= strtoupper($roles[$users->auth_level]) ?></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="text-left">User Status</td>
-                                                                    <td class="text-right"><?= $users->active == 1 ? "Active" : "Not Active" ?></td>
+                                                                    <td class="text-right"><?= $users->banned == 0 ? "Active" : "Not Active" ?></td>
                                                                 </tr>
 
                                                             </tbody>
@@ -124,7 +124,6 @@
                                                         <ul class="list-unstyled">
                                                             <li class="text-left">
                                                                 <h4 class="text-capitalize"><?= $users->first_name . ' ' . $users->last_name ?></h4>
-                                                                <p class="text-muted text-capitalize"><?= $users->name ?></p>
                                                             </li>
 
 

@@ -199,7 +199,7 @@ class Auth extends MY_Controller
      *   - Must not have any space, tab, or other whitespace characters
      *   - No backslash, apostrophe or quote chars are allowed
      */
-    public function create_user()
+    public function created_user()
     {
         // Customize this array for your user
         $user_data = [

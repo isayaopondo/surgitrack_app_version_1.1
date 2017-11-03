@@ -24,7 +24,7 @@ class Terminologies extends MY_Controller
         $this->load->library(array( 'form_validation', 'alerts'));
         $this->load->helper(array('url', 'language'));
 
-        $this->load->model(array('settings_model', 'terminologies_model'));
+        $this->load->model(array('settings_model', 'terminologies_model','setup_model'));
 
         $this->pagescripts .= "<!-- PAGE RELATED PLUGIN(S) -->";
         $this->pagescripts .= "<script src=\"" . base_url()  . "assets/js/plugin/datatables/jquery.dataTables.min.js\"></script>
@@ -60,6 +60,15 @@ class Terminologies extends MY_Controller
             } else {
                 $this->data['default_firm'] = 'DEFAULT';
                 $this->data['default_firm_color'] = '#000000';
+            }
+            //CHECK IF FACILITY IS SETUP
+            if (!$this->setup_model->is_setup_complete($this->auth_facilityid)) {
+
+                if ($this->usergroup == 'admin') {
+                    redirect('setup/my_setup', 'refresh');
+                } elseif ($this->usergroup != 'admin') {
+                    redirect('setup/setup_fail', 'refresh');
+                }
             }
         }
     }

@@ -691,6 +691,8 @@ class Authentication
         // Check if user is banned
         $is_banned = ($auth_data->banned === '1');
 
+
+
         // Is this a login attempt
         if ($passwd) {
             // Check if the posted password matches the one in the user record

@@ -34,6 +34,7 @@
                             <div class="col-sm-12">
                                 <div id="myCarousel" class="carousel fade profile-carousel">
                                     <div class="air air-bottom-right padding-10">
+                                        <a href="javascript:void(0);" data-toggle="modal"  data-target="#myModalEditDetails" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-lock"></i> Change Password</a>
                                         <a href="javascript:void(0);" data-toggle="modal"  data-target="#myModalEditDetails" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-pencil"></i> Edit Profile</a>&nbsp; <a href="javascript:void(0);" class="btn txt-color-white bg-color-pinkDark btn-sm"><i class="fa fa-link"></i> Connect</a>
                                     </div>
                                     <div class="air air-top-left padding-10">
@@ -66,7 +67,7 @@
                                 <div class="row">
 
                                     <div class="col-sm-3 profile-pic">
-                                        <img src="<?= isset($_SESSION["profilephoto"]) && $_SESSION["profilephoto"] != '' ? $_SESSION["profilephoto"] : base_url('assets/img/avatars/male.png') ?>" alt="<?= $_SESSION["fullname"] ?>" /> 
+
                                         <div class="padding-10">
                                             <h4 class="font-md"><strong><?= isset($user_stats['participated']) ? $user_stats['participated'] : 0 ?></strong>
                                                 <br>
@@ -85,7 +86,7 @@
                                         <ul class="list-unstyled">
                                             <li>
                                                 <p class="text-muted">
-                                                    <i class="fa fa-phone"></i>&nbsp;&nbsp; <span class="txt-color-darken"><?= $myprofile->phone ?></span> 
+                                                    <i class="fa fa-phone"></i>&nbsp;&nbsp; <span class="txt-color-darken"><?= $myprofile->phone_number ?></span>
                                                 </p>
                                             </li>
                                             <li>
@@ -93,11 +94,7 @@
                                                     <i class="fa fa-envelope"></i>&nbsp;&nbsp;<a href="mailto:<?= $myprofile->email ?>"><?= $myprofile->email ?></a>
                                                 </p>
                                             </li>
-                                            <li>
-                                                <p class="text-muted">
-                                                    <i class="fa fa-skype"></i>&nbsp;&nbsp;<span class="txt-color-darken"><?= $myprofile->skype ?></span>
-                                                </p>
-                                            </li>
+
 
                                         </ul>
                                         <br>
@@ -114,7 +111,7 @@
 
                                     </div>
                                     <div class="col-sm-3">
-                                        <h1><small>Area Interests</small></h1>
+                                        <h1><small></small></h1>
                                         <ul class="list-inline ">
 
                                             <li>
@@ -153,14 +150,14 @@
                     </div>
 
                     <div class="well  padding-10">
-                        <h5 class="margin-top-0"><i class="fa fa-building"></i> Department  <button class="btn btn-success btn-xs pull-right" data-toggle="modal"  data-target="#myModalAddDepartment"><i class="fa fa-plus-square"></i> Add Department</button> </h5>
+                        <h5 class="margin-top-0"><i class="fa fa-building"></i> Department   </h5>
                         <div class="panel panel-default">
                             <div class="panel-body status smart-form vote ">
 
                                 <ul class="comments">
                                     <?php
                                     if (isset($mydepartment)) {
-                                        echo '<li> <i class="fa fa-check-square-o "></i> ' . $mydepartment->department_name . '<a href="#" onclick="remove_department(' . $mydepartment->user_id . ',' . $mydepartment->department_id . ')" class="pull-right label label-info padding-sm-left"><i class=" fa fa-times-circle" >  Remove</i></a></li>';
+                                        echo '<li> <i class="fa fa-check-square-o "></i> ' . $mydepartment->department_name . '</li>';
                                     }
                                     ?>
 
@@ -269,15 +266,7 @@
                                 </section>
 
                             </div>
-                            <div class="row">
 
-                                <section class="col col-6">
-                                    <label>Skype</label>
-                                    <label class="input"> <i class="icon-append fa fa-skype"></i>
-                                        <input type="text" name="skype" placeholder="Skype" <?= isset($myprofile->skype) ? $myprofile->skype : '' ?>>
-                                        <b class="tooltip tooltip-bottom-right">Needed to enter the portal</b> </label>
-                                </section>
-                            </div>
                             <section >
                                 <label>More about me..</label>
                                 <label class="textarea"> 

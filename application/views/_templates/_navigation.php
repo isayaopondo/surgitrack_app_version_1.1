@@ -10,7 +10,7 @@
             <a href="<?= base_url('users/profile') ?>" >
                 <img src="<?=  base_url('assets/img/avatars/male.png') ?>" alt="me" class="online" />
                 <span>
-                    <?= $auth_username ?>
+                    <?= $auth_name ?>
                 </span>
                 <i class="fa fa-angle-down"></i>
             </a> 
@@ -44,7 +44,7 @@
             </li>
             <?php if ($usergroup == 'admin') { ?>
             <li class=" <?= ($this->router->fetch_class() == 'patients' ) && ($this->router->fetch_method() == 'spacial_mapping' ) ? 'active' : '' ?>">
-                <a href="<?= base_url() ?>patients/spacial_mapping" ><i class="fa fa-lg fa-fw fa-map-marker"></i> Spacial Distribution</a>
+                <a href="<?= base_url() ?>patients/spacial_mapping" ><i class="fa fa-lg fa-fw fa-map-marker"></i> Maps</a>
             </li>
             <?php } ?>
             <?php if ($usergroup == 'doctor'|| $usergroup == 'nurse') { ?>
@@ -67,7 +67,7 @@
                 <?php
             }
 
-            if ($usergroup == 'admin') { ?>
+            if ($usergroup == 'sadmin') { ?>
                 <li class="<?= ($this->router->fetch_class() == 'theatre' ) && ($this->router->fetch_method() == 'op_coding' ) ? 'active' : '' ?>">
                     <a href="<?= base_url() ?>booking/op_coding" title="Coding "><i class="fa fa-lg fa-fw fa-flask"></i> Patient's Coding</a>
                 </li>
@@ -182,15 +182,10 @@
                     <a href="#"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">Users</span></a>
                     <ul>
                         <li class="<?= ($this->router->fetch_class() == 'users' ) && ($this->router->fetch_method() == 'index' ) || ($this->router->fetch_method() == 'usersmanage' ) ? 'active' : '' ?>">
-                            <a href="<?= base_url() ?>users"><i class="fa fa-lg fa-fw fa-list"></i> Users List</a>
+                            <a href="<?= base_url() ?>users"><i class="fa fa-lg fa-fw fa-users"></i> Users List</a>
                         </li>
 
-                        <li class="<?= ($this->router->fetch_class() == 'users' ) && ($this->router->fetch_method() == 'groups' ) ? 'active' : '' ?>">
-                            <a href="<?= base_url() ?>users/groups"><i class="fa fa-lg fa-fw fa-users"></i> User Groups/Roles</a>
-                        </li>
-                        <li class="<?= ($this->router->fetch_class() == 'users' ) && ($this->router->fetch_method() == 'permissions' ) ? 'active' : '' ?>">
-                            <a href="<?= base_url() ?>users/permissions"><i class="fa fa-lg fa-fw fa-lock"></i> Permissions</a>
-                        </li>
+
 
                         <li class="<?= ($this->router->fetch_class() == 'users' ) && ($this->router->fetch_method() == 'audit_trail' ) ? 'active' : '' ?>">
                             <a href="<?= base_url() ?>users/audit_trail"><i class="fa fa-lg fa-fw fa-clock-o"></i> Audit Trail</a>

@@ -112,7 +112,7 @@
                         </li>
                          <li class="divider"></li>
                         <li>
-                            <a href="<?= base_url('theatre/my_logbook') ?>" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-list-ol"></i> <u>M</u>y log book</a>
+                            <a href="<?= base_url('booking/my_logbook') ?>" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-list-ol"></i> <u>M</u>y log book</a>
                         </li>
                         <li class="divider"></li>
                         <li>

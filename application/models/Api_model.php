@@ -23,6 +23,13 @@ class Api_model extends CI_Model
                 $this->db->insert('strack_facilities', $data);
                 if ($this->db->affected_rows() >= 1) {
                     $id = $this->db->insert_id();
+
+                    $data_setup = [
+                        'facility_id' => $id,
+                        'is_complete' => 0,
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ];
+                    $this->add_facility_setup($data_setup);
                     $message['success'] = '1';
                     $message['facility_id'] = $id;
                     $message['message'] = "Facility created successfully.";
@@ -39,6 +46,61 @@ class Api_model extends CI_Model
             $message['message'] = "System Error!";
         }
         return $message;
+    }
+
+    public function add_facility_setup($data)
+    {
+        $this->db->insert('strack_facilities_setup', $data);
+        return ($this->db->affected_rows() > 0) ? true : false;
+    }
+
+    public function update_facility_setup($data, $id)
+    {
+        if ($this->facility_setup_exist($id)) {
+
+            $this->db->where('facility_id', $id);
+            $this->db->update('strack_facilities_setup', $data);
+            if ($this->db->affected_rows() >= 1) {
+                $this->check_facility_setup_completenes($id);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            $mydata = [
+                'created_at' => date('Y-m-d H:i:s'),
+            ];
+            $data = array_merge($data, $mydata);
+            $this->add_facility_setup($data);
+        }
+    }
+
+    public function facility_setup_exist($id)
+    {
+        $this->db->where('facility_id', $id);
+        $query = $this->db->get('strack_facilities_setup');
+        if ($query->num_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    private function check_facility_setup_completenes($id)
+    {
+        $this->db->where(array('facility_id' => $id, 'is_users' => 1, 'is_departments' => 1, 'is_theatres' => 1, 'is_wards' => 1));
+        $query = $this->db->get('strack_facilities_setup');
+        if ($query->num_rows() >= 1) {
+            $data = [
+                'is_complete' => 1,
+                'completed_at' => date('Y-m-d H:i:s'),
+            ];
+            $this->update_facility_setup($data, $id);
+        } else {
+            return false;
+        }
+
     }
 
     public function facilities_update($data, $id)
@@ -60,27 +122,25 @@ class Api_model extends CI_Model
     }
 
 
-    function admin_user_insert($data, $accountsfacility_id)
+    public function admin_user_insert($data, $password, $accountsfacility_id)
     {
         if (is_array($data) && !empty($data)) {
             $facility = $this->get_facility($accountsfacility_id);
 
-            $facilityid = !empty($facility) ? $facility->facility_id :'';
-            $facility_name = !empty($facility) ? $facility->facility_name :'';
+            $facilityid = !empty($facility) ? $facility->facility_id : '';
+            $facility_name = !empty($facility) ? $facility->facility_name : '';
 
-            if ($this->user_exist($data['email'],$facilityid,$facility_name,$data['auth_level'])) {
+            if ($this->user_exist($data['email'], $facilityid, $facility_name, $data['auth_level'])) {
                 $message['success'] = '1';
                 $message['message'] = "User has been successfully invited.";
             } else {
                 $this->db->set($data)
                     ->insert('users');
                 if ($this->db->affected_rows() >= 1) {
-                    $user_id = $this->db->insert_id();
-
-                    $this->add_facility_users($user_id, $facilityid,$data['auth_level']);
-                    $this->send_invite_mail($data['passwd'], $data['email'], $facility_name,'_createinvite');
+                    $this->add_facility_users($data['user_id'], $facilityid, $data['auth_level']);
+                    $this->send_invite_mail($password, $data['email'], $facility_name, '_createinvite');
                     $message['success'] = '1';
-                    $message['user_id'] = $user_id;
+                    $message['user_id'] = $data['user_id'];
                     $message['message'] = "User created and invited successfully.";
                 } else {
                     $message['success'] = '0';
@@ -95,28 +155,64 @@ class Api_model extends CI_Model
         return $message;
     }
 
+    public function _user_insert($data, $password, $facilityid, $facility_name)
+    {
 
-    public function user_exist($email,$facilityid,$facility_name,$auth_level)
+        if ($this->user_exist($data['email'], $facilityid, $facility_name, $data['auth_level'])) {
+            $message['success'] = '1';
+            $message['message'] = "User has been successfully invited.";
+        } else {
+            $this->db->set($data)
+                ->insert('users');
+            if ($this->db->affected_rows() >= 1) {
+                $this->add_facility_users($data['user_id'], $facilityid, $data['auth_level']);
+                $this->send_invite_mail($password, $data['email'], $facility_name, '_createinvite');
+                $message['success'] = '1';
+                $message['user_id'] = $data['user_id'];
+                $message['message'] = "User created and invited successfully.";
+            } else {
+                $message['success'] = '0';
+                $message['message'] = "Error! user creation failed.";
+            }
+        }
+
+
+        return $message;
+    }
+
+    public function add_user_firm($data)
+    {
+        $this->db->insert('strack_department_firms_users', $data);
+        return ($this->db->affected_rows() > 0) ? true : false;
+    }
+
+    public function add_user_department($data)
+    {
+        $this->db->insert('strack_department_users', $data);
+        return ($this->db->affected_rows() > 0) ? true : false;
+    }
+
+    public function user_exist($email, $facilityid, $facility_name, $auth_level)
     {
         $this->db->where('email', $email);
         $query = $this->db->get('users');
         if ($query->num_rows() > 0) {
             $user_id = $query->row()->user_id;
-            $this->add_facility_users($user_id, $facilityid,$auth_level);
-            $this->send_invite_mail('', $email,$facility_name, 'invite');
+            $this->add_facility_users($user_id, $facilityid, $auth_level);
+            $this->send_invite_mail('', $email, $facility_name, 'invite');
             return true;
         } else {
             return false;
         }
     }
 
-    private function add_facility_users($user_id, $facilityid,$auth_level)
+    private function add_facility_users($user_id, $facilityid, $auth_level)
     {
         $user_data = [
             'user_id' => $user_id,
             'facility_id' => $facilityid,
             'current_user' => '1',
-            'auth_level'=>$auth_level,
+            'auth_level' => $auth_level,
             'date_assigned' => date('Y-m-d'),
             'created_on' => date('Y-m-d H:i:s'),
         ];
@@ -141,10 +237,10 @@ class Api_model extends CI_Model
             'email' => $user->email,
             'password' => $passcode,
         );
-        $this->notificationmanager->sendMail($user->user_id, $mailtype,  SYSTEM_NAME, $user->email, $info);
+        $this->notificationmanager->sendMail($user->user_id, $mailtype, SYSTEM_NAME, $user->email, $info);
     }
 
-    function get_user($user_string)
+    public function get_user($user_string)
     {
         // Selected user table data
         $selected_columns = [
@@ -164,11 +260,11 @@ class Api_model extends CI_Model
 
     }
 
-    function get_facility($user_string)
+    public function get_facility($user_string)
     {
         // Selected user table data
         $selected_columns = [
-            'facility_name','facility_id',
+            'facility_name', 'facility_id',
         ];
 
         // User table query
@@ -180,7 +276,6 @@ class Api_model extends CI_Model
         return $query->row();
 
     }
-
 
 
 //strack_facility_users

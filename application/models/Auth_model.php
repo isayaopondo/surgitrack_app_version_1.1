@@ -30,9 +30,10 @@ class Auth_model extends MY_Model {
 
 		// Selected user table data
 		$selected_columns = [
+            'first_name',
+            'last_name',
 			'username',
 			'email',
-			'auth_level',
 			'passwd',
 			'user_id',
 			'banned'
@@ -56,6 +57,7 @@ class Auth_model extends MY_Model {
             $facl =$this->add_facilities_to_auth_data( $row['user_id'] );
 
             $multi_facl=$this->add_multi_facilities_to_auth_data( $row['user_id'] );
+
 
             return (object) array_merge( $row, $acl,$facl,$multi_facl );
 		}
@@ -139,9 +141,10 @@ class Auth_model extends MY_Model {
 	{
 		// Selected user table data
 		$selected_columns = [
+            'u.first_name',
+            'u.last_name',
 			'u.username',
 			'u.email',
-			'u.auth_level',
 			'u.user_id',
 			'u.banned'
 		];
@@ -180,7 +183,8 @@ class Auth_model extends MY_Model {
 
             $multi_facl=$this->add_multi_facilities_to_auth_data( $row['user_id'] );
 
-			return (object) array_merge( $row, $acl,$facl,$multi_facl );
+
+            return (object) array_merge( $row, $acl,$facl,$multi_facl );
 		}
 
 		return FALSE;

@@ -59,6 +59,39 @@ class MY_Controller extends Auth_Controller
             echo $this->load->view($view, $this->viewdata, true); //This will return html on 3rd argument being true
     }
 
+    function _render_setup($view, $data = null, $returnhtml = false) {//I think this makes more sense
+        $this->viewdata = (empty($data)) ? $this->data : $data;
+
+        $html= $this->load->view('_templates/_header', '', true);
+        $html.= $this->load->view('_templates/_page_head', '', true);
+        $html.= $this->load->view('setup/_head_nav', $this->viewdata, true);
+        $html.= $this->load->view($view, $this->viewdata, true);
+        $html.= $this->load->view('setup/_footer', '', true);
+        $html.= $this->load->view('_templates/_content_footer', '', true);
+        $html.= $this->load->view('_templates/_footer', '', true);
+        $html.= $this->load->view('_templates/_footer_links', '', true);
+        echo $html;
+
+
+    }
+
+    function _render_setupfail($view, $data = null, $returnhtml = false) {//I think this makes more sense
+        $this->viewdata = (empty($data)) ? $this->data : $data;
+
+        $html= $this->load->view('_templates/_header', '', true);
+        $html.= $this->load->view('_templates/_page_head', '', true);
+        $html.= $this->load->view($view, $this->viewdata, true);
+        $html.= $this->load->view('setup/_footer', '', true);
+        $html.= $this->load->view('_templates/_content_footer', '', true);
+        $html.= $this->load->view('_templates/_footer', '', true);
+        $html.= $this->load->view('_templates/_footer_links', '', true);
+        echo $html;
+
+
+    }
+
+
+
 
 }
 

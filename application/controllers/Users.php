@@ -19,8 +19,8 @@ class Users extends MY_Controller
         $this->load->database();
         $this->load->library(array( 'form_validation', 'alerts'));
         $this->load->helper(array('url', 'language', 'form', 'string'));
-        $this->lang->load('auth');
-        $this->load->model(array('user_model', 'settings_model'));
+        $this->load->library('notificationmanager');
+        $this->load->model(array('user_model', 'settings_model','setup_model'));
 
 
         $this->pagescripts .= "<!-- Full Calendar -->
@@ -57,358 +57,192 @@ class Users extends MY_Controller
                 $this->data['default_firm'] = 'DEFAULT';
                 $this->data['default_firm_color'] = '#000000';
             }
+
+            //CHECK IF FACILITY IS SETUP
+            if (!$this->setup_model->is_setup_complete($this->auth_facilityid)) {
+
+                if ($this->usergroup == 'admin') {
+                    redirect('setup/my_setup', 'refresh');
+                } elseif ($this->usergroup != 'admin') {
+                    redirect('setup/setup_fail', 'refresh');
+                }
+            }
         }
     }
 
     public function index()
     {
+        $this->data['roles'] = config_item('levels_and_roles');
         $id = $this->uri->segment(3);
+        if ($id != "" && is_numeric($id)) {
+            $this->data['user'] = $this->setup_model->get_User_by_id($id);
+        }
 
+        $this->data['users'] = $this->setup_model->get_users($this->auth_facilityid);
+        //$this->data['usergroups'] = $this->user_model->get_user_groups();
 
-        $this->data['facilities'] = $this->settings_model->get_facilities_list();
-        $this->data['view'] = $this->user_model->get_user_by_id($id);
-        $this->data['view_group'] = $this->user_model->get_user_group($id);
-        $this->data['users'] = $this->user_model->get_users();
-        $this->data['usergroups'] = $this->user_model->get_user_groups();
-        $this->data['departments'] = $this->settings_model->get_departments();
-        $this->data['firms'] = $this->settings_model->get_firms_list();
+        $this->data['departments'] = $this->settings_model->get_departments($this->auth_facilityid);
+        $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
         $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('users/index', $this->data, true);
 
     }
 
-    public function grouplist()
+    public function create_user()
     {
-        $this->data['pagescripts'] = $this->pagescripts;
-        $this->data['usergroups'] = $this->user_model->get_groups();
-        $this->data['levels'] = $this->user_model->get_groups();
-        $this->_smart_render('users/index', $this->data, true);
-    }
+        $this->load->helper('auth');
+        $this->load->model('Authorization/authorization_model');
+        $this->load->model('Authorization/validation_callables');
+        $this->load->library('form_validation');
 
-    function create_user()
-    {
-        $this->data['pagescripts'] = $this->pagescripts;
-        $this->data['title'] = "Create User";
+        $admin = $this->input->post();
+        $user_data = [
+            'email' => $admin['email'],
+            'auth_level' => $admin['auth_level'], // 9 if you want to login @ examples/index.
+            'phone_number' => $admin['phone_number'],
+            'first_name' => $admin['first_name'],
+            'last_name' => $admin['last_name'],
+        ];
+        $this->form_validation->set_data($admin);
 
+        $validation_rules = [
+            [
+                'field' => 'first_name',
+                'label' => 'first_name',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'First Name field is required.'
+                ]
 
-        if (empty($this->input->post('userid'))) {
-            $tables = $this->config->item('tables', 'ion_auth');
-            $identity_column = $this->config->item('identity', 'ion_auth');
-            $this->data['identity_column'] = $identity_column;
-            // validate form input
-            $this->form_validation->set_rules('first_name', $this->lang->line('create_user_validation_fname_label'), 'required');
-            $this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label'), 'required');
-            if ($identity_column !== 'email') {
-                $this->form_validation->set_rules('identity', $this->lang->line('create_user_validation_identity_label'), 'required|is_unique[' . $tables['users'] . '.' . $identity_column . ']');
-                $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email');
-            } else {
-                $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email|is_unique[' . $tables['users'] . '.email]');
-            }
-            $this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'trim');
-            // $this->form_validation->set_rules('company', $this->lang->line('create_user_validation_company_label'), 'trim');
-            $this->form_validation->set_rules('password', $this->lang->line('create_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
-            //  $this->form_validation->set_rules('password_confirm', $this->lang->line('create_user_validation_password_confirm_label'), 'required');
-            if ($this->form_validation->run() == true) {
-                $email = strtolower($this->input->post('email'));
-                $identity = ($identity_column === 'email') ? $email : $this->input->post('identity');
-                $password = $this->input->post('password');
-                $additional_data = array(
-                    'first_name' => $this->input->post('first_name'),
-                    'last_name' => $this->input->post('last_name'),
-                    'user_group' => $this->input->post('user_group'),
-                    'phone' => $this->input->post('phone'),
-                );
-                $group = array($this->input->post('user_group'));
-            }
-            if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data, $group)) {
-                // check to see if we are creating the user
-                // redirect them back to the admin page
-                $this->session->set_flashdata('message', $this->ion_auth->messages());
-                redirect("users/index", 'refresh');
-            } else {
-                // display the create user form
-                // set the flash data error message if there is one
-                $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+            ],
+            [
+                'field' => 'department',
+                'label' => 'department',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Department field is required.'
+                ]
 
-                // $data['view']             = $this->user_model->get_user_by_id($id);
-                $this->data['users'] = $this->user_model->get_users();
-                $this->data['usergroups'] = $this->user_model->get_user_groups();
-                $this->_smart_render('users/index', $this->data, true);
-            }
-        } else {
-            $id = $this->input->post('userid');
-            $user = $this->ion_auth->user($id)->row();
-            $groups = $this->ion_auth->groups()->result_array();
-            $currentGroups = $this->ion_auth->get_users_groups($id)->result();
-            // validate form input
-            $this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required');
-            $this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required');
-            $this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required');
-            //$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'required');
-            if (isset($_POST) && !empty($_POST)) {
-                // do we have a valid request?
-                //if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('userid')) {
-                //    show_error($this->lang->line('error_csrf'));
-                //}
+            ],
 
-                if ($this->form_validation->run() === TRUE) {
-                    $data = array(
-                        'first_name' => $this->input->post('first_name'),
-                        'last_name' => $this->input->post('last_name'),
+            [
+                'field' => 'last_name',
+                'label' => 'last_name',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Last name field is required.'
+                ]
+
+            ],
+
+            [
+                'field' => 'username',
+                'label' => 'username',
+                'rules' => 'max_length[12]|is_unique[' . db_table('user_table') . '.username]',
+                'errors' => [
+                    'is_unique' => 'Username already in use.'
+                ]
+            ],
+
+            [
+                'field' => 'email',
+                'label' => 'email',
+                'rules' => 'trim|required|valid_email|is_unique[' . db_table('user_table') . '.email]',
+                'errors' => [
+                    'is_unique' => 'Email address already in use.'
+                ]
+            ],
+            [
+                'field' => 'auth_level',
+                'label' => 'auth_level',
+                'rules' => 'required|integer|in_list[1,6,9]'
+            ]
+        ];
+
+        $this->form_validation->set_rules($validation_rules);
+
+        if ($this->form_validation->run()) {
+            $password = get_random_password(8, 8, true, true);
+
+            $user_data['token'] = random_string('alnum', 64);
+            $user_data['username'] = NULL;
+            $user_data['passwd'] = $this->authentication->hash_passwd($password);
+            $user_data['user_id'] = $this->authorization_model->get_unused_id();
+            $user_data['created_at'] = date('Y-m-d H:i:s');
+            $stmt = $this->api_model->_user_insert($user_data, $password, $this->auth_facilityid, $this->auth_facilityname);
+            if ($stmt['success'] == '1') {
+                //Add to department and Firm
+
+                if (!empty($this->input->post('department'))) {
+                    $data_department = array(
+                        'user_id' => $user_data['user_id'],
                         'department_id' => $this->input->post('department'),
-                        'phone' => $this->input->post('phone'),
-                        'username' => $this->input->post('user_name'),
-                        'facility_ids' => $this->input->post('facility'),
+                        'current_user' => '1',
+                        'date_assigned' => date('Y-m-d H:i:s', strtotime('now')),
+                        'created_on' => date('Y-m-d H:i:s', strtotime('now')),
+                        'created_by' => $this->auth_user_id,
                     );
+                    $this->api_model->add_user_department($data_department);
 
-                    // Only allow updating groups if user is admin
-                    if ($this->ion_auth->is_admin()) {
-                        //Update the groups user belongs to
-                        $groupData = array($this->input->post('user_group')); //$this->input->post('user_group');
-                        if (isset($groupData) && !empty($groupData)) {
-                            $this->ion_auth->remove_from_group('', $id);
-                            foreach ($groupData as $grp) {
-                                $this->ion_auth->add_to_group($grp, $id);
-                            }
-                        }
-                    }
-                    // check to see if we are updating the user
-                    if ($this->ion_auth->update($user->user_id, $data)) {
-                        // redirect them back to the admin page if admin, or to the base url if non admin
-                        $this->session->set_flashdata('message', $this->ion_auth->messages());
-                        if ($this->ion_auth->is_admin()) {
-                            redirect('auth', 'refresh');
-                        } else {
-                            redirect('users/index', 'refresh');
-                        }
-                    } else {
-                        // redirect them back to the admin page if admin, or to the base url if non admin
-                        $this->session->set_flashdata('message', $this->ion_auth->errors());
-                        if ($this->ion_auth->is_admin()) {
-                            redirect('auth', 'refresh');
-                        } else {
-                            redirect('users/index', 'refresh');
-                        }
-                    }
+
                 }
+                if (!empty($this->input->post('firm'))) {
+                    $data_firm = array(
+                        'user_id' => $user_data['user_id'],
+                        'firm_id' => $this->input->post('firm'),
+                        'current_user' => '1',
+                        'date_assigned' => date('Y-m-d H:i:s', strtotime('now')),
+                        'created_on' => date('Y-m-d H:i:s', strtotime('now')),
+                        'created_by' => $this->auth_user_id,
+                    );
+                    $this->api_model->add_user_firm($data_firm);
+                }
+                $data_setup = [
+                    'facility_id' => $this->auth_facilityid,
+                    'is_users' => 1,
+                    'modified_at' => date('Y-m-d H:i:s', strtotime('now'))
+                ];
+                $this->api_model->update_facility_setup($data_setup, $this->auth_facilityid);
+
+                $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-check"></i>
+                                    <strong>Success</strong> ' . $stmt['message'] . '
+                            </div> ');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-check"></i>
+                                    <strong>Success</strong> ' . $stmt['message'] . '
+                            </div> ');
             }
-            // display the edit user form
-            $this->data['csrf'] = $this->_get_csrf_nonce();
-            // set the flash data error message if there is one
-            $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-            // pass the user to the view
-            $this->data['user'] = $user;
-            $this->data['groups'] = $groups;
-            $this->data['currentGroups'] = $currentGroups;
 
 
-            $this->data['view'] = $this->user_model->get_user_by_id($id);
-            $this->data['users'] = $this->user_model->get_users();
-            $this->data['usergroups'] = $this->user_model->get_user_groups();
-            $this->_smart_render('users/index', $this->data, true);
         }
-    }
 
-    // edit a user
-    function edit_user($id)
-    {
-        $this->data['pagescripts'] = $this->pagescripts;
-        $this->data['title'] = "Edit User";
-//        if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->auth_user_id == $id))) {
-//            redirect('auth', 'refresh');
-//        }
-        $user = $this->ion_auth->user($id)->row();
-        $groups = $this->ion_auth->groups()->result_array();
-        $currentGroups = $this->ion_auth->get_users_groups($id)->result();
-        // validate form input
-        $this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required');
-        $this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required');
-        $this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'required');
-        $this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'required');
-        if (isset($_POST) && !empty($_POST)) {
-            // do we have a valid request?
-            if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')) {
-                show_error($this->lang->line('error_csrf'));
-            }
-            // update the password if it was posted
-            if ($this->input->post('password')) {
-                $this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
-                $this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
-            }
-            if ($this->form_validation->run() === TRUE) {
-                $data = array(
-                    'first_name' => $this->input->post('first_name'),
-                    'last_name' => $this->input->post('last_name'),
-                    'company' => $this->input->post('company'),
-                    'phone' => $this->input->post('phone'),
-                );
-                // update the password if it was posted
-                if ($this->input->post('password')) {
-                    $data['password'] = $this->input->post('password');
-                }
-                // Only allow updating groups if user is admin
-                if ($this->ion_auth->is_admin()) {
-                    //Update the groups user belongs to
-                    $groupData = $this->input->post('groups');
-                    if (isset($groupData) && !empty($groupData)) {
-                        $this->ion_auth->remove_from_group('', $id);
-                        foreach ($groupData as $grp) {
-                            $this->ion_auth->add_to_group($grp, $id);
-                        }
-                    }
-                }
-                // check to see if we are updating the user
-                if ($this->ion_auth->update($user->id, $data)) {
-                    // redirect them back to the admin page if admin, or to the base url if non admin
-                    $this->session->set_flashdata('message', $this->ion_auth->messages());
-                    if ($this->ion_auth->is_admin()) {
-                        redirect('auth', 'refresh');
-                    } else {
-                        redirect('/', 'refresh');
-                    }
-                } else {
-                    // redirect them back to the admin page if admin, or to the base url if non admin
-                    $this->session->set_flashdata('message', $this->ion_auth->errors());
-                    if ($this->ion_auth->is_admin()) {
-                        redirect('auth', 'refresh');
-                    } else {
-                        redirect('/', 'refresh');
-                    }
-                }
-            }
+
+        $this->data['roles'] = config_item('levels_and_roles');
+        $id = $this->uri->segment(3);
+        if ($id != "" && is_numeric($id)) {
+            $this->data['user'] = $this->setup_model->get_User_by_id($id);
         }
-        // display the edit user form
-        $this->data['csrf'] = $this->_get_csrf_nonce();
-        // set the flash data error message if there is one
-        $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-        // pass the user to the view
-        $this->data['user'] = $user;
-        $this->data['groups'] = $groups;
-        $this->data['currentGroups'] = $currentGroups;
-        $this->data['first_name'] = array(
-            'name' => 'first_name',
-            'id' => 'first_name',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('first_name', $user->first_name),
-        );
-        $this->data['last_name'] = array(
-            'name' => 'last_name',
-            'id' => 'last_name',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('last_name', $user->last_name),
-        );
-        $this->data['company'] = array(
-            'name' => 'company',
-            'id' => 'company',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('company', $user->company),
-        );
-        $this->data['phone'] = array(
-            'name' => 'phone',
-            'id' => 'phone',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('phone', $user->phone),
-        );
-        $this->data['password'] = array(
-            'name' => 'password',
-            'id' => 'password',
-            'type' => 'password'
-        );
-        $this->data['password_confirm'] = array(
-            'name' => 'password_confirm',
-            'id' => 'password_confirm',
-            'type' => 'password'
-        );
-        $data['view'] = $this->user_model->get_user_by_id($id);
-        $this->data['users'] = $this->user_model->get_users();
-        $this->data['usergroups'] = $this->user_model->get_user_groups();
+
+        $this->data['users'] = $this->setup_model->get_users($this->auth_facilityid);
+        //$this->data['usergroups'] = $this->user_model->get_user_groups();
+
+        $this->data['departments'] = $this->settings_model->get_departments($this->auth_facilityid);
+        $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('users/index', $this->data, true);
+
     }
 
-    // create a new group
-    function create_group()
-    {
-        $this->data['pagescripts'] = $this->pagescripts;
-        $this->data['title'] = $this->lang->line('create_group_title');
-        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-            redirect('users/users_groups', 'refresh');
-        }
-        // validate form input
-        $this->form_validation->set_rules('group_name', 'Group Name', 'required');
-        if ($this->form_validation->run() == TRUE) {
-            $new_group_id = $this->ion_auth->create_group($this->input->post('group_name'), $this->input->post('description'));
-            if ($new_group_id) {
-                // check to see if we are creating the group
-                // redirect them back to the admin page
-                $this->session->set_flashdata('message', $this->ion_auth->messages());
-                redirect("users/groups", 'refresh');
-            }
-        } else {
-            // display the create group form
-            // set the flash data error message if there is one
-            $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-            $this->data['group_name'] = array(
-                'name' => 'group_name',
-                'id' => 'group_name',
-                'type' => 'text',
-                'value' => $this->form_validation->set_value('group_name'),
-            );
-            $this->data['description'] = array(
-                'name' => 'description',
-                'id' => 'description',
-                'type' => 'text',
-                'value' => $this->form_validation->set_value('description'),
-            );
-            $this->_smart_render('users/groups', $this->data, true);
-        }
-    }
-
-    // edit a group
-    function edit_group($id)
-    {
-        // bail if no group id given
-        if (!$id || empty($id)) {
-            redirect('auth', 'refresh');
-        }
-        $this->data['title'] = $this->lang->line('edit_group_title');
-        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-            redirect('users/groups', 'refresh');
-        }
-        $group = $this->ion_auth->group($id)->row();
-        // validate form input
-        $this->form_validation->set_rules('group_name', $this->lang->line('edit_group_validation_name_label'), 'required|alpha_dash');
-        if (isset($_POST) && !empty($_POST)) {
-            if ($this->form_validation->run() === TRUE) {
-                $group_update = $this->ion_auth->update_group($id, $_POST['group_name'], $_POST['group_description']);
-                if ($group_update) {
-                    $this->session->set_flashdata('message', $this->lang->line('edit_group_saved'));
-                } else {
-                    $this->session->set_flashdata('message', $this->ion_auth->errors());
-                }
-                redirect("users/groups", 'refresh');
-            }
-        }
-        // set the flash data error message if there is one
-        $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-        // pass the user to the view
-        $this->data['group'] = $group;
-        $readonly = $this->config->item('admin_group', 'ion_auth') === $group->name ? 'readonly' : '';
-        $this->data['group_name'] = array(
-            'name' => 'group_name',
-            'id' => 'group_name',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('group_name', $group->name),
-            $readonly => $readonly,
-        );
-        $this->data['group_description'] = array(
-            'name' => 'group_description',
-            'id' => 'group_description',
-            'type' => 'text',
-            'value' => $this->form_validation->set_value('group_description', $group->description),
-        );
-        $this->_smart_render('users/edit_group', $this->data, true);
-    }
 
     // create a new user
 
@@ -628,16 +462,12 @@ class Users extends MY_Controller
     public function usersmanage()
     {
         $id = $this->uri->segment(3);
-        $this->data['firms'] = $this->settings_model->get_firms_list();
-        $this->data['facilities'] = $this->settings_model->get_facilities_list();
-        $this->data['departments'] = $this->settings_model->get_departments_list();
-        $this->data['assigned_unit'] = $this->user_model->get_user_units($id);
-        $this->data['past_assigned_unit'] = $this->user_model->get_past_user_units($id);
-        //$this->data['regions'] = $this->transu_model->get_regions();
-        $this->data['usergroups'] = $this->user_model->get_groups();
-        $this->data['user'] = $this->user_model->get_Users();
-        $this->data['users'] = $this->user_model->get_user($id);
-
+        $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
+        $this->data['facilities'] = $this->settings_model->get_facilities_list($this->auth_facilityid);
+        $this->data['departments'] = $this->settings_model->get_departments_list($this->auth_facilityid);
+        $this->data['user'] = $this->user_model->get_Users($this->auth_facilityid);
+       $this->data['users'] = $this->user_model->get_user($id);
+        $this->data['roles'] = config_item('levels_and_roles');
         $departments = $this->user_model->get_users_department($id);
         if (!empty($departments)) {
             $department_id = $departments->department_id;
@@ -715,24 +545,12 @@ class Users extends MY_Controller
         $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
     }
 
-    public function permissions()
-    {
-        $this->data['title'] = "User Permissions";
-        if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->auth_user_id == $id))) {
-            redirect('auth', 'refresh');
-        }
-        $this->data['levels'] = $this->user_model->get_groups();
-        $this->data['pagescripts'] = $this->pagescripts;
-        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-        $this->_smart_render('users/permissions', $this->data, true);
-    }
+
 
     public function audit_trail()
     {
         $this->data['title'] = "Audit Trail";
-        if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->auth_user_id == $id))) {
-            redirect('auth', 'refresh');
-        }
+
         $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
 
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
@@ -752,15 +570,15 @@ class Users extends MY_Controller
         }
         //$this->data['participantdetails'] = $this->user_model->get_partcipant_by_user_id($user_id);
         $this->data['myprofile'] = $this->user_model->get_user_by_id($user_id);
-        $this->data['departments'] = $this->settings_model->get_departments_list();
-        $this->data['facilities'] = $this->settings_model->get_facilities_list();
+        $this->data['departments'] = $this->settings_model->get_departments_list($this->auth_facilityid);
+        $this->data['facilities'] = $this->settings_model->get_facilities_list($this->auth_facilityid);
 
         $this->data['mydepartments'] = $this->settings_model->get_mydepartments_filter_list($user_id);
 
         $this->data['mydepartment'] = $this->settings_model->get_mydepartment($user_id);
 
         $this->data['myfacilities'] = $this->settings_model->get_myfacilities_list($user_id);
-        $this->data['firms'] = $this->settings_model->get_firms_list();
+        $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
         $this->data['myfirms'] = $this->settings_model->get_myfirms_list($user_id);
 
 
@@ -784,12 +602,11 @@ class Users extends MY_Controller
             $data_user = array(
                 'first_name' => $this->input->post('first_name'),
                 'last_name' => $this->input->post('last_name'),
-                'phone' => $this->input->post('phone'),
+                'phone_number' => $this->input->post('phone'),
                 'email' => $this->input->post('email'),
                 'skype' => $this->input->post('skype'),
                 'user_portfolio' => $this->input->post('user_portfolio'),
-                'more_info' => $this->input->post('more_info'),
-                'modified_on' => date('Y-m-d H:i:s', strtotime('now')),
+                'modified_at' => date('Y-m-d H:i:s', strtotime('now')),
                 'modified_by' => $this->auth_user_id,
             );
 

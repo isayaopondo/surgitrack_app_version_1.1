@@ -20,7 +20,7 @@ class Booking extends MY_Controller
         $this->load->helper(array('url', 'language', 'form'));
         //$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
         //$this->lang->load('auth');
-        $this->load->model(array('settings_model', 'booking_model', 'patients_model', 'user_model'));
+        $this->load->model(array('settings_model', 'booking_model', 'patients_model', 'user_model','setup_model'));
 
         $this->pagescripts .= "<!-- Full Calendar -->
 		<script src=\"" . base_url() . "assets/js/plugin/moment/moment.min.js\"></script>
@@ -49,17 +49,7 @@ class Booking extends MY_Controller
                     <script src="' . base_url() . 'assets/js/plugin/select2/js/select2.js"></script>'
             . '<script src="' . base_url() . 'assets/js/pages/booking_tools.js"></script> ';
 
-        /*if (!$this->is_logged_in()) {
-            redirect('auth', 'refresh');
-        } else {
-            if (!empty($this->auth_role)) {
-                $this->data['usergroup'] = $this->auth_role;
-                $this->user_id = $this->auth_user_id;
-                $this->usergroup = $this->auth_role;
-            } else {
-                redirect('auth', 'refresh');
-            }
-        }*/
+
         $this->is_logged_in();
         if ($this->require_min_level(1)) {
             $this->data['usergroup'] = $this->auth_role;
@@ -74,6 +64,16 @@ class Booking extends MY_Controller
             } else {
                 $this->data['default_firm'] = 'DEFAULT';
                 $this->data['default_firm_color'] = '#000000';
+            }
+
+            //CHECK IF FACILITY IS SETUP
+            if (!$this->setup_model->is_setup_complete($this->auth_facilityid)) {
+
+                if ($this->usergroup == 'admin') {
+                    redirect('setup/my_setup', 'refresh');
+                } elseif ($this->usergroup != 'admin') {
+                    redirect('setup/setup_fail', 'refresh');
+                }
             }
 
         }

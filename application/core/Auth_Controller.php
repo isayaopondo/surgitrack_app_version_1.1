@@ -517,7 +517,8 @@ class Auth_Controller extends CI_Controller
         // Set user specific variables to be available in controllers
         $this->auth_user_id = $this->auth_data->user_id;
         $this->auth_username = $this->auth_data->username;
-        $this->auth_level = $this->auth_data->auth_level;
+        $this->auth_name = $this->auth_data->first_name .' '.$this->auth_data->last_name;
+       // $this->auth_level = $this->auth_data->auth_level;
         $this->auth_role = $this->authentication->roles[$this->auth_data->auth_level];
         $this->auth_email = $this->auth_data->email;
 
@@ -525,16 +526,17 @@ class Auth_Controller extends CI_Controller
         // Set user specific variables to be available in all views
         $data = [
             'auth_user_id' => $this->auth_user_id,
+            'auth_name' => $this->auth_name,
             'auth_username' => $this->auth_username,
-            'auth_level' => $this->auth_level,
             'auth_role' => $this->auth_role,
             'auth_email' => $this->auth_email
         ];
 
         // Set user specific variables to be available as config items
         $this->config->set_item('auth_user_id', $this->auth_user_id);
+        $this->config->set_item('auth_name', $this->auth_name);
         $this->config->set_item('auth_username', $this->auth_username);
-        $this->config->set_item('auth_level', $this->auth_level);
+
         $this->config->set_item('auth_role', $this->auth_role);
         $this->config->set_item('auth_email', $this->auth_email);
 
@@ -554,23 +556,26 @@ class Auth_Controller extends CI_Controller
             $data['multi_facl'] = $this->multi_facl;
             $this->config->set_item('multi_facl', $this->multi_facl);
 
-            $this->auth_facilityid = $this->auth_data->auth_facilityid;
-            $this->auth_facilityname = $this->auth_data->auth_facilityname;
+            $this->auth_facilityid = $this->facl->facility_id;
+            $this->auth_facilityname = $this->facl->facility_name;
+            $this->auth_level = $this->facl->auth_level;
 
 
-            $data['auth_facilityid'] = $this->auth_data->auth_facilityid;
-            $data['auth_facilityname'] = $this->auth_data->auth_facilityname;
+            $data['auth_facilityid'] = $this->facl->facility_id;
+            $data['auth_facilityname'] = $this->facl->facility_name;
+            $data['auth_level'] = $this->facl->auth_level;
 
-            $this->config->set_item('auth_facilityid', $this->auth_data->auth_facilityid);
-            $this->config->set_item('auth_facilityname', $this->auth_data->auth_facilityname);
+            $this->config->set_item('auth_facilityid', $this->facl->facility_id);
+            $this->config->set_item('auth_facilityname', $this->facl->facility_name);
+            $this->config->set_item('auth_level', $this->facl->auth_level);
 
-            if(!empty($this->auth_data->auth_departmentid)){
-                $this->auth_departmentname =$this->auth_data->auth_departmentname;
-                $this->auth_departmentid=$this->auth_data->auth_departmentid;
-                $data['auth_departmentname'] = $this->auth_data->auth_departmentname;
-                $data['auth_departmentid'] = $this->auth_data->auth_departmentid;
-                $this->config->set_item('auth_departmentname', $this->auth_data->auth_departmentname);
-                $this->config->set_item('auth_departmentid', $this->auth_data->auth_departmentid);
+            if(!empty($this->facl->department_id)){
+                $this->auth_departmentname =$this->facl->department_name;
+                $this->auth_departmentid=$this->facl->department_id;
+                $data['auth_departmentname'] = $this->facl->department_name;
+                $data['auth_departmentid'] = $this->facl->department_id;
+                $this->config->set_item('auth_departmentname', $this->facl->department_name);
+                $this->config->set_item('auth_departmentid', $this->facl->department_id);
 
             }else{
                 $data['auth_departmentname'] = 'none';

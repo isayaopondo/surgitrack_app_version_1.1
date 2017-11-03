@@ -28,7 +28,7 @@ class Dashboard extends MY_Controller
 
         // Form and URL helpers always loaded (just for convenience)
         $this->load->helper(array('url', 'form'));
-        $this->load->model(array('settings_model', 'booking_model', 'user_model', 'dashboard_model'));
+        $this->load->model(array('settings_model', 'booking_model', 'user_model', 'dashboard_model','setup_model'));
 
         /*  if (!$this->is_logged_in()) {
               redirect('auth', 'refresh');
@@ -57,7 +57,23 @@ class Dashboard extends MY_Controller
                 }
             }
 
+            $default_firm = $this->settings_model->get_myfirm($this->auth_user_id);
+            if (!empty($default_firm)) {
+                $this->data['default_firm'] = $default_firm ? $default_firm->firm_name : '';
+                $this->data['default_firm_color'] = !empty($default_firm->firm_color) ? $default_firm->firm_color : '#000000';
+            } else {
+                $this->data['default_firm'] = 'DEFAULT';
+                $this->data['default_firm_color'] = '#000000';
+            }
+        //CHECK IF FACILITY IS SETUP
+            if (!$this->setup_model->is_setup_complete($this->auth_facilityid)) {
 
+                if ($this->usergroup == 'admin') {
+                   redirect('setup/my_setup', 'refresh');
+                } elseif ($this->usergroup != 'admin') {
+                    redirect('setup/setup_fail', 'refresh');
+                }
+            }
 
         } else {
             redirect('auth', 'refresh');
@@ -177,4 +193,6 @@ class Dashboard extends MY_Controller
         $this->output->set_header("Cache-Control: no-store, no-cache");
         $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
     }
+
+
 }

@@ -550,9 +550,9 @@ class Settings_model extends MY_Model
         return false;
     }
 
-    public function get_facilities_list()
+    public function get_facilities_list($id)
     {
-        $this->db->where('ispublic', '1');
+        $this->db->where('facility_id', $id);
         $this->db->select('facility_id,facility_name, facility_town,facility_phone,facility_address');
         $this->db->order_by("facility_name", "asc");
         $this->db->from('strack_facilities');
@@ -582,6 +582,11 @@ class Settings_model extends MY_Model
     {
         $this->db->where('facility_id', $id);
         $this->db->update('strack_facilities', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function delete_facilities($id)
@@ -593,6 +598,12 @@ class Settings_model extends MY_Model
             return 1;
         } else {
             $this->db->update('strack_facilities', array('isdeleted' => '1'), array('facility_id' => $id));
+            if ($this->db->affected_rows() >= 1) {
+                return true;
+            } else {
+                return false;
+            }
+
         }
     }
 
@@ -647,12 +658,22 @@ class Settings_model extends MY_Model
     function theatres_insert($data)
     {
         $this->db->insert('strack_facility_theatres', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function theatres_update($data, $id)
     {
         $this->db->where('theatre_id', $id);
         $this->db->update('strack_facility_theatres', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function delete_theatres($id)
@@ -664,6 +685,11 @@ class Settings_model extends MY_Model
             return 1;
         } else {
             $this->db->update('strack_facility_theatres', array('isdeleted' => '1'), array('theatre_id' => $id));
+            if ($this->db->affected_rows() >= 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -674,7 +700,7 @@ class Settings_model extends MY_Model
 
     public function get_wards($facility_id = '')
     {
-        $this->db->where(array('w.facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('w.facility_id'=>$this->auth_facilityid,'w.isdeleted' => '0'));
         $this->db->select('*')
             ->from('strack_facility_wards w')
             ->join('strack_facilities f', 'f.facility_id=w.facility_id', 'LEFT');
@@ -695,7 +721,7 @@ class Settings_model extends MY_Model
 
     public function get_wards_list($facility_id = "")
     {
-        $this->db->where(array('facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('facility_id'=>$this->auth_facilityid,'isdeleted' => '0'));
         $this->db->select('ward_id,ward_name, ward_info,facility_id,ward_phone');
         $this->db->order_by("ward_name", "asc");
         $this->db->from('strack_facility_wards');
@@ -707,12 +733,22 @@ class Settings_model extends MY_Model
     function wards_insert($data)
     {
         $this->db->insert('strack_facility_wards', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function wards_update($data, $id)
     {
         $this->db->where('ward_id', $id);
         $this->db->update('strack_facility_wards', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function delete_wards($id)
@@ -724,6 +760,11 @@ class Settings_model extends MY_Model
             return 1;
         } else {
             $this->db->update('strack_facility_wards', array('isdeleted' => '1'), array('ward_id' => $id));
+            if ($this->db->affected_rows() >= 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -815,9 +856,9 @@ class Settings_model extends MY_Model
     //===================================
     //       Firms
     //===================================
-    public function get_firms()
+    public function get_firms($auth_facilityid)
     {
-        $this->db->where(array('d.facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('d.facility_id'=>$auth_facilityid));
         $this->db->select('*')
             ->from('strack_department_firms f')
             ->join('strack_departments d', 'd.department_id=f.department_id', 'LEFT');
@@ -888,11 +929,12 @@ class Settings_model extends MY_Model
 
     public function get_myfirms_list($user_id)
     {
-        $this->db->where(array('user_id'=> $user_id,'f.facility_id'=>$this->auth_facilityid));
-        $this->db->select('fu.firm_id,firm_name,current_user, firm_info,department_id,firm_phone,approved,user_id');
+        $this->db->where(array('user_id'=> $user_id,'d.facility_id'=>$this->auth_facilityid));
+        $this->db->select('fu.firm_id,firm_name,current_user, firm_info,f.department_id,firm_phone,approved,user_id');
         $this->db->order_by("firm_name", "asc");
         $this->db->from('strack_department_firms_users fu')
-            ->join("strack_department_firms f", "f.firm_id=fu.firm_id");
+            ->join("strack_department_firms f", "f.firm_id=fu.firm_id")
+            ->join('strack_departments d', 'd.department_id=f.department_id', 'LEFT');
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -965,12 +1007,22 @@ class Settings_model extends MY_Model
     function firms_insert($data)
     {
         $this->db->insert('strack_department_firms', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function firms_update($data, $id)
     {
         $this->db->where('firm_id', $id);
         $this->db->update('strack_department_firms', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function delete_firms($id)
@@ -982,6 +1034,11 @@ class Settings_model extends MY_Model
             return 1;
         } else {
             $this->db->update('strack_department_firms', array('isdeleted' => '1'), array('firm_id' => $id));
+            if ($this->db->affected_rows() >= 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -1037,6 +1094,7 @@ class Settings_model extends MY_Model
 
     public function get_departments_list()
     {
+        $this->db->where(array('facility_id'=>$this->auth_facilityid));
         $this->db->select('department_id,department_name,facility_id,department_phone');
         $this->db->order_by("department_name", "asc");
         $this->db->from('strack_departments');
@@ -1113,12 +1171,22 @@ class Settings_model extends MY_Model
     function departments_insert($data)
     {
         $this->db->insert('strack_departments', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function departments_update($data, $id)
     {
         $this->db->where('department_id', $id);
         $this->db->update('strack_departments', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function delete_departments($id)
@@ -1130,6 +1198,11 @@ class Settings_model extends MY_Model
             return 1;
         } else {
             $this->db->update('strack_departments', array('isdeleted' => '1'), array('department_id' => $id));
+            if ($this->db->affected_rows() >= 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -1259,11 +1332,21 @@ class Settings_model extends MY_Model
     {
         $this->db->where('consumable_id', $id);
         $this->db->update('strack_nappi_consumables', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function nappi_consumables_insert($data)
     {
         $this->db->insert('strack_nappi_consumables', $data);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function get_nappi_consumables()
@@ -1372,6 +1455,11 @@ class Settings_model extends MY_Model
             return 1;
         } else {
             $this->db->update('strack_rpl_procedure_codes', array('isdeleted' => '1'), array('rpl_id' => $id));
+            if ($this->db->affected_rows() >= 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -1379,6 +1467,11 @@ class Settings_model extends MY_Model
     {
         $this->db->where("rpl_id", $id);
         $this->db->delete('strack_rpl_procedure_codes');
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function get_consumables_details($consumable_id)

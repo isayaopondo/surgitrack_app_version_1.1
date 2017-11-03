@@ -257,6 +257,7 @@ class Authentication
 				// Get user table data if username or email address matches a record
 				if( $auth_data = $this->CI->{$this->auth_model}->get_auth_data( $user_string ) )
 				{
+
 					// Confirm user
 					if( ! $this->_user_confirmed( $auth_data, $requirement, $passwd ) )
 					{
@@ -719,6 +720,7 @@ class Authentication
 	{
 		// Check if user is banned
 		$is_banned = ( $auth_data->banned === '1' );
+
 
 		// Is this a login attempt
 		if( $passwd )

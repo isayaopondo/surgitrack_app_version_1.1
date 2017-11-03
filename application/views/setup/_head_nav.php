@@ -31,7 +31,7 @@
 
     <div class="row">
 
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <!-- /well -->
             <div class="well padding-10">
                 <h5 class="margin-top-0"><i class="fa fa-list"></i> SETUP STEPS</h5>
@@ -41,22 +41,29 @@
 
                         <nav>
                             <ul>
-                                <li class="">
-                                    <a href="" title="Dashboard"><i class="fa fa-lg fa-fw fa-hospital-o"></i>Departments <span class="badge pull-right">3</span></a>
+                                <li class="<?= ($this->router->fetch_class() == 'setup' ) && ($this->router->fetch_method() == 'my_setup' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>setup/my_setup" title="Summary"><i class="fa fa-lg fa-fw fa-home"></i>General <?=$sstats['sstatus']?></a>
                                 </li>
-                                <li class="">
-                                    <a href="" ><i class="fa fa-lg fa-fw fa-hospital-o"></i>Firms <span class="badge pull-right">3</span></a>
+                                <li class="<?= ($this->router->fetch_class() == 'setup' ) && ($this->router->fetch_method() == 'departments' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>setup/departments" title="Departments"><i class="fa fa-lg fa-fw fa-hospital-o"></i>Departments <?=$sstats['sdepartments']?></a>
+                                </li>
+                                <li class="<?= ($this->router->fetch_class() == 'setup' ) && ($this->router->fetch_method() == 'firms' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>setup/firms" ><i class="fa fa-lg fa-fw fa-hospital-o"></i>Firms <?=$sstats['sfirms']?></a>
+                                </li>
+                                <li class="<?= ($this->router->fetch_class() == 'setup' ) && ($this->router->fetch_method() == 'wards' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>setup/wards"><i class="fa fa-lg fa-fw fa-bed"></i> Wards/Location <?=$sstats['swards']?></a>
+                                </li>
+                                <li class="<?= ($this->router->fetch_class() == 'setup' ) && ($this->router->fetch_method() == 'theatres' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>setup/theatres"><i class="fa fa-lg fa-fw fa-scissors"></i> Theatres <?=$sstats['stheatres']?></a>
+                                <li class="<?= ($this->router->fetch_class() == 'setup' ) && ($this->router->fetch_method() == 'procedures' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>setup/procedures" ><i class="fa fa-lg fa-fw fa-list-alt"></i> Procedures <?=$sstats['sprocedures']?></a>
+                                </li>
+                                <li class="<?= ($this->router->fetch_class() == 'setup' ) && ($this->router->fetch_method() == 'users' ) ? 'active' : '' ?> ">
+                                    <a href="<?= base_url() ?>setup/users" ><i class="fa fa-lg fa-fw fa-users"></i>Invite Users <?=$sstats['susers']?></a>
                                 </li>
 
-                                <li class=" ">
-                                    <a href="" ><i class="fa fa-lg fa-fw fa-list-alt"></i> Procedures <span class="badge pull-right">3</span></a>
                                 </li>
-                                <li class=" ">
-                                    <a href="" ><i class="fa fa-lg fa-fw fa-users"></i> Users <span class="badge pull-right">15</span></a>
-                                </li>
-                                <li class="">
-                                    <a href=""><i class="fa fa-lg fa-fw fa-scissors"></i> Theatres <span class="badge pull-right">15</span></a>
-                                </li>
+
                             </ul>
                         </nav>
 
@@ -70,5 +77,5 @@
 
         </div>
 
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             <div class="well">

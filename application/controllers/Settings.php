@@ -17,7 +17,7 @@ class Settings extends MY_Controller
         $this->load->library(array('form_validation', 'alerts'));
         $this->load->helper(array('url', 'language'));
 
-        $this->load->model(array('settings_model'));
+        $this->load->model(array('settings_model','setup_model'));
 
 
         $this->pagescripts .= " <!-- Full Calendar -->
@@ -922,7 +922,7 @@ class Settings extends MY_Controller
     public function departments($id = "")
     {
         if ($id != "" && is_numeric($id)) {
-            $this->data['department'] = $this->settings_model->get_department_by_id($id);
+            $this->data['department'] = $this->settings_model->get_departments_by_id($id);
         }
         $this->data['facilities'] = $this->settings_model->get_facilities_list();
 

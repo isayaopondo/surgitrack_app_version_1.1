@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Administrator extends CI_Controller {
+class Administrator extends MY_Controller {
 
     private $pagescripts = '';
     private $case_list = '';
@@ -13,70 +13,77 @@ class Administrator extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->database();
-        $this->load->library(array('ion_auth', 'form_validation', 'writelog'));
+        $this->load->library(array( 'form_validation', 'writelog'));
         $this->load->helper(array('url', 'language'));
-        $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
-        $this->lang->load('auth');
-        $this->load->model(array('settings_model', 'theatre_model', 'patients_model', 'user_model', 'administrator_model'));
+
+        $this->load->model(array('settings_model', 'booking_model', 'patients_model', 'user_model', 'administrator_model','setup_model'));
         $this->pagescripts .= "<!-- Full Calendar -->
-		<script src=\"" . URL . "assets/js/plugin/moment/moment.min.js\"></script>
-		<script src=\"" . URL . "assets/js/plugin/fullcalendar/jquery.fullcalendar.min.js\"></script> 
-                <script src=\"" . URL . "assets/js/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/moment/moment.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/fullcalendar/jquery.fullcalendar.min.js\"></script> 
+                <script src=\"" . base_url() . "assets/js/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js\"></script>
                
 		";
         //
 
         $this->pagescripts .= "<!-- PAGE RELATED PLUGIN(S) -->";
-        $this->pagescripts .= "<script src=\"" . URL . "assets/js/plugin/datatables/jquery.dataTables.min.js\"></script>
-		<script src=\"" . URL . "assets/js/plugin/datatables/dataTables.colVis.min.js\"></script>
-		<script src=\"" . URL . "assets/js/plugin/datatables/dataTables.tableTools.min.js\"></script>
-		<script src=\"" . URL . "assets/js/plugin/datatables/dataTables.bootstrap.min.js\"></script>
-		<script src=\"" . URL . "assets/js/plugin/datatable-responsive/datatables.responsive.min.js\"></script> 
-                 <script src=\"" . URL . "assets/js/bootstrap/bootstrap-colorpicker.js\"></script>";
+        $this->pagescripts .= "<script src=\"" . base_url() . "assets/js/plugin/datatables/jquery.dataTables.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatables/dataTables.colVis.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatables/dataTables.tableTools.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatables/dataTables.bootstrap.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatable-responsive/datatables.responsive.min.js\"></script> 
+                 <script src=\"" . base_url() . "assets/js/bootstrap/bootstrap-colorpicker.js\"></script>";
         $this->case_list = '
-                 <script src="' . URL . 'assets/js/pages/case_list.js"></script>';
-        $this->table_tools = '<script src="' . URL . 'assets/js/pages/settings_tools.js"></script>
-                 <script src="' . URL . 'assets/js/pages/table_tools.js"></script>
-                <script src="' . URL . 'assets/js/pages/filters.js"></script> ';
+                 <script src="' . base_url() . 'assets/js/pages/case_list.js"></script>';
+        $this->table_tools = '<script src="' . base_url() . 'assets/js/pages/settings_tools.js"></script>
+                 <script src="' . base_url() . 'assets/js/pages/table_tools.js"></script>
+                <script src="' . base_url() . 'assets/js/pages/filters.js"></script> ';
         
-        $this->dual_list = '<script src=\""' . URL . '"assets/plugins/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.min.js\"></script>';
-        $this->dual_list_css = '<link rel="stylesheet" type="text/css" href=\"' . URL . 'assets/plugins/bootstrap-duallistbox/src/bootstrap-duallistbox.css">';
+        $this->dual_list = '<script src=\""' . base_url() . '"assets/plugins/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.min.js\"></script>';
+        $this->dual_list_css = '<link rel="stylesheet" type="text/css" href=\"' . base_url() . 'assets/plugins/bootstrap-duallistbox/src/bootstrap-duallistbox.css">';
 
-        $this->calendar = ' <script src="' . URL . 'assets/js/pages/calendar_settings.js"></script> ';
-        $this->general_tools = ' <script src="' . URL . 'assets/js/plugin/select2/js/select2.js"></script>'
-                . ' <script src="' . URL . 'assets/js/pages/general_tools.js"></script> ';
+        $this->calendar = ' <script src="' . base_url() . 'assets/js/pages/calendar_settings.js"></script> ';
+        $this->general_tools = ' <script src="' . base_url() . 'assets/js/plugin/select2/js/select2.js"></script>'
+                . ' <script src="' . base_url() . 'assets/js/pages/general_tools.js"></script> ';
 
-        if (!$this->ion_auth->logged_in()) {
-            redirect('auth/login', 'refresh');
-        } else {
-            $this->user_group = $this->ion_auth->get_users_groups()->row();
-            $this->data['usergroup'] = $this->user_group->name;
+        $this->is_logged_in();
+        if ($this->require_min_level(1)) {
+            $this->data['usergroup'] = $this->auth_role;
+            $this->user_id = $this->auth_user_id;
+            $this->usergroup = $this->auth_role;
+
+            $default_firm = $this->settings_model->get_myfirm($this->auth_user_id);
+            if (!empty($default_firm)) {
+                $this->data['default_firm'] = $default_firm ? $default_firm->firm_name : '';
+                $this->data['default_firm_color'] = !empty($default_firm->firm_color) ? $default_firm->firm_color : '#000000';
+            } else {
+                $this->data['default_firm'] = 'DEFAULT';
+                $this->data['default_firm_color'] = '#000000';
+            }
+            //CHECK IF FACILITY IS SETUP
+            if (!$this->setup_model->is_setup_complete($this->auth_facilityid)) {
+
+                if ($this->usergroup == 'admin') {
+                    redirect('setup/my_setup', 'refresh');
+                } elseif ($this->usergroup != 'admin') {
+                    redirect('setup/setup_fail', 'refresh');
+                }
+            }
         }
     }
 
     public function index() {
-        if (!$this->ion_auth->logged_in()) {
-            // redirect them to the login page
-            redirect('auth/login', 'refresh');
-        } elseif ($this->ion_auth->locked()) {
-            redirect('auth/page_lock', 'refresh');
-        } else {
+
             // $this->data['submision'] = $this->dashboard_model->getsub_scounties();
             //$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             //$this->_render_page('support/index', $this->data, true);
 
             redirect('/', 'refresh');
-        }
+
     }
 
     public function mapt() {
-        if (!$this->ion_auth->logged_in()) {
-            // redirect them to the login page
-            redirect('auth/login', 'refresh');
-        } elseif ($this->ion_auth->locked()) {
-            redirect('auth/page_lock', 'refresh');
-        } else {
-            $user_id = $this->ion_auth->user()->row()->id;
+       
+            $user_id = $this->auth_user_id;
             $department_id = $this->user_model->get_users_department($user_id)->department_id;
             $this->data['departments'] = $this->settings_model->get_departments_list();
             $this->data['procedures'] = $this->settings_model->get_procedure();
@@ -84,7 +91,7 @@ class Administrator extends CI_Controller {
             $this->data['pagescripts'] = $this->pagescripts . $this->table_tools . $this->general_tools;
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             $this->_smart_render('administrator/mapt-form', $this->data, true);
-        }
+       
     }
 
     public function create_mapt() {
@@ -101,11 +108,11 @@ class Administrator extends CI_Controller {
                 $remaining_options = $data;
                 $data2 = array(
                     'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                    'created_by' => $this->ion_auth->user()->row()->id
+                    'created_by' => $this->auth_user_id
                 );
                 $arr = $remaining_options + $data2;
 
-                $return = array('mapt_id' => $this->theatre_model->mapt_insert($arr),
+                $return = array('mapt_id' => $this->booking_model->mapt_insert($arr),
                     'message' => 'You have succesifully created a new MAPT',
                     'mapt' => $this->input->post('mapt_name'),
                     'success' => 1);
@@ -114,7 +121,7 @@ class Administrator extends CI_Controller {
 
                 echo json_encode($return);
                 $this->session->set_flashdata('message', "You have succesifully created a new MAPT");
-                $this->writelog->writelog($this->ion_auth->user()->row()->id, 'Created New MAPT  ' . $this->input->post('mapt_name'), "#" . serialize($return));
+                $this->writelog->writelog($this->auth_user_id, 'Created New MAPT  ' . $this->input->post('mapt_name'), "#" . serialize($return));
             }
         }
     }
@@ -130,33 +137,27 @@ class Administrator extends CI_Controller {
                 $remaining_options = $data;
                 $data2 = array(
                     'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                    'created_by' => $this->ion_auth->user()->row()->id
+                    'created_by' => $this->auth_user_id
                 );
                 $arr = $remaining_options + $data2;
 
-                $return = array('criteria_id' => $this->theatre_model->mapt_criteria_insert($arr),
+                $return = array('criteria_id' => $this->booking_model->mapt_criteria_insert($arr),
                     'message' => 'You have succesifully created a new criteria',
                     'mapt' => $this->input->post('mapt_name'),
                     'success' => 1);
                 $qid = $return['criteria_id'];
-                $this->theatre_model->mapt_scores_insert($options, $qid);
+                $this->booking_model->mapt_scores_insert($options, $qid);
                 echo json_encode($return);
                 $this->session->set_flashdata('message', "You have succesifully created a new Criteria");
-                $this->writelog->writelog($this->ion_auth->user()->row()->id, 'Created MAPT Criteria  ' . $this->input->post('mapt_name'), "#" . serialize($return));
+                $this->writelog->writelog($this->auth_user_id, 'Created MAPT Criteria  ' . $this->input->post('mapt_name'), "#" . serialize($return));
             }
         }
     }
 
     public function mapt_list_data() {
-        //Admission=1
-        if (!$this->ion_auth->is_admin()) {
-            $user_id = $this->ion_auth->user()->row()->id;
-            $department_id = $this->user_model->get_users_department($user_id)->department_id;
-            $json = $this->theatre_model->mapt_list_data($department_id);
-        } else {
-            $json = $this->theatre_model->mapt_list_data();
-        }
-
+       
+            $json = $this->booking_model->mapt_list_data();
+       
         $this->output->set_header("Pragma: no-cache");
         $this->output->set_header("Cache-Control: no-store, no-cache");
         $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
@@ -164,7 +165,7 @@ class Administrator extends CI_Controller {
 
     public function search_mapt_details() {
         $mapt_id = $this->input->post('mapt_id');
-        $mapt_details = $this->theatre_model->get_mapt_details($mapt_id);
+        $mapt_details = $this->booking_model->get_mapt_details($mapt_id);
         $return = '<div class="alert alert-info no-margin fade in">
 			<i class="fa-fw fa fa-info"></i>
 			MAPT DETAILS
@@ -183,7 +184,7 @@ class Administrator extends CI_Controller {
     public function view_mapt_criteria() {
 
         $mapt_id = $this->input->post('mapt_id');
-        $mapt_details = $this->theatre_model->get_mapt_details($mapt_id);
+        $mapt_details = $this->booking_model->get_mapt_details($mapt_id);
         $return = '<div class="alert alert-info no-margin fade in">
 			<i class="fa-fw fa fa-info"></i>
 			MAPT DETAILS
@@ -197,7 +198,7 @@ class Administrator extends CI_Controller {
                 . '</tr>'
                 . '</table>';
 
-        $maptcriteria = $this->theatre_model->get_mapt_criteria_details($mapt_id);
+        $maptcriteria = $this->booking_model->get_mapt_criteria_details($mapt_id);
         $return .= '<div class="alert alert-info no-margin fade in">
 			<i class="fa-fw fa fa-info"></i>
 			CRITERIA
@@ -209,7 +210,7 @@ class Administrator extends CI_Controller {
             $return .= '<div class="col-sm-12 col-md-12 col-lg-4">'
                     . ''
                     . '<b>Criteria Name:</b> ' . $criteria_details->criteria_name . '<br> <b>Weight:</b> ' . $criteria_details->criteria_weight . '<br>  <b>Description:</b> ' . $criteria_details->additional_info . '';
-            $criteria = $this->theatre_model->get_mapt_criteria_score($criteria_details->criteria_id);
+            $criteria = $this->booking_model->get_mapt_criteria_score($criteria_details->criteria_id);
 
             $return .= '</div>';
 
@@ -233,7 +234,7 @@ class Administrator extends CI_Controller {
     public function mapt_entry_form() {
 
         $mapt_id = $this->input->post('mapt_id');
-        $mapt_details = $this->theatre_model->get_mapt_details($mapt_id);
+        $mapt_details = $this->booking_model->get_mapt_details($mapt_id);
         $return = '<div class="alert alert-info no-margin fade in">
 			<i class="fa-fw fa fa-info"></i>
 			MAPT DETAILS
@@ -247,7 +248,7 @@ class Administrator extends CI_Controller {
                 . '</tr>'
                 . '</table>';
 
-        $maptcriteria = $this->theatre_model->get_mapt_criteria_details($mapt_id);
+        $maptcriteria = $this->booking_model->get_mapt_criteria_details($mapt_id);
         $return .= '<div class="alert alert-info no-margin fade in">
 			<i class="fa-fw fa fa-info"></i>
 			CRITERIA
@@ -260,7 +261,7 @@ class Administrator extends CI_Controller {
                 <section>
                             <label class="label">' . $criteria_details->criteria_name . '</label>
                             <div class="inline-group">';
-            $criteria = $this->theatre_model->get_mapt_criteria_score($criteria_details->criteria_id);
+            $criteria = $this->booking_model->get_mapt_criteria_score($criteria_details->criteria_id);
             foreach ($criteria as $score) {
                 //$return .= '<b>' . $score->score_text . '</b> = ' . $score->score_value . ', ';
                 $return .= '<label class="radio">
@@ -286,7 +287,7 @@ class Administrator extends CI_Controller {
         } elseif ($this->ion_auth->locked()) {
             redirect('auth/page_lock', 'refresh');
         } else {
-            $user_id = $this->ion_auth->user()->row()->id;
+            $user_id = $this->auth_user_id;
             $this->data['pagescripts'] = $this->pagescripts . $this->calendar . $this->general_tools;
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             $this->_smart_render('administrator/calendar_management', $this->data, true);
@@ -316,7 +317,7 @@ class Administrator extends CI_Controller {
                 'blocked_enddate' => $this->input->post('blocked_enddate'),
                 'blocked_type' => $this->input->post('blocked_type'),
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'created_by' => $this->ion_auth->user()->row()->id
+                'created_by' => $this->auth_user_id
             );
         } else {
             $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
@@ -331,7 +332,7 @@ class Administrator extends CI_Controller {
             if ($this->form_validation->run() == true && $this->administrator_model->blocked_date_insert($data)) {
                 $log_action = 'Blocked Dates';
                 $log_info = 'Added  ' . $this->input->post('blocked_date') . ' to Blocked Dates on ' . date('Y-m-d H:i:s', strtotime('now'));
-                $this->writelog->writelog($this->ion_auth->user()->row()->id, $log_action, $log_info);
+                $this->writelog->writelog($this->auth_user_id, $log_action, $log_info);
 
                 $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
@@ -346,7 +347,7 @@ class Administrator extends CI_Controller {
             if ($this->form_validation->run() == true && $this->administrator_model->blocked_date_update($data, $id)) {
                 $log_action = 'Blocked Dates';
                 $log_info = 'Editted to Blocked Dates on ' . date('Y-m-d H:i:s', strtotime('now'));
-                $this->writelog->writelog($this->ion_auth->user()->row()->id, $log_action, $log_info);
+                $this->writelog->writelog($this->auth_user_id, $log_action, $log_info);
                 $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
                                             ×
