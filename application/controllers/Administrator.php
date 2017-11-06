@@ -281,17 +281,12 @@ class Administrator extends MY_Controller {
     }
 
     public function calendar_management() {
-        if (!$this->ion_auth->logged_in()) {
-            // redirect them to the login page
-            redirect('auth/login', 'refresh');
-        } elseif ($this->ion_auth->locked()) {
-            redirect('auth/page_lock', 'refresh');
-        } else {
+
             $user_id = $this->auth_user_id;
             $this->data['pagescripts'] = $this->pagescripts . $this->calendar . $this->general_tools;
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             $this->_smart_render('administrator/calendar_management', $this->data, true);
-        }
+
     }
 
     public function calendar_blocking_data() {

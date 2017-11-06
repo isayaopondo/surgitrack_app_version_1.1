@@ -632,7 +632,7 @@ class Settings extends MY_Controller
         if ($id != "" && is_numeric($id)) {
             $this->data['theatre'] = $this->settings_model->get_theatres_by_id($id);
         }
-        $this->data['facilities'] = $this->settings_model->get_facilities_list();
+        $this->data['facilities'] = $this->settings_model->get_facilities_list($this->auth_facilityid);
 
         // $this->data['submision'] = $this->dashboard_model->getsub_scounties();
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools;
@@ -732,7 +732,7 @@ class Settings extends MY_Controller
         if ($id != "" && is_numeric($id)) {
             $this->data['wardslocation'] = $this->settings_model->get_wards_by_id($id);
         }
-        $this->data['facilities'] = $this->settings_model->get_facilities_list();
+        $this->data['facilities'] = $this->settings_model->get_facilities_list($this->auth_facilityid);
 
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
@@ -924,7 +924,7 @@ class Settings extends MY_Controller
         if ($id != "" && is_numeric($id)) {
             $this->data['department'] = $this->settings_model->get_departments_by_id($id);
         }
-        $this->data['facilities'] = $this->settings_model->get_facilities_list();
+        $this->data['facilities'] = $this->settings_model->get_facilities_list($this->auth_facilityid);
 
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
@@ -943,7 +943,7 @@ class Settings extends MY_Controller
 
     public function departments_data()
     {
-        $json = $this->settings_model->get_departments();
+        $json = $this->settings_model->get_departments($this->auth_facilityid);
 
         $this->output->set_header("Pragma: no-cache");
         $this->output->set_header("Cache-Control: no-store, no-cache");
@@ -1049,7 +1049,7 @@ class Settings extends MY_Controller
 
     public function firms_data()
     {
-        $json = $this->settings_model->get_firms();
+        $json = $this->settings_model->get_firms($this->auth_facilityid);
 
         $this->output->set_header("Pragma: no-cache");
         $this->output->set_header("Cache-Control: no-store, no-cache");
@@ -1446,7 +1446,7 @@ class Settings extends MY_Controller
 
     public function nappi_consumables_data()
     {
-        $json = $this->settings_model->get_nappi_consumables();
+        $json = $this->settings_model->get_nappi_consumables($this->auth_facilityid);
 
         $this->output->set_header("Pragma: no-cache");
         $this->output->set_header("Cache-Control: no-store, no-cache");

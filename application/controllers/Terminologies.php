@@ -100,4 +100,13 @@ class Terminologies extends MY_Controller
         $this->_smart_render('terminologies/rpl_codes', $this->data, true);
 
     }
+
+    public function rpl_codes(){
+        $this->data['departments'] = $this->settings_model->get_departments_list();
+        $this->data['procedures'] = $this->settings_model->get_procedure();
+        $this->data['category'] = $this->settings_model->get_category();
+        $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('terminologies/procedures_subset', $this->data, true);
+    }
 }

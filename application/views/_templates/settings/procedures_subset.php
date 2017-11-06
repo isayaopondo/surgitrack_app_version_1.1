@@ -9,7 +9,7 @@
 
     <!-- breadcrumb -->
     <ol class="breadcrumb">
-        <li>Home</li><li>Settings</li><li> RPL Codes</li>
+        <li>Home</li><li>Settings</li><li> RPL CODES</li>
     </ol>
     <!-- end breadcrumb -->
 </div>
@@ -30,8 +30,8 @@
                 <!-- PAGE HEADER -->
                  <i class="fa-fw fa fa-codepen"></i>
                 RPL
-                <span>>
-                    Codes
+                <span>
+                    CODES
                 </span>
             </h1>
         </div>
@@ -111,9 +111,9 @@
                                             </div>
                                         
                                             <div class="form-group">
-                                                <label>Procedure Groups</label>
+                                                <label>Category</label>
                                                 <select class="form-control" name="category" id="procedure_category" style="width:100%">
-                                                    <option value="0" selected="" >All Groups</option>
+                                                    <option value="0" selected="" >All Category</option>
                                                     <?php
                                                     foreach ($category as $row) {
                                                         $selected = isset($booking->category_id) && $booking->category_id == $row->category_id ? 'selected="selected"' : '';
