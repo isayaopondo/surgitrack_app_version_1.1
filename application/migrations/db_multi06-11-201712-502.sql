@@ -1,7 +1,14 @@
-﻿# Dump of table acl_categories
-# ------------------------------------------------------------
-
+﻿# Dump tables in correct order to not violate constraints
+DROP TABLE IF EXISTS `acl`;
+DROP TABLE IF EXISTS `acl_actions`;
 DROP TABLE IF EXISTS `acl_categories`;
+DROP TABLE IF EXISTS `users`;
+
+
+
+
+# Dump of table acl_categories
+# ------------------------------------------------------------
 
 CREATE TABLE `acl_categories` (
   `category_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -17,8 +24,6 @@ CREATE TABLE `acl_categories` (
 # Dump of table acl_actions
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `acl_actions`;
-
 CREATE TABLE `acl_actions` (
   `action_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `action_code` varchar(100) NOT NULL COMMENT 'No periods allowed!',
@@ -33,8 +38,6 @@ CREATE TABLE `acl_actions` (
 
 # Dump of table users
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `user_id` int(10) unsigned NOT NULL,
@@ -62,8 +65,6 @@ CREATE TABLE `users` (
 
 # Dump of table acl
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `acl`;
 
 CREATE TABLE `acl` (
   `ai` int(10) unsigned NOT NULL AUTO_INCREMENT,
