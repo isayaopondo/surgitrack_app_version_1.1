@@ -2,9 +2,8 @@
 DROP TABLE IF EXISTS `acl`;
 DROP TABLE IF EXISTS `acl_actions`;
 DROP TABLE IF EXISTS `acl_categories`;
+DROP TABLE IF EXISTS `strack_facility_users`;
 DROP TABLE IF EXISTS `users`;
-
-
 
 
 # Dump of table acl_categories
@@ -482,8 +481,6 @@ CREATE TABLE `strack_facility_time_slots` (
 
 # Dump of table strack_facility_users
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `strack_facility_users`;
 
 CREATE TABLE `strack_facility_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
