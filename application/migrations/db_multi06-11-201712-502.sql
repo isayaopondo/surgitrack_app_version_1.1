@@ -1,36 +1,4 @@
-﻿# Dump of table acl
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `acl`;
-
-CREATE TABLE `acl` (
-  `ai` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `action_id` int(10) unsigned NOT NULL,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`ai`),
-  KEY `action_id` (`action_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `acl_ibfk_1` FOREIGN KEY (`action_id`) REFERENCES `acl_actions` (`action_id`) ON DELETE CASCADE,
-  CONSTRAINT `acl_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table acl_actions
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `acl_actions`;
-
-CREATE TABLE `acl_actions` (
-  `action_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `action_code` varchar(100) NOT NULL COMMENT 'No periods allowed!',
-  `action_desc` varchar(100) NOT NULL COMMENT 'Human readable description',
-  `category_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`action_id`),
-  KEY `category_id` (`category_id`),
-  CONSTRAINT `acl_actions_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `acl_categories` (`category_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+﻿
 
 
 # Dump of table acl_categories
@@ -450,26 +418,6 @@ CREATE TABLE `strack_facility_time_slots` (
 
 
 
-# Dump of table strack_facility_users
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `strack_facility_users`;
-
-CREATE TABLE `strack_facility_users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `facility_id` int(11) unsigned NOT NULL,
-  `current_user` enum('0','1') NOT NULL DEFAULT '0',
-  `auth_level` tinyint(4) DEFAULT NULL,
-  `date_assigned` date NOT NULL,
-  `date_unassigned` datetime NOT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `strack_facility_users` (`user_id`),
-  CONSTRAINT `strack_facility_users_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 
 # Dump of table strack_facility_wards
@@ -791,13 +739,60 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DELIMITER ;;
-/*!50003 SET SESSION SQL_MODE="" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`root`@`localhost` */ /*!50003 TRIGGER `ca_passwd_trigger` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
-    IF ((NEW.passwd <=> OLD.passwd) = 0) THEN
-        SET NEW.passwd_modified_at = NOW();
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
+
+
+# Dump of table acl_actions
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `acl_actions`;
+
+CREATE TABLE `acl_actions` (
+  `action_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `action_code` varchar(100) NOT NULL COMMENT 'No periods allowed!',
+  `action_desc` varchar(100) NOT NULL COMMENT 'Human readable description',
+  `category_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`action_id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `acl_actions_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `acl_categories` (`category_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+# Dump of table strack_facility_users
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `strack_facility_users`;
+
+CREATE TABLE `strack_facility_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `facility_id` int(11) unsigned NOT NULL,
+  `current_user` enum('0','1') NOT NULL DEFAULT '0',
+  `auth_level` tinyint(4) DEFAULT NULL,
+  `date_assigned` date NOT NULL,
+  `date_unassigned` datetime NOT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `strack_facility_users` (`user_id`),
+  CONSTRAINT `strack_facility_users_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+# Dump of table acl
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `acl`;
+
+CREATE TABLE `acl` (
+  `ai` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `action_id` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`ai`),
+  KEY `action_id` (`action_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `acl_ibfk_1` FOREIGN KEY (`action_id`) REFERENCES `acl_actions` (`action_id`) ON DELETE CASCADE,
+  CONSTRAINT `acl_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
