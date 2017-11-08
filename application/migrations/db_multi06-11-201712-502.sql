@@ -788,16 +788,3 @@ CREATE TABLE `username_or_email_on_hold` (
   `time` datetime NOT NULL,
   PRIMARY KEY (`ai`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-DELIMITER ;;
-/*!50003 SET SESSION SQL_MODE="" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`root`@`localhost` */ /*!50003 TRIGGER `ca_passwd_trigger` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
-    IF ((NEW.passwd <=> OLD.passwd) = 0) THEN
-        SET NEW.passwd_modified_at = NOW();
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
-
