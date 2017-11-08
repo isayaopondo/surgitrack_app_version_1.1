@@ -1,17 +1,15 @@
-﻿# Dump of table acl
+﻿# Dump of table acl_categories
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `acl`;
+DROP TABLE IF EXISTS `acl_categories`;
 
-CREATE TABLE `acl` (
-  `ai` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `action_id` int(10) unsigned NOT NULL,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`ai`),
-  KEY `action_id` (`action_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `acl_ibfk_1` FOREIGN KEY (`action_id`) REFERENCES `acl_actions` (`action_id`) ON DELETE CASCADE,
-  CONSTRAINT `acl_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+CREATE TABLE `acl_categories` (
+  `category_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `category_code` varchar(100) NOT NULL COMMENT 'No periods allowed!',
+  `category_desc` varchar(100) NOT NULL COMMENT 'Human readable description',
+  PRIMARY KEY (`category_id`),
+  UNIQUE KEY `category_code` (`category_code`),
+  UNIQUE KEY `category_desc` (`category_desc`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -33,18 +31,49 @@ CREATE TABLE `acl_actions` (
 
 
 
-# Dump of table acl_categories
+# Dump of table users
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `acl_categories`;
+DROP TABLE IF EXISTS `users`;
 
-CREATE TABLE `acl_categories` (
-  `category_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `category_code` varchar(100) NOT NULL COMMENT 'No periods allowed!',
-  `category_desc` varchar(100) NOT NULL COMMENT 'Human readable description',
-  PRIMARY KEY (`category_id`),
-  UNIQUE KEY `category_code` (`category_code`),
-  UNIQUE KEY `category_desc` (`category_desc`)
+CREATE TABLE `users` (
+  `user_id` int(10) unsigned NOT NULL,
+  `username` varchar(12) DEFAULT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone_number` varchar(191) DEFAULT NULL,
+  `auth_level` tinyint(3) unsigned NOT NULL,
+  `banned` enum('0','1') NOT NULL DEFAULT '0',
+  `passwd` varchar(60) NOT NULL,
+  `passwd_recovery_code` varchar(60) DEFAULT NULL,
+  `passwd_recovery_date` datetime DEFAULT NULL,
+  `passwd_modified_at` datetime DEFAULT NULL,
+  `accountsadmin_id` int(11) DEFAULT NULL,
+  `token` varchar(191) DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+# Dump of table acl
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `acl`;
+
+CREATE TABLE `acl` (
+  `ai` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `action_id` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`ai`),
+  KEY `action_id` (`action_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `acl_ibfk_1` FOREIGN KEY (`action_id`) REFERENCES `acl_actions` (`action_id`) ON DELETE CASCADE,
+  CONSTRAINT `acl_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -760,35 +789,6 @@ CREATE TABLE `username_or_email_on_hold` (
   PRIMARY KEY (`ai`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-
-
-# Dump of table users
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `users`;
-
-CREATE TABLE `users` (
-  `user_id` int(10) unsigned NOT NULL,
-  `username` varchar(12) DEFAULT NULL,
-  `first_name` varchar(50) DEFAULT NULL,
-  `last_name` varchar(100) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone_number` varchar(191) DEFAULT NULL,
-  `auth_level` tinyint(3) unsigned NOT NULL,
-  `banned` enum('0','1') NOT NULL DEFAULT '0',
-  `passwd` varchar(60) NOT NULL,
-  `passwd_recovery_code` varchar(60) DEFAULT NULL,
-  `passwd_recovery_date` datetime DEFAULT NULL,
-  `passwd_modified_at` datetime DEFAULT NULL,
-  `accountsadmin_id` int(11) DEFAULT NULL,
-  `token` varchar(191) DEFAULT NULL,
-  `last_login` datetime DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DELIMITER ;;
