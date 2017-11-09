@@ -193,8 +193,7 @@ class Authorization_model extends MY_Model {
        //     ->get_where( $this->db_table('user_table') );
 
         $query = $this->db->get_where(
-            $this->db_table('user_table'),
-            ['user_id' => $random_unique_int]
+            'users', ['user_id' => $random_unique_int]
         );
 
 
