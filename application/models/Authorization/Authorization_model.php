@@ -189,8 +189,14 @@ class Authorization_model extends MY_Model {
         $random_unique_int = 2147483648 + mt_rand( -2147482448, 2147483647 );
 
         // Make sure the random user_id isn't already in use
-        $query = $this->db->where( 'user_id', $random_unique_int )
-            ->get_where( $this->db_table('user_table') );
+       // $query = $this->db->where( 'user_id', $random_unique_int )
+       //     ->get_where( $this->db_table('user_table') );
+
+        $query = $this->db->get_where(
+            $this->db_table('user_table'),
+            ['user_id' => $random_unique_int]
+        );
+
 
         if( $query->num_rows() > 0 )
         {
