@@ -46,6 +46,8 @@ $(document).ready(function () {
 
 
 
+
+
     var wards = $('#wardstable').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
         "t" +

@@ -75,19 +75,7 @@
                 <!-- Widget ID (each widget will need unique ID)-->
                 <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-deletebutton="false"
                      data-widget-fullscreenbutton="false">
-                    <!-- widget options:
-                            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-                            
-                            data-widget-colorbutton="false"	
-                            data-widget-editbutton="false"
-                            data-widget-togglebutton="false"
-                            data-widget-deletebutton="false"
-                            data-widget-fullscreenbutton="false"
-                            data-widget-custombutton="false"
-                            data-widget-collapsed="true" 
-                            data-widget-sortable="false"
-                            
-                    -->
+
                     <header>
                         <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
                         <h2>Add/Edit Department Details </h2>				
@@ -111,22 +99,11 @@
                             </section>
                             <form id="checkout-form"method="POST" action="<?= base_url('settings/create_departments') ?>" class="smart-form" novalidate="novalidate">
                                 <fieldset>
-                                    <section >
                                         <input class="form-control rounded" type="hidden"  id="department_id" name="department_id" value="<?= isset($department->department_id) ? $department->department_id : '' ?>">
-                                        <label class="select">
-                                            <select name="facility">
-                                                <option value="0" selected="" disabled="">Facility</option>
-                                                <?php
-                                                foreach ($facilities as $row) {
-                                                    $selected = isset($department->facility_id) && $department->facility_id == $row->facility_id ? 'selected="selected"' : '';
-                                                    echo '<option ' . $selected . ' value="' . $row->facility_id . '">' . $row->facility_name . '</option>';
-                                                }
-                                                ?>
-                                            </select> <i></i> </label>
-                                    </section>
+                                    <input class="form-control rounded" type="hidden"  id="facility" name="facility" value="<?= isset($auth_facilityid) ? $auth_facilityid : '' ?>">
                                     <section>
                                         <label for="address2" class="input">
-                                            <input type="text" name="department_name" id="department_name" placeholder="Department Name" value="<?= isset($department->department_name) ? $facility->department_name : '' ?>">
+                                            <input type="text" name="department_name" id="department_name" placeholder="Department Name" value="<?= isset($department->department_name) ? $department->department_name : '' ?>">
                                         </label>
                                     </section>
                                     <section >
@@ -138,7 +115,7 @@
                                 <fieldset>
                                     <section>
                                         <label class="textarea"> 										
-                                            <textarea rows="3" name="department_info" placeholder="Additional info"><?= isset($department->department_info) ? $facility->department_info : '' ?></textarea> 
+                                            <textarea rows="3" name="department_info" placeholder="Additional info"><?= isset($department->department_info) ? $department->department_info : '' ?></textarea>
                                         </label>
                                     </section>
                                 </fieldset>
@@ -214,16 +191,13 @@
                                         <th class="hasinput" style="width:30%">
                                             <input type="text" class="form-control" placeholder="Filter Department" />
                                         </th>
-                                        <th class="hasinput" style="width:15%">
-                                            <input type="text" class="form-control" placeholder="Filter Facility" />
-                                        </th>
+
                                         <th style="width:15%"></th>
                                         <th style="width:20%"></th>
                                         <th></th>
                                     </tr>
                                     <tr>
                                         <th>Department Name</th>
-                                        <th >Facility</th>
                                         <th >Phone</th>
                                         <th >Info</th>
                                         <th></th>

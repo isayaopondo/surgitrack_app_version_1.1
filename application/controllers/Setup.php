@@ -14,6 +14,7 @@ class Setup extends MY_Controller
     private $pagescripts = "";
     private $table_tools = "";
     private $setup_tools = "";
+    private $settings_tools = "";
     private $usergroup = '';
     private $sstats = '';
 
@@ -41,6 +42,9 @@ class Setup extends MY_Controller
             . ' <script src="' . base_url() . 'assets/js/pages/table_tools.js"></script> ';
         $this->setup_tools = ''
             . ' <script src="' . base_url() . 'assets/js/pages/setup_tools.js"></script> ';
+        $this->settings_tools = ''
+            . ' <script src="' . base_url() . 'assets/js/pages/settings_tools.js"></script> 
+                <script src="' . base_url() . 'assets/js/pages/settings_general_tools.js"></script> ';
 
 
         $this->general_tools = '<script src="' . base_url() . 'assets/js/plugin/select2/js/select2.js"></script>'
@@ -88,7 +92,7 @@ class Setup extends MY_Controller
 
         $this->data['departments'] = $this->settings_model->get_departments($this->auth_facilityid);
         $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
-        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools.$this->settings_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_render_setup('setup/users', $this->data, true);
 
@@ -258,18 +262,148 @@ class Setup extends MY_Controller
          ],*/
     }
 
+    public function assign_setup_procedures()
+    {
+        // $id = $this->input->post();
+        $this->form_validation->set_rules('department', 'Department name', 'required');
+        // $this->form_validation->set_rules('procedure_dual', 'Procedures', 'required');
+        $user_id = $this->auth_user_id;
+        $i = 0;
+        $j = 0;
+        if ($this->form_validation->run() == true) {
+            $procedure_dual = $this->input->post('procedure_dual');
+            $department_id = $this->input->post('department');
+            if (!empty($procedure_dual)) {
+                //reset departments
+                // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
+
+                foreach ($procedure_dual as $val) {
+                    $procedure= $this->settings_model->get_global_procedure_by_id($val);
+                    $data = array(
+                        'facility_id' => $this->auth_facilityid,
+                        'department_id' => $department_id,
+                        'procedure_fk_id' => $val,
+
+                        'procedure_name' => $procedure->procedure_name,
+                        'category_id' => $procedure->category_id,
+                        'rpl_code' => $procedure->rpl_code,
+                        'group_id' => $procedure->group_id,
+                        'subgroup_id' => $procedure->subgroup_id,
+
+                        'created_on' => date('Y-m-d H:i:s', strtotime('now')),
+                        'created_by' => $user_id,
+                    );
+                    $this->settings_model->procedure_department_insert($data, $val, $department_id) ? $i++ : $j++;
+                }
+                $data_setup = [
+                    'facility_id' => $this->auth_facilityid,
+                    'is_procedures' => 1,
+                    'modified_at' => date('Y-m-d H:i:s', strtotime('now'))
+                ];
+                $this->api_model->update_facility_setup($data_setup, $this->auth_facilityid);
+                $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Success!</strong> The procedure subsetting has successfully been created ' . $i . ' records added and ' . $j . ' records updated
+                            </div');
+            } else {
+
+                $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Error!</strong> Failed, the procedure subsetting has failed: check if procedures are selected
+                            </div');
+            }
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Error!</strong> Failed, the procedure subsetting has failed
+                            </div');
+        }
+        redirect('setup/procedures');
+    }
 
     public function procedures()
     {
+
         $this->data['departments'] = $this->settings_model->get_departments_list();
-        $this->data['procedures'] = $this->settings_model->get_procedure();
-        $this->data['category'] = $this->settings_model->get_category();
-        $this->data['pagescripts'] = $this->pagescripts . $this->setup_tools . $this->general_tools;
+        $this->data['procedures'] = $this->setup_model->get_full_procedure_list();
+        $this->data['procedure_groups'] = $this->setup_model->get_procedure_groups();
+        $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
         $this->_render_setup('setup/procedures', $this->data, true);
     }
 
+
+    public function assign_departmental_procedures()
+    {
+        // $id = $this->input->post();
+        $this->form_validation->set_rules('department', 'Department name', 'required');
+        // $this->form_validation->set_rules('procedure_dual', 'Procedures', 'required');
+        $user_id = $this->auth_user_id;
+        $i = 0;
+        $j = 0;
+        if ($this->form_validation->run() == true) {
+            $procedure_dual = $this->input->post('procedure_dual');
+            $department_id = $this->input->post('department');
+            if (!empty($procedure_dual)) {
+                //reset departments
+                // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
+
+                foreach ($procedure_dual as $val) {
+                    $procedure= $this->settings_model->get_global_procedure_by_id($val);
+                    $data = array(
+                        'facility_id' => $this->auth_facilityid,
+                        'department_id' => $department_id,
+                        'procedure_fk_id' => $val,
+
+                        'procedure_name' => $procedure->procedure_name,
+                        'category_id' => $procedure->category_id,
+                        'rpl_code' => $procedure->rpl_code,
+                        'group_id' => $procedure->group_id,
+                        'subgroup_id' => $procedure->subgroup_id,
+
+                        'created_on' => date('Y-m-d H:i:s', strtotime('now')),
+                        'created_by' => $user_id,
+                    );
+                    $this->settings_model->procedure_department_insert($data, $val, $department_id) ? $i++ : $j++;
+                }
+                $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Success!</strong> The procedure subsetting has successfully been created ' . $i . ' records added and ' . $j . ' records updated
+                            </div');
+            } else {
+
+                $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Error!</strong> Failed, the procedure subsetting has failed: check if procedures are selected
+                            </div');
+            }
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Error!</strong> Failed, the procedure subsetting has failed
+                            </div');
+        }
+        redirect('settings/procedures_subset');
+    }
 
 
     //Ops
@@ -596,7 +730,7 @@ class Setup extends MY_Controller
         }
     }
 
-    //delete Procedures
+    //delete departments
     public function delete_departments()
     {
         $id = $this->uri->segment(3);
@@ -738,12 +872,19 @@ class Setup extends MY_Controller
     public function procedures_subset()
     {
 
-        $this->data['departments'] = $this->settings_model->get_departments_list();
-        $this->data['procedures'] = $this->settings_model->get_procedure();
-        $this->data['category'] = $this->settings_model->get_category();
+        /*$this->data['departments'] = $this->settings_model->get_departments_list();
+        $this->data['procedures'] = $this->setup_model->get_full_procedure_list();
+        $this->data['procedure_groups'] = $this->setup_model->get_procedure_groups();
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-        $this->_render_setup('settings/procedures_subset', $this->data, true);
+        $this->_render_setup('settings/procedures_subset', $this->data, true);*/
+
+        $this->data['departments'] = $this->settings_model->get_departments_list();
+        $this->data['procedures'] = $this->setup_model->get_full_procedure_list();
+        $this->data['procedure_groups'] = $this->setup_model->get_procedure_groups();
+        $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('settings/procedures_subset', $this->data, true);
 
     }
 

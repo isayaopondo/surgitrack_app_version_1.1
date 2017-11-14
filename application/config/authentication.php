@@ -78,7 +78,6 @@ $config['add_acl_query_to_auth_functions'] = TRUE;
 */
 
 $config['max_allowed_attempts'] = 5;
-$config['max_allowed_attempts'] = 25;
 
 /*
 | -----------------------------------------------------------------
@@ -93,7 +92,7 @@ $config['max_allowed_attempts'] = 25;
 | 
 */
 
-$config['deny_access_at'] = 100;
+$config['deny_access_at'] = 0;
 
 /*
 | -----------------------------------------------------------------

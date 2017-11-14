@@ -152,8 +152,8 @@ class Auth_Controller extends CI_Controller
             'session', 'tokens', 'authentication'
         ])->helper([
             'serialization', 'cookie'
-        ])->model('Auth_model');
-        if (config_item('declared_auth_model') != 'Auth_model')
+        ])->model('auth_model');
+        if (config_item('declared_auth_model') != 'auth_model')
             $this->load->model(config_item('declared_auth_model'));
     }
 
@@ -603,6 +603,7 @@ class Auth_Controller extends CI_Controller
      */
     protected function setup_login_form($optional_login = FALSE)
     {
+
         $this->tokens->name = 'login_token';
 
         /**

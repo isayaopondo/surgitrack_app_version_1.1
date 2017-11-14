@@ -109,22 +109,12 @@
                             </section>
                             <form id="checkout-form"method="POST" action="<?= base_url('settings/create_theatres') ?>" class="smart-form" novalidate="novalidate">
                                 <fieldset>
-                                    <section >
                                         <input class="form-control rounded" type="hidden"  id="theatre_id" name="theatre_id" value="<?= isset($theatre->theatre_id) ? $theatre->theatre_id : '' ?>">
-                                        <label class="select">
-                                            <select name="facility">
-                                                <option value="0" selected="" disabled="">Facility</option>
-                                                <?php
-                                                foreach ($facilities as $row) {
-                                                    $selected = isset($theatre->facility_id) && $theatre->facility_id == $row->facility_id ? 'selected="selected"' : '';
-                                                    echo '<option ' . $selected . ' value="' . $row->facility_id . '">' . $row->facility_name . '</option>';
-                                                }
-                                                ?>
-                                            </select> <i></i> </label>
-                                    </section>
+                                        <input class="form-control rounded" type="hidden"  id="facility" name="facility" value="<?= isset($auth_facilityid) ? $auth_facilityid : '' ?>">
+
                                     <section>
                                         <label for="address2" class="input">
-                                            <input type="text" name="theatre_name" id="theatre_name" placeholder="Theatre Name" value="<?= isset($theatre->theatre_name) ? $facility->theatre_name : '' ?>">
+                                            <input type="text" name="theatre_name" id="theatre_name" placeholder="Theatre Name" value="<?= isset($theatre->theatre_name) ? $theatre->theatre_name : '' ?>">
                                         </label>
                                     </section>
                                     <section >
@@ -136,7 +126,7 @@
                                 <fieldset>
                                     <section>
                                         <label class="textarea"> 										
-                                            <textarea rows="3" name="theatre_info" placeholder="Additional info"><?= isset($theatre->theatre_info) ? $facility->theatre_info : '' ?></textarea> 
+                                            <textarea rows="3" name="theatre_info" placeholder="Additional info"><?= isset($theatre->theatre_info) ? $theatre->theatre_info : '' ?></textarea>
                                         </label>
                                     </section>
                                 </fieldset>
@@ -212,16 +202,13 @@
                                         <th class="hasinput" style="width:30%">
                                             <input type="text" class="form-control" placeholder="Filter Theatre" />
                                         </th>
-                                        <th class="hasinput" style="width:15%">
-                                            <input type="text" class="form-control" placeholder="Filter Facility" />
-                                        </th>
+
                                         <th style="width:15%"></th>
                                         <th style="width:20%"></th>
                                         <th></th>
                                     </tr>
                                     <tr>
                                         <th>Theatre Name</th>
-                                        <th >Facility</th>
                                         <th >Phone</th>
                                         <th >Info</th>
                                         <th></th>

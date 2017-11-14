@@ -17,7 +17,7 @@ class Settings extends MY_Controller
         $this->load->library(array('form_validation', 'alerts'));
         $this->load->helper(array('url', 'language'));
 
-        $this->load->model(array('settings_model','setup_model'));
+        $this->load->model(array('settings_model', 'setup_model'));
 
 
         $this->pagescripts .= " <!-- Full Calendar -->
@@ -127,10 +127,10 @@ class Settings extends MY_Controller
         echo json_encode($this->settings_model->ajaxget_category_by_procedureid($id));
     }
 
-    public function ajaxget_by_procedure_category()
+    public function ajaxget_by_procedure_groups()
     {
-        $id = $this->input->post('category');
-        echo json_encode($this->settings_model->ajaxget_by_procedure_category($id));
+        $id = $this->input->post('proceduregroup');
+        echo json_encode($this->settings_model->ajaxget_by_procedure_groups($id));
     }
 
     //Add_edit Christian Union
@@ -150,6 +150,7 @@ class Settings extends MY_Controller
         if ($this->form_validation->run() == true) {
 
             $data = array(
+                'facility_id' => $this->auth_facilityid,
                 'procedure_name' => $this->input->post('procedure_name'),
                 'procedure_fullname' => $this->input->post('procedure_fullname'),
                 'category_id' => $this->input->post('category'),
@@ -217,12 +218,22 @@ class Settings extends MY_Controller
             $procedure_dual = $this->input->post('procedure_dual');
             $department_id = $this->input->post('department');
             if (!empty($procedure_dual)) {
-                $this->settings_model->delete_procedure_department($department_id, $user_id);
+                //reset departments
+                // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
 
                 foreach ($procedure_dual as $val) {
+                    $procedure = $this->settings_model->get_global_procedure_by_id($val);
                     $data = array(
+                        'facility_id' => $this->auth_facilityid,
                         'department_id' => $department_id,
-                        'procedure_id' => $val,
+                        'procedure_fk_id' => $val,
+
+                        'procedure_name' => $procedure->procedure_name,
+                        'category_id' => $procedure->category_id,
+                        'rpl_code' => $procedure->rpl_code,
+                        'group_id' => $procedure->group_id,
+                        'subgroup_id' => $procedure->subgroup_id,
+
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
                         'created_by' => $user_id,
                     );
@@ -257,6 +268,16 @@ class Settings extends MY_Controller
         redirect('settings/procedures_subset');
     }
 
+
+    public function procedure_department_data()
+    {
+        $json = $this->settings_model->get_procedure_department($this->auth_facilityid);
+
+        $this->output->set_header("Pragma: no-cache");
+        $this->output->set_header("Cache-Control: no-store, no-cache");
+        $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
+
+    }
     //====================================
     //     Catergory
     //===================================
@@ -944,7 +965,6 @@ class Settings extends MY_Controller
     public function departments_data()
     {
         $json = $this->settings_model->get_departments($this->auth_facilityid);
-
         $this->output->set_header("Pragma: no-cache");
         $this->output->set_header("Cache-Control: no-store, no-cache");
         $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
@@ -1688,14 +1708,12 @@ class Settings extends MY_Controller
 
     public function procedures_subset()
     {
-
         $this->data['departments'] = $this->settings_model->get_departments_list();
-        $this->data['procedures'] = $this->settings_model->get_procedure();
-        $this->data['category'] = $this->settings_model->get_category();
+        $this->data['procedures'] = $this->setup_model->get_full_procedure_list();
+        $this->data['procedure_groups'] = $this->setup_model->get_procedure_groups();
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('settings/procedures_subset', $this->data, true);
-
     }
 
 }

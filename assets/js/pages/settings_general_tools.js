@@ -11,6 +11,28 @@ $(document).ready(function () {
      * BOOTSTRAP DUALLIST BOX
      */
 
+    $('#user_department').on('change', function () {
+        if ($('#user_firm').length > 0) {
+            $('select#user_firm').html('');
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: jsonPath + "/settings/ajaxget_department_firms/",
+                data: {department_id: $(this).val()},
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        $("<option />").val(data[i].firm_id)
+                            .text(data[i].firm_name)
+                            .appendTo($('select#user_firm'));
+                    }
+                }
+
+            });
+        }
+
+    });
+
     $('#procedure_dual').bootstrapDualListbox({
         selectedListLabel: 'Selected',
         preserveSelectionOnMove: 'moved',
@@ -26,19 +48,19 @@ $(document).ready(function () {
         //nonSelectedFilter: 'ion ([7-9]|[1][0-2])'
     });
 
-    $('#procedure_category').on('change', function () {
+    $('#procedure_group').on('change', function () {
         if ($('#initializeDuallistbox').length > 0) {
            $('#initializeDuallistbox').empty();
             $.ajax({
                 type: "POST",
                 dataType: 'json',
-                url: jsonPath + "/settings/ajaxget_by_procedure_category/",
-                data: {category: $(this).val()},
+                url: jsonPath + "/settings/ajaxget_by_procedure_groups/",
+                data: {proceduregroup: $(this).val()},
                 success: function (data) {
                     for (var i = 0; i < data.length; i++)
                     {
-                        initializeDuallistbox.append('<option value="' + data[i].procedure_id + '" selected>' + data[i].procedure_name + '</option>');
-                        initializeDuallistbox.bootstrapDualListbox('setRemoveSelectedLabel',data[i].procedure_id);
+                        initializeDuallistbox.append('<option value="' + data[i].id + '" selected>'+ data[i].rpl_code + ': ' + data[i].procedure_name + '</option>');
+                        initializeDuallistbox.bootstrapDualListbox('setRemoveSelectedLabel',data[i].id);
                     }
                     initializeDuallistbox.bootstrapDualListbox('refresh', true);
                 }

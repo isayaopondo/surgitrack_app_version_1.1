@@ -96,7 +96,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: false,
         ajax: {
-            "url": jsonPath + "/data/facility_procedure_summary_data/",
+            "url": jsonPath + "/booking/facility_procedure_summary_data/",
             "type": "POST"
         },
         "iDisplayLength": 15,

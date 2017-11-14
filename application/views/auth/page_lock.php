@@ -11,7 +11,7 @@
 					<div>
 						<h1><i class="fa fa-user fa-3x text-muted air air-top-right hidden-mobile"></i><?= $_SESSION["fullname"] ?> <small><i class="fa fa-lock text-muted"></i> &nbsp;Locked</small></h1>
 						<p class="text-muted">
-							<a href="mailto:simmons@smartadmin">john.doe@smartadmin.com</a>
+							<a href="mailto:simmons@smartadmin">john.doe@surgitrack.com</a>
 						</p>
 
 						<div class="input-group">

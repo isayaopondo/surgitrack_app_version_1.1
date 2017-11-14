@@ -108,6 +108,7 @@
             <?php }
             
             ?>
+            <?php if ($usergroup == 'admin') { ?>
             <li class="<?= ($this->router->fetch_class() == 'theatreTime' ) && ($this->router->fetch_method() == 'calendar_management' ) ? 'active' : '' ?>">
                 <a href="<?= base_url() ?>administrator/calendar_management" title="Manage Calendar"><i class="fa fa-lg fa-fw fa-calendar"></i> Calendar Management</a>
             </li>
@@ -126,7 +127,7 @@
                             </ul>
                         </li>
 
-            <?php if ($usergroup == 'admin') { ?>
+
 
 
 

@@ -64,7 +64,7 @@
                                     <label>Department </label>
 
                                     <label class="select">
-                                        <select name="department">
+                                        <select name="department" id="user_department">
                                             <option value="0" selected="" disabled="">Department</option>
                                             <?php
                                             foreach ($departments as $row) {
@@ -77,14 +77,9 @@
                                 <section >
                                     <label>Firm </label>
                                     <label class="select">
-                                        <select name="firm">
+                                        <select name="firm" id="user_firm">
                                             <option value="0" selected="" disabled="">Firms</option>
-                                            <?php
-                                            foreach ($firms as $row) {
-                                                $selected = isset($user->firm_id) && $user->firm_id == $row->firm_id ? 'selected="selected"' : '';
-                                                echo '<option ' . $selected . ' value="' . $row->firm_id . '">' . $row->firm_name . '</option>';
-                                            }
-                                            ?>
+
                                         </select> <i></i> </label>
                                 </section>
                                 <section >

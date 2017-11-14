@@ -109,19 +109,9 @@
                             </section>
                             <form id="checkout-form"method="POST" action="<?= base_url('settings/create_wards') ?>" class="smart-form" novalidate="novalidate">
                                 <fieldset>
-                                    <section >
-                                        <input class="form-control rounded" type="hidden"  id="ward_id" name="ward_id" value="<?= isset($theatre->theatre_id) ? $theatre->theatre_id : '' ?>">
-                                        <label class="select">
-                                            <select name="facility">
-                                                <option value="0" selected="" disabled="">Facility</option>
-                                                <?php
-                                                foreach ($facilities as $row) {
-                                                    $selected = isset($wardslocation->facility_id) && $wardslocation->facility_id == $row->facility_id ? 'selected="selected"' : '';
-                                                    echo '<option ' . $selected . ' value="' . $row->facility_id . '">' . $row->facility_name . '</option>';
-                                                }
-                                                ?>
-                                            </select> <i></i> </label>
-                                    </section>
+                                    <input class="form-control rounded" type="hidden"  id="facility" name="facility" value="<?= isset($auth_facilityid) ? $auth_facilityid : '' ?>">
+                                        <input class="form-control rounded" type="hidden"  id="ward_id" name="ward_id" value="<?= isset($wardslocation) ? $wardslocation->ward_id : '' ?>">
+
                                     <section>
                                         <label for="ward_name" class="input">
                                             <input type="text" name="ward_name" id="ward_name" placeholder="Wards/Location Name" value="<?= isset($wardslocation->ward_name) ? $wardslocation->ward_name : '' ?>">
@@ -212,16 +202,13 @@
                                         <th class="hasinput" style="width:30%">
                                             <input type="text" class="form-control" placeholder="Filter Ward/Location" />
                                         </th>
-                                        <th class="hasinput" style="width:15%">
-                                            <input type="text" class="form-control" placeholder="Filter Facility" />
-                                        </th>
+
                                         <th style="width:15%"></th>
                                         <th style="width:20%"></th>
                                         <th></th>
                                     </tr>
                                     <tr>
                                         <th>Wards/Location Name</th>
-                                        <th >Facility</th>
                                         <th >Phone</th>
                                         <th >Info</th>
                                         <th></th>

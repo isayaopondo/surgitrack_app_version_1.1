@@ -183,10 +183,10 @@ class Dashboard extends MY_Controller
 
     public function facility_procedure_summary_data()
     {
-        if (in_array($this->auth_role, ['admin', 'doctor', 'nurse'])) {
-            $json = $this->booking_model->get_procedure_summaries();
+        if (in_array($this->auth_role, [ 'doctor', 'nurse'])) {
+            $json = $this->booking_model->get_procedure_summaries($default_firm->firm_id);
         } else {
-            $json = '';
+            $json = $this->booking_model->get_procedure_summaries();
         }
 
         $this->output->set_header("Pragma: no-cache");

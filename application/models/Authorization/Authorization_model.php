@@ -193,8 +193,7 @@ class Authorization_model extends MY_Model {
        //     ->get_where( $this->db_table('user_table') );
 
         $query = $this->db->get_where(
-            $this->db_table('user_table'),
-            ['user_id' => $random_unique_int]
+            'users', ['user_id' => $random_unique_int]
         );
 
 
@@ -211,6 +210,37 @@ class Authorization_model extends MY_Model {
 
     // --------------------------------------------------------------
 
+
+    /**
+     * Get the user name, user salt, and hashed recovery code,
+     * but only if the recovery code hasn't expired.
+     *
+     * @param  int  the user ID
+     */
+    public function fetchPasswordHashFromDB( $user_id )
+    {
+
+        $query = $this->db->select( 'username, passwd' )
+            ->from( $this->db_table('user_table') )
+            ->where( 'user_id', $user_id )
+            ->limit(1)
+            ->get();
+
+        if ( $query->num_rows() == 1 )
+            return $query->row();
+
+        return FALSE;
+    }
+
+    public function _reset_password($user_id,$password){
+        $this->db->where( 'user_id', $user_id )
+            ->update(
+                $this->db_table('user_table'),
+                [
+                    'passwd' => $password ,
+                ]
+            );
+    }
 }
 
 /* End of file Authorization_model.php */

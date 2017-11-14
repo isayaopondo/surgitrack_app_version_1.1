@@ -25,19 +25,21 @@ class Setup_model extends MY_Model
             return FALSE;
     }
 
-   public function  get_Users($facilityid) {
+    public function get_Users($facilityid)
+    {
         $this->db->select('u.user_id,u.first_name,u.email,u.last_name,fu.auth_level,d.department_name,')
             ->from('users u')
             ->where('fu.facility_id', $facilityid)
             ->join("strack_department_users du", "u.user_id=du.user_id AND current_user='1'", 'LEFT')
-            ->join("strack_facility_users fu", "u.user_id=fu.user_id",'INNER')
+            ->join("strack_facility_users fu", "u.user_id=fu.user_id", 'INNER')
             ->join("strack_departments d", "du.department_id=d.department_id");
         $query = $this->db->get();
         $result = $query->result();
         return $result;
     }
 
-    public function  get_User_by_id($userid) {
+    public function get_User_by_id($userid)
+    {
         $this->db->select('u.user_id,u.first_name,u.email,u.last_name,fu.auth_level,d.department_name,')
             ->from('users u')
             ->where('u.user_id', $userid)
@@ -48,28 +50,33 @@ class Setup_model extends MY_Model
         $result = $query->row();
         return $result;
     }
-    public function get_setup_stats($facilityid){
-        $stats['susers']=$this->get_total_stats($facilityid,'strack_facility_users');
-        $stats['sdepartments']=$this->get_total_stats($facilityid,'strack_departments');
-        $stats['sfirms']=$this->get_total_firms($facilityid);
-        $stats['swards']=$this->get_total_stats($facilityid,'strack_facility_wards');
-        $stats['stheatres']=$this->get_total_stats($facilityid,'strack_facility_theatres');
-        $stats['sprocedures']=$this->get_total_stats($facilityid,'strack_facility_procedures');
-        $stats['sstatus']=$this->get_completion_status($facilityid);
+
+    public function get_setup_stats($facilityid)
+    {
+        $stats['susers'] = $this->get_total_stats($facilityid, 'strack_facility_users');
+        $stats['sdepartments'] = $this->get_total_stats($facilityid, 'strack_departments');
+        $stats['sfirms'] = $this->get_total_firms($facilityid);
+        $stats['swards'] = $this->get_total_stats($facilityid, 'strack_facility_wards');
+        $stats['stheatres'] = $this->get_total_stats($facilityid, 'strack_facility_theatres');
+        $stats['sprocedures'] = $this->get_total_stats($facilityid, 'strack_facility_procedures');
+        $stats['sstatus'] = $this->get_completion_status($facilityid);
         return $stats;
     }
 
-    public function get_total_stats($facilityid,$table){
+    public function get_total_stats($facilityid, $table)
+    {
         $this->db->where(array("facility_id" => $facilityid));
         $query = $this->db->get($table);
         if ($query->num_rows() >= 1)
-            return '<span class="badge badge-primary pull-right">'.$query->num_rows().'</span>';
+            return '<span class="badge badge-primary pull-right">' . $query->num_rows() . '</span>';
         else
             return '<span class="badge badge-warning pull-right">0</span>';;
 
     }
-    public function get_completion_status($facilityid){
-        $this->db->where(array("facility_id" => $facilityid,'is_complete'=>'1'));
+
+    public function get_completion_status($facilityid)
+    {
+        $this->db->where(array("facility_id" => $facilityid, 'is_complete' => '1'));
         $query = $this->db->get('strack_facilities_setup');
         if ($query->num_rows() >= 1)
             return '<span class="badge badge-success pull-right">READY</span>';
@@ -78,17 +85,37 @@ class Setup_model extends MY_Model
 
     }
 
-    public function get_total_firms($facilityid){
+    public function get_total_firms($facilityid)
+    {
         $this->db->where(array("d.facility_id" => $facilityid));
         $this->db->select()
             ->from('strack_department_firms f')
             ->join("strack_departments d", "f.department_id=d.department_id");
         $query = $this->db->get();
         if ($query->num_rows() >= 1)
-            return '<span class="badge badge-primary pull-right">'.$query->num_rows().'</span>';
+            return '<span class="badge badge-primary pull-right">' . $query->num_rows() . '</span>';
         else
             return '<span class="badge badge-warning pull-right">0</span>';
 
+    }
+
+    public function get_full_procedure_list()
+    {
+        $this->db->select('*')
+            ->from('procedures');
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+
+    }
+
+    public function get_procedure_groups()
+    {
+        $this->db->select('*')
+            ->from('rplgroups');
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
     }
 
 }

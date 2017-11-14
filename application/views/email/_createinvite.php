@@ -16,7 +16,7 @@ Dear  <?php if (strlen($username) > 0) { ?>Dr. <?php echo $username; ?><br /><?p
                 <big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b><a href="http://app.surgitrack.co.za/auth/login" style="color: #3366cc;">Continue....</a></b></big><br />
                 <br />
                 Link doesn't work? Copy the following link to your browser address bar:<br />
-                <nobr><a href="http://app.surgitrack.co.za/auth/login" style="color: #3366cc;">http://app.surgitrack.co.za/auth/login</a></nobr><br />
+                <nobr><a href="<?=base_url()?>/auth/login" style="color: #3366cc;">http://app.surgitrack.co.za/auth/login</a></nobr><br />
                 <br />
 
                 <br />

@@ -20,7 +20,7 @@ class Booking extends MY_Controller
         $this->load->helper(array('url', 'language', 'form'));
         //$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
         //$this->lang->load('auth');
-        $this->load->model(array('settings_model', 'booking_model', 'patients_model', 'user_model','setup_model'));
+        $this->load->model(array('settings_model', 'booking_model', 'patients_model', 'user_model', 'setup_model'));
 
         $this->pagescripts .= "<!-- Full Calendar -->
 		<script src=\"" . base_url() . "assets/js/plugin/moment/moment.min.js\"></script>
@@ -414,7 +414,7 @@ class Booking extends MY_Controller
     {
         //$this->output->enable_profiler(TRUE);
         //Waiting=0
-        if( in_array( $this->auth_role, ['doctor','nurse'] ) ) {
+        if (in_array($this->auth_role, ['doctor', 'nurse'])) {
             $json = $this->booking_model->get_booking_list_data('', $patient_id);
 
         } else {
@@ -815,7 +815,6 @@ class Booking extends MY_Controller
             // $getfirm_id = $this->user_model->get_users_firm($user_id)->firm_id;
 
             $firm_id = isset($frm) && $frm !== '' ? $frm : '';
-            //$department_id = $this->user_model->get_users_department($user_id)->department_id;
             $json = $this->booking_model->get_procedure_summaries($firm_id);
         }
 
@@ -825,6 +824,13 @@ class Booking extends MY_Controller
     }
 
 
+    public function facility_procedure_summary_data()
+    {
+        $json = $this->booking_model->get_facility_procedures_summaries();
+        $this->output->set_header("Pragma: no-cache");
+        $this->output->set_header("Cache-Control: no-store, no-cache");
+        $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
+    }
 
 
     public function save_booking_mapt()

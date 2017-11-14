@@ -6,9 +6,11 @@
  * Time: 12:15
  */
 
-class Booking_model extends MY_Model {
+class Booking_model extends MY_Model
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
@@ -17,17 +19,20 @@ class Booking_model extends MY_Model {
     // Multi-Attribute Priotitization Tool (MAPT) methods
     //=======================================
 
-    public function mapt_insert($data) {
+    public function mapt_insert($data)
+    {
         $this->db->insert('strack_mapt', $data);
         return $this->db->insert_id();
     }
 
-    public function mapt_criteria_insert($data) {
+    public function mapt_criteria_insert($data)
+    {
         $this->db->insert('strack_mapt_criteria', $data);
         return $this->db->insert_id();
     }
 
-    public function mapt_scores_insert($options, $qid) {
+    public function mapt_scores_insert($options, $qid)
+    {
         foreach ($options as $option) {
             $data['criteria_id'] = $qid;
             $data['score_value'] = $option['score_value'];
@@ -37,16 +42,19 @@ class Booking_model extends MY_Model {
     }
 
 //Save criteria scores
-    private function insert_scores($data) {
+    private function insert_scores($data)
+    {
         $this->db->insert('strack_mapt_criteria_scores', $data);
     }
 
-    public function mapt_formfill_insert($data) {
+    public function mapt_formfill_insert($data)
+    {
         $this->db->insert('strack_mapt_patients_score_instance', $data);
         return $this->db->insert_id();
     }
 
-    public function mapt_formfill_scores_insert($options, $qid) {
+    public function mapt_formfill_scores_insert($options, $qid)
+    {
 
         foreach ($options as $key => $option) {
             $data['mapt_score_id'] = $qid;
@@ -56,12 +64,14 @@ class Booking_model extends MY_Model {
         }
     }
 
-    private function insert_formfill_scores($data) {
+    private function insert_formfill_scores($data)
+    {
         $this->db->insert('strack_mapt_patients_score', $data);
         return $this->db->insert_id();
     }
 
-    public function mapt_list_data($department_id = '') {
+    public function mapt_list_data($department_id = '')
+    {
         if (isset($department_id) && $department_id != null) {
             $this->db->where(array("strack_mapt.department_id" => $department_id));
         }
@@ -75,7 +85,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_mapt_details($mapt_id) {
+    public function get_mapt_details($mapt_id)
+    {
         $this->db->where(array("mapt_id" => $mapt_id));
         $this->db->select('mapt_id,department_name,procedure_name,category_name,mapt_name,keywords,notes')
             ->from('strack_mapt');
@@ -88,7 +99,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_mapt_by_procedure($procedure_id) {
+    public function get_mapt_by_procedure($procedure_id)
+    {
         $this->db->where(array("pr.procedure_id" => $procedure_id));
         $this->db->select('mapt_id,department_name,procedure_name,category_name,mapt_name,keywords,notes')
             ->from('strack_mapt');
@@ -101,7 +113,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_mapt_criteria_details($mapt_id) {
+    public function get_mapt_criteria_details($mapt_id)
+    {
         $this->db->where(array("mapt_id" => $mapt_id));
         $this->db->select('criteria_id,mapt_id,criteria_name,criteria_weight,additional_info')
             ->from('strack_mapt_criteria');
@@ -110,7 +123,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_mapt_criteria_score($criteria_id) {
+    public function get_mapt_criteria_score($criteria_id)
+    {
         $this->db->where(array("criteria_id" => $criteria_id));
         $this->db->select('criteria_id,score_value,score_text,score_id')
             ->from('strack_mapt_criteria_scores');
@@ -119,7 +133,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_mapt_patient_score($mapt_score_id) {
+    public function get_mapt_patient_score($mapt_score_id)
+    {
         $this->db->where(array("in.mapt_score_id" => $mapt_score_id));
         $this->db->select('criteria_name,criteria_weight, cs.score_value,cs.score_text,cs.score_id')
             ->from('strack_mapt_patients_score_instance in ');
@@ -131,7 +146,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_total_mapt_patient_score($mapt_score_id) {
+    public function get_total_mapt_patient_score($mapt_score_id)
+    {
         $this->db->where(array("in.mapt_score_id" => $mapt_score_id));
         $this->db->select('criteria_name,criteria_weight, cs.score_value,cs.score_text,cs.score_id')
             ->from('strack_mapt_patients_score_instance in ');
@@ -148,7 +164,8 @@ class Booking_model extends MY_Model {
         return $totascore;
     }
 
-    public function get_maptDateScores($booking_id) {
+    public function get_maptDateScores($booking_id)
+    {
         $this->db->where(array("booking_id" => $booking_id));
         $this->db->select('*')
             ->from('strack_mapt_patients_score_instance');
@@ -158,7 +175,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_current_maptDateScores($booking_id) {
+    public function get_current_maptDateScores($booking_id)
+    {
         $this->db->where(array("booking_id" => $booking_id));
         $this->db->select('*')
             ->from('strack_mapt_patients_score_instance');
@@ -173,7 +191,8 @@ class Booking_model extends MY_Model {
         return $resultscore;
     }
 
-    public function get_highest_lead_time($procedure_id, $firm_id) {
+    public function get_highest_lead_time($procedure_id, $firm_id)
+    {
         $this->db->where(array("procedure_id" => $procedure_id, "firm_id" => $firm_id));
         $this->db->select('DATEDIFF( date(Now()),date(MIN(b.booking_date))) as leadtime')
             ->from('strack_booking b');
@@ -195,17 +214,19 @@ class Booking_model extends MY_Model {
     //     Case Booking
     //======================================
 
-    public function booking_insert($data) {
+    public function booking_insert($data)
+    {
         $this->db->insert('strack_booking', $data);
         $id = $this->db->insert_id();
-        if (is_numeric($id)&& $id != 0) {
+        if (is_numeric($id) && $id != 0) {
             return $id;
         } else {
             return false;
         }
     }
 
-    public function booking_update($data, $id) {
+    public function booking_update($data, $id)
+    {
         $this->db->where('booking_id', $id);
         $this->db->update('strack_booking', $data);
         if ($this->db->affected_rows() >= 1) {
@@ -215,7 +236,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function booking_procedure_id($id) {
+    public function booking_procedure_id($id)
+    {
         $this->db->where('booking_id', $id);
         $this->db->select('*')
             ->from('strack_booking b');
@@ -227,7 +249,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function surgeon_insert($data) {
+    public function surgeon_insert($data)
+    {
         $this->db->insert('strack_booking_op_surgeon', $data);
         $id = $this->db->insert_id();
         if ($id >= 1) {
@@ -237,7 +260,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function delete_existing_booking_surgeon($id) {
+    public function delete_existing_booking_surgeon($id)
+    {
         $this->db->where('booking_id', $id);
         $this->db->delete('strack_booking_op_surgeon');
         if ($this->db->affected_rows() >= 1) {
@@ -248,7 +272,8 @@ class Booking_model extends MY_Model {
     }
 
     //Updating details of the Surgeon who performed the operation
-    public function surgeon_update($data) {
+    public function surgeon_update($data)
+    {
         $this->db->where('booking_id', $id);
         $this->db->update('strack_booking_op_surgeon', $data);
         if ($this->db->affected_rows() >= 1) {
@@ -258,7 +283,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function check_ifsurgeon_booking_exist($booking_id, $op_user_id) {
+    public function check_ifsurgeon_booking_exist($booking_id, $op_user_id)
+    {
         $this->db->where(array("booking_id" => $booking_id, "op_user_id" => $op_user_id));
         $this->db->select('*')
             ->from('strack_booking_op_surgeon');
@@ -270,7 +296,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function check_if_patient_has_open_booking($procedure_id = '', $patient_id = '') {
+    public function check_if_patient_has_open_booking($procedure_id = '', $patient_id = '')
+    {
         if (isset($procedure_id) && $procedure_id != null) {
             $this->db->where(array("procedure_id" => $procedure_id));
         }
@@ -290,7 +317,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function delete_booking($id) {
+    public function delete_booking($id)
+    {
         $this->db->update('strack_booking b', array('isdeleted' => '1'), array('booking_id' => $id));
         if ($this->db->affected_rows() >= 1) {
             return true;
@@ -299,7 +327,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_user_booked_by($user_id = '') {
+    public function get_user_booked_by($user_id = '')
+    {
         if (isset($user_id) && $user_id != null) {
             $this->db->where(array("users.user_id" => $user_id));
             $this->db->select('CONCAT(users.first_name," ",users.last_name) AS bookedby')
@@ -316,7 +345,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_user_admitted_by($user_id = '') {
+    public function get_user_admitted_by($user_id = '')
+    {
         if (isset($user_id) && $user_id != null) {
             $this->db->where(array("users.user_id" => $user_id));
             $this->db->select('CONCAT(users.first_name," ",users.last_name) AS bookedby')
@@ -333,7 +363,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_user_surgeon_name($booking_id = '', $op_role) {
+    public function get_user_surgeon_name($booking_id = '', $op_role)
+    {
         if (isset($booking_id) && $booking_id != null) {
             $this->db->where(array("strack_booking_op_surgeon.booking_id" => $booking_id, "strack_booking_op_surgeon.op_role" => $op_role));
             $this->db->select('CONCAT(SUBSTRING(users.first_name,1,1)," . ",users.last_name) AS surgeon_name')
@@ -355,7 +386,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_user_surgeon_id($booking_id = '', $op_role) {
+    public function get_user_surgeon_id($booking_id = '', $op_role)
+    {
         if (isset($booking_id) && $booking_id != null) {
             $this->db->where(array("strack_booking_op_surgeon.booking_id" => $booking_id, "strack_booking_op_surgeon.op_role" => $op_role));
             $this->db->select('op_user_id AS surgeon_id')
@@ -387,7 +419,8 @@ class Booking_model extends MY_Model {
      * the time taken to pull data
      */
 
-    public function get_booking_list_data($department_id = '', $patient_id = '', $status = '', $firm_id = '') {
+    public function get_booking_list_data($department_id = '', $patient_id = '', $status = '', $firm_id = '')
+    {
 
         if (isset($firm_id) && $firm_id != null) {
             $this->db->where(array("strack_department_firms.firm_id" => $firm_id));
@@ -437,7 +470,7 @@ class Booking_model extends MY_Model {
         } else {
             $this->db->order_by('b.created_on', 'DESC');
         }
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.isdeleted" => '0'));
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.isdeleted" => '0'));
 
         $this->db->where("b.booking_status != '99'");
         $query = $this->db->get();
@@ -459,7 +492,7 @@ class Booking_model extends MY_Model {
             $mapt['mapt'] = number_format($curr_mapt_scores, 2);
             $mapt['cpscore'] = number_format((($curr_mapt_scores + $weighted_lead) / 2), 2);
 
-            $results = array_merge((array) $res, $mapt);
+            $results = array_merge((array)$res, $mapt);
             array_push($end_res, $results);
         }
         return $end_res;
@@ -467,7 +500,8 @@ class Booking_model extends MY_Model {
 
     //Should optimize the SQL Query
 
-    public function get_booking_list_phone($patient_id = '', $status = '', $firm_id = '') {
+    public function get_booking_list_phone($patient_id = '', $status = '', $firm_id = '')
+    {
 
         if (isset($firm_id) && $firm_id != null) {
             $this->db->where(array("strack_department_firms.firm_id" => $firm_id));
@@ -505,7 +539,7 @@ class Booking_model extends MY_Model {
         if ((isset($status) && $status != null) || $status != '') {
             $this->db->where(array("b.booking_status" => $status));
         }
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.isdeleted" => '0'));
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.isdeleted" => '0'));
         $query = $this->db->get();
         $result = $query->result();
         //echo $this->db->last_query();
@@ -526,20 +560,20 @@ class Booking_model extends MY_Model {
             $mapt['mapt'] = number_format($curr_mapt_scores, 2);
             $mapt['cpscore'] = number_format((($curr_mapt_scores + $weighted_lead) / 2), 2);
 
-            $results = array_merge((array) $res, $mapt);
+            $results = array_merge((array)$res, $mapt);
             array_push($end_res, $results);
         }
         return $end_res;
     }
 
     //Should optimize the SQL Query
-    public function get_caselog_list_data($department_id = '', $patient_id = '', $status = '', $firm_id = '') {
+    public function get_caselog_list_data($department_id = '', $patient_id = '', $status = '', $firm_id = '')
+    {
         if (isset($firm_id) && $firm_id != null) {
             $this->db->where(array("strack_department_firms.firm_id" => $firm_id));
         } elseif (isset($department_id) && $department_id != null) {
             $this->db->where(array("strack_department_firms.department_id" => $department_id));
         }
-
 
 
         if (isset($patient_id) && $patient_id != null) {
@@ -580,7 +614,7 @@ class Booking_model extends MY_Model {
         }
 
 
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.isdeleted" => '0'));
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.isdeleted" => '0'));
         $query = $this->db->get();
 
         $result = $query->result();
@@ -594,14 +628,15 @@ class Booking_model extends MY_Model {
             $mapt['assistant_surgeon'] = $this->get_user_surgeon_name($res->booking_id, 'assistant');
             $mapt['supervisor_surgeon'] = $this->get_user_surgeon_name($res->booking_id, 'supervisor');
 
-            $results = array_merge((array) $res, $mapt);
+            $results = array_merge((array)$res, $mapt);
             array_push($end_res, $results);
         }
         return $end_res;
     }
 
     //Should optimize the SQL Query
-    public function get_log_book_data($user_id = '') {
+    public function get_log_book_data($user_id = '')
+    {
 
         if (isset($user_id) && $user_id != null) {
             $this->db->where(array("strack_booking_op_surgeon.op_user_id" => $user_id));
@@ -640,7 +675,7 @@ class Booking_model extends MY_Model {
         //    $this->db->where(array("b.booking_status" => $status));
         // }
 
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.isdeleted" => '0'));
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.isdeleted" => '0'));
         $query = $this->db->get();
 
         $result = $query->result();
@@ -650,14 +685,15 @@ class Booking_model extends MY_Model {
             $mapt['bookedby'] = $this->get_user_booked_by($res->booked_by);
             $mapt['admittedby'] = $this->get_user_admitted_by($res->admitted_by);
 
-            $results = array_merge((array) $res, $mapt);
+            $results = array_merge((array)$res, $mapt);
             array_push($end_res, $results);
         }
         return $end_res;
     }
 
     //Should optimize the SQL Query
-    public function get_mybooking_data($department_id = '') {
+    public function get_mybooking_data($department_id = '')
+    {
         if (isset($department_id) && $department_id != null) {
             $this->db->where(array("strack_department_firms.department_id" => $department_id));
         }
@@ -672,38 +708,55 @@ class Booking_model extends MY_Model {
         $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_insurance_companies', 'pl.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
 
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.booking_status" => '2'));
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.booking_status" => '2'));
         $query = $this->db->get();
         $result = $query->result();
 
         return $result;
     }
 
-    public function get_procedure_summaries($firm_id = '') {
+    public function get_procedure_summaries($firm_id = '')
+    {
         $firm = '';
-        /* if (isset($department_id) && $department_id != null) {
-          $department = "LEFT JOIN strack_department_firms d ON b.firm_id=d.firm_id AND d.department_id=" . $department_id;
-          } */
+        $firm .= ' WHERE p.department_id=' . $this->auth_departmentid;
 
         if (isset($firm_id) && $firm_id != null) {
-            //$this->db->where('b.firm_id',$firm_id);
-            //$firm='LEFT JOIN strack_department_firms f ON b.firm_id=f.firm_id AND b.firm_id='.$firm_id;
-            $firm = ' WHERE b.firm_id=' . $firm_id;
+            $firm .= ' AND  b.firm_id=' . $firm_id;
         }
+
+
         $query = $this->db->query("SELECT p.procedure_name,p.procedure_id,c.category_name,COUNT(b.booking_id) as waiting 
                                     FROM strack_facility_procedures p
-                                    JOIN strack_facility_procedure_categories c ON p.category_id =c.category_id
-                                    LEFT JOIN strack_booking b ON b.procedure_id =p.`procedure_id` AND  b.booking_status='0'
+                                    LEFT JOIN strack_facility_procedure_categories c ON p.category_id =c.category_id
+                                    LEFT JOIN strack_booking b ON b.procedure_id =p.`procedure_id` AND  (b.booking_status='0' OR b.booking_status='1')
                                    " . $firm . "
                                     Group BY p.procedure_id
                                     ORDER BY waiting DESC");
 
         $result = $query->result();
-        //echo $this->db->last_query();
         return $result;
     }
 
-    public function delete_mapt($id) {
+    public function get_facility_procedures_summaries()
+    {
+        $firm = ' WHERE p.facility_id=' . $this->auth_facilityid;
+
+
+        $query = $this->db->query("SELECT p.procedure_name,p.procedure_id,c.category_name,COUNT(b.booking_id) as waiting 
+                                    FROM strack_facility_procedures p
+                                    LEFT JOIN strack_facility_procedure_categories c ON p.category_id =c.category_id
+                                    LEFT JOIN strack_booking b ON b.procedure_id =p.`procedure_id` AND  (b.booking_status='0' OR b.booking_status='1')
+                                   " . $firm . "
+                                    Group BY p.procedure_id
+                                    ORDER BY waiting DESC");
+
+        $result = $query->result();
+        return $result;
+    }
+
+
+    public function delete_mapt($id)
+    {
         $this->db->where('mapt_id', $id);
         $this->db->delete('strack_mapt');
         if ($this->db->affected_rows() >= 1) {
@@ -713,7 +766,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_mycase_calendar_data($firm_id = "", $department_id = '') {
+    public function get_mycase_calendar_data($firm_id = "", $department_id = '')
+    {
 
         //$url = URL . 'dashboard/calendar/'; CONCAT("' . $url . '","",booking_id) as url
         $url = base_url() . 'booking/theatrelists/?folder_number=';
@@ -734,15 +788,16 @@ class Booking_model extends MY_Model {
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
         $this->db->join('strack_insurance_companies', 'pl.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.booking_status" => '2'));
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.booking_status" => '2'));
         $query = $this->db->get();
         $result = $query->result();
         $datesblocked = $this->get_blocked_surgery_slots();
-        $res = array_merge((array) $result, $datesblocked);
+        $res = array_merge((array)$result, $datesblocked);
         return $res;
     }
 
-    public function get_blocked_surgery_slots() {
+    public function get_blocked_surgery_slots()
+    {
         $status_query = "(
                 CASE 
                     WHEN blocked_type = '0' THEN 'Blocked Day'
@@ -762,10 +817,11 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_mycase_details($booking_id = '') {
+    public function get_mycase_details($booking_id = '')
+    {
 
         if (isset($booking_id) && $booking_id != null) {
-            $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.booking_id" => $booking_id));
+            $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.booking_id" => $booking_id));
 
             $userquery = "IFNULL(b.surgeon_name, CONCAT(SUBSTRING(users.first_name,1,1),'. ',users.last_name)) AS surgeon_name";
 
@@ -794,10 +850,11 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_patient_details_byfolder_number($folder_number = '') {
+    public function get_patient_details_byfolder_number($folder_number = '')
+    {
 
         if (isset($folder_number) && $folder_number != null) {
-            $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"pl.folder_number" => $folder_number));
+            $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "pl.folder_number" => $folder_number));
 
             $this->db->select('IF(gender = "1","Male","Female") AS gender,patient_id,folder_number,surname,other_names,dateofbirth,email,phone,phone2,phone3,'
                 . 'additional_info,pl.insuranceco_id,insuranceco_name,insurance_number,pl.firm_id,CONCAT(ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25), " Years") as age')
@@ -810,10 +867,11 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_patient_id_byfolder_number($folder_number = '') {
+    public function get_patient_id_byfolder_number($folder_number = '')
+    {
 
         if (isset($folder_number) && $folder_number != null) {
-            $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"pl.folder_number" => $folder_number));
+            $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "pl.folder_number" => $folder_number));
 
             $this->db->select('patient_id,folder_number,surname,other_names')
                 ->from('strack_patients_list pl');
@@ -823,10 +881,11 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_patient_details($patient_id = '') {
+    public function get_patient_details($patient_id = '')
+    {
 
         if (isset($patient_id) && $patient_id != null) {
-            $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"pl.patient_id" => $patient_id));
+            $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "pl.patient_id" => $patient_id));
 
             $this->db->select('IF(gender = "1","Male","Female") AS gender,patient_id,folder_number,surname,other_names,dateofbirth,email,phone,phone2,phone3,'
                 . 'additional_info,pl.insuranceco_id,insuranceco_name,insurance_number,pl.firm_id,CONCAT(ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25), " Years") as age')
@@ -839,7 +898,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_patient_booking_details($booking_id) {
+    public function get_patient_booking_details($booking_id)
+    {
         $this->db->select('b.*,pc.category_name')
             ->from('strack_booking b');
         $this->db->join('strack_facility_procedure_categories pc', 'b.category_id=pc.category_id', 'LEFT');
@@ -855,7 +915,8 @@ class Booking_model extends MY_Model {
      * The SMS Module(Series of functionality) should be extended to allow for Feedback from Patients
      */
 
-    public function get_sms_notification($sms_type, $language = '', $surname = '', $admission_date = '', $surgerydate = '') {
+    public function get_sms_notification($sms_type, $language = '', $surname = '', $admission_date = '', $surgerydate = '')
+    {
 
         $sms = $this->prepare_sms($sms_type, $language, $surname, $admission_date, $surgerydate);
         return $sms;
@@ -865,7 +926,8 @@ class Booking_model extends MY_Model {
      * Compose the SMS text based patient's details
      */
 
-    private function prepare_sms($smstemplate, $language = '', $surname, $admission_date = '', $surgerydate = "") {
+    private function prepare_sms($smstemplate, $language = '', $surname, $admission_date = '', $surgerydate = "")
+    {
         $date = date('d-m-Y H:i:s', strtotime("now"));
         if (isset($language) && $language != null) {
             $this->db->where('language_id', $language);
@@ -885,7 +947,7 @@ class Booking_model extends MY_Model {
 
             return $smstemplate;
         } else {
-            return (object) NULL;
+            return (object)NULL;
         }
     }
 
@@ -894,7 +956,8 @@ class Booking_model extends MY_Model {
      *
      */
 
-    public function get_patient_id_by($booking_id) {
+    public function get_patient_id_by($booking_id)
+    {
         $this->db->select('patient_id')
             ->from('strack_booking b');
         $this->db->where(array("b.booking_id" => $booking_id));
@@ -903,7 +966,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function back_to_admission($id) {
+    public function back_to_admission($id)
+    {
         $data = array('booking_status' => '1');
         $this->db->where(array("booking_id" => $id));
         $this->db->update('strack_booking b', $data);
@@ -914,7 +978,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function return_to_waiting($id) {
+    public function return_to_waiting($id)
+    {
         $data = array('booking_status' => '0');
         $this->db->where(array("booking_id" => $id));
         $this->db->update('strack_booking b', $data);
@@ -925,7 +990,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function remove_booking($id) {
+    public function remove_booking($id)
+    {
         $data = array('booking_status' => '99');
         $this->db->where(array("booking_id" => $id));
         $this->db->update('strack_booking b', $data);
@@ -942,7 +1008,8 @@ class Booking_model extends MY_Model {
      *
      */
 
-    public function get_theatre_list($opt, $opt_val, $surgdate) {
+    public function get_theatre_list($opt, $opt_val, $surgdate)
+    {
         $theatrelist = $this->get_theatre_list_data('2', $opt, $opt_val, $surgdate);
         $theatrename = ($opt == 'theatre') ? $this->get_theatre_name($opt_val) : "";
 
@@ -1000,7 +1067,8 @@ class Booking_model extends MY_Model {
         return $header . $theatre;
     }
 
-    public function get_case_log_list($opt, $opt_val) {
+    public function get_case_log_list($opt, $opt_val)
+    {
         $theatrelist = $this->get_theatre_list_data('3', $opt, $opt_val);
         $theatrename = ($opt == 'theatre') ? $this->get_theatre_name($opt_val) : "";
 
@@ -1049,7 +1117,8 @@ class Booking_model extends MY_Model {
         return $theatre;
     }
 
-    public function get_full_theatre_list() {
+    public function get_full_theatre_list()
+    {
         $theatrelist = $this->get_theatre_list_data('2');
 
         $theatre = '<br><br><hr><br><br>';
@@ -1105,7 +1174,8 @@ class Booking_model extends MY_Model {
         return $header . $theatre;
     }
 
-    public function get_theatre_list_data($status = '', $opt = '', $opt_val = '', $surgdate = '', $opt_val2 = '', $opt_val3 = '') {
+    public function get_theatre_list_data($status = '', $opt = '', $opt_val = '', $surgdate = '', $opt_val2 = '', $opt_val3 = '')
+    {
         if (isset($opt) && $opt != null) {
             if ($opt == 'firm') {
                 $this->db->where(array("b.firm_id" => $opt_val));
@@ -1174,14 +1244,15 @@ class Booking_model extends MY_Model {
         if ((isset($status) && $status != null) || $status != '') {
             $this->db->where(array("b.booking_status" => $status));
         }
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid,"b.isdeleted" => '0'));
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.isdeleted" => '0'));
         $query = $this->db->get();
         //echo ($this->db->last_query());
         $result = $query->result();
         return $result;
     }
 
-    public function get_waiting_list($opt = '', $opt_val = '') {
+    public function get_waiting_list($opt = '', $opt_val = '')
+    {
         $theatrelist = $this->get_theatre_list_data('0', $opt, $opt_val);
         $theatrename = ($opt == 'theatre') ? $this->get_theatre_name($opt_val) : "";
 
@@ -1230,7 +1301,8 @@ class Booking_model extends MY_Model {
         return $theatre;
     }
 
-    public function get_admission_list($opt = '', $opt_val = '', $opt_val2 = '', $opt_val3 = '') {
+    public function get_admission_list($opt = '', $opt_val = '', $opt_val2 = '', $opt_val3 = '')
+    {
         $theatrelist = $this->get_theatre_list_data('1', $opt, $opt_val, '', $opt_val2, $opt_val3);
         $theatrename = ($opt == 'theatre') ? $this->get_theatre_name($opt_val) : "";
 
@@ -1293,7 +1365,8 @@ class Booking_model extends MY_Model {
         return $header . $theatre;
     }
 
-    public function get_theatre_name($id) {
+    public function get_theatre_name($id)
+    {
         $this->db->where("theatre_id", $id);
         $q = $this->db->get('strack_facility_theatres t');
         //echo $this->db->last_query();
@@ -1303,7 +1376,8 @@ class Booking_model extends MY_Model {
         return false;
     }
 
-    public function get_firms_name($id) {
+    public function get_firms_name($id)
+    {
         $this->db->where("firm_id", $id);
         $q = $this->db->get('strack_department_firms');
         if ($q->num_rows() > 0) {
@@ -1312,7 +1386,8 @@ class Booking_model extends MY_Model {
         return false;
     }
 
-    public function get_patient_log($patient_id) {
+    public function get_patient_log($patient_id)
+    {
         $this->db->select('CONCAT("<b>",first_name,"</b>"," ",last_name) as user_name,'
             . 'log_action as action,log_info as logdetails,log_date_time  as logtime,log_type')
             ->from('strack_patient_log');
@@ -1320,14 +1395,15 @@ class Booking_model extends MY_Model {
         if ((isset($patient_id) && $patient_id != null) || $patient_id != '') {
             $this->db->where(array("strack_patient_log.patient_id" => $patient_id));
         }
-        $this->db->where(array('pl.facility_id'=>$this->auth_facilityid));
+        //$this->db->where(array('pl.facility_id' => $this->auth_facilityid));
 
         $query = $this->db->get();
         $result = $query->result();
         return $result;
     }
 
-    public function check_patient_exist($folder_number) {
+    public function check_patient_exist($folder_number)
+    {
         $this->db->where("folder_number", $folder_number);
         $this->db->select('*')
             ->from('strack_patients_list pl');
@@ -1336,7 +1412,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function save_opnotes_name($booking_id, $data) {
+    public function save_opnotes_name($booking_id, $data)
+    {
         $this->db->where('booking_id', $booking_id);
         $this->db->update('strack_booking b', $data);
         if ($this->db->affected_rows() >= 1) {
@@ -1346,7 +1423,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_opnotesfile_name($booking_id) {
+    public function get_opnotesfile_name($booking_id)
+    {
         $this->db->where('booking_id', $booking_id);
         $this->db->select('opnotes_file_name,opnotes_dropbox_folder')
             ->from('strack_booking b');
@@ -1355,7 +1433,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function get_dropbox_folder_structure($booking_id) {
+    public function get_dropbox_folder_structure($booking_id)
+    {
         $this->db->where('booking_id', $booking_id);
         $this->db->select('CONCAT("/",facility_name,"/",department_name,"/",firm_name)   as folder_name')
             ->from('strack_booking b')
@@ -1367,7 +1446,8 @@ class Booking_model extends MY_Model {
         return $result;
     }
 
-    public function patients_booking_summary($booking_id) {
+    public function patients_booking_summary($booking_id)
+    {
         $patient_details = $this->get_mycase_details($booking_id);
         $return = '<table width="100%" class="table">';
         $return .= '<tr class="success">'
@@ -1382,7 +1462,8 @@ class Booking_model extends MY_Model {
         return $return;
     }
 
-    public function patients_opnotes_summary($booking_id) {
+    public function patients_opnotes_summary($booking_id)
+    {
         $patient_details = $this->get_mycase_details($booking_id);
         $return = '<table width="100%" class="table">';
         $return .= '<tr class="success">'
@@ -1397,7 +1478,8 @@ class Booking_model extends MY_Model {
         return $return;
     }
 
-    public function coding_booking_procedure_insert($data) {
+    public function coding_booking_procedure_insert($data)
+    {
         $this->db->insert('strack_booking_procedures_done', $data);
         if ($this->db->affected_rows() >= 1) {
             return true;
@@ -1406,7 +1488,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function delete_booking_procedure($procedure_id, $booking_id) {
+    public function delete_booking_procedure($procedure_id, $booking_id)
+    {
         $this->db->where(array('procedure_id' => $procedure_id, 'booking_id' => $booking_id));
         $this->db->delete('strack_booking_procedures_done');
         if ($this->db->affected_rows() >= 1) {
@@ -1416,7 +1499,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function remove_unused_consumable($booking_consumable_id) {
+    public function remove_unused_consumable($booking_consumable_id)
+    {
         $this->db->where(array('booking_consumable_id' => $booking_consumable_id));
         $this->db->delete('strack_booking_consumables');
         if ($this->db->affected_rows() >= 1) {
@@ -1426,7 +1510,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function get_rpl_procedure_consumable($booking_id) {
+    public function get_rpl_procedure_consumable($booking_id)
+    {
         $this->db->where(array("bc.booking_id" => $booking_id));
         $this->db->select('c.*,bc.price,bc.quantity,bc.booking_consumable_id')
             ->from('strack_booking_consumables bc');
@@ -1459,7 +1544,8 @@ class Booking_model extends MY_Model {
         return $return;
     }
 
-    public function get_booking_consumable($booking_id) {
+    public function get_booking_consumable($booking_id)
+    {
         $this->db->where(array("bc.booking_id" => $booking_id));
         $this->db->select('c.*,bc.price,bc.quantity,bc.booking_consumable_id')
             ->from('strack_booking_consumables bc');
@@ -1502,7 +1588,8 @@ class Booking_model extends MY_Model {
         return $return;
     }
 
-    public function get_procedure_consumables($procedure_id) {
+    public function get_procedure_consumables($procedure_id)
+    {
         $this->db->where(array("p.procedure_id" => $procedure_id));
         $this->db->select('n.id,c.*')
             ->from('strack_rpl_consumables n');
@@ -1512,7 +1599,8 @@ class Booking_model extends MY_Model {
         return $query->result();
     }
 
-    public function add_procedure_consumables($data) {
+    public function add_procedure_consumables($data)
+    {
         $this->db->insert('strack_booking_consumables', $data);
         if ($this->db->affected_rows() >= 1) {
             return true;
@@ -1521,7 +1609,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function checkif_booking_has_thisconsumables($booking_id, $consumable_id) {
+    public function checkif_booking_has_thisconsumables($booking_id, $consumable_id)
+    {
         $this->db->where(array("booking_id" => $booking_id, 'consumable_id' => $consumable_id));
         $this->db->select('*')
             ->from('strack_booking_consumables');
@@ -1533,7 +1622,8 @@ class Booking_model extends MY_Model {
         }
     }
 
-    public function update_booking_consumables($data, $booking_id, $consumable_id) {
+    public function update_booking_consumables($data, $booking_id, $consumable_id)
+    {
         $this->db->where(array("booking_id" => $booking_id, 'booking_consumable_id' => $consumable_id));
         $this->db->update('strack_booking_consumables', $data);
         if ($this->db->affected_rows() >= 1) {

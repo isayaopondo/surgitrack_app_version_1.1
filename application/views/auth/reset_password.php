@@ -18,16 +18,18 @@
                 <h1 class="txt-color-red "><span class="login-header-big">SurgiTrack</span>
                 </h1>
                 <h3 class="txt-color-red "> <span class="page-title">
-                        Department of Urology, <br> Tygerberg Hospital
-                    </span></h3>                                                
+                       A Surgical Workflow, <br> System
+                    </span></h3>
                 <div class="hero">
 
                     <div class="pull-left login-desc-box-l">
-                        <h4 class="paragraph-header">It's Okay to be Smart. Experience the simplicity of SurgiTrack, everywhere you go!</h4>
+                        <h4 class="paragraph-header">It's Okay to be Smart. Experience the simplicity of SurgiTrack,
+                            everywhere you go!</h4>
 
                     </div>
 
-                    <img src="<?= base_url() ?>assets/img/demo/iphoneview.png" class="pull-right display-image" alt="" style="width:210px">
+                    <img src="<?= base_url() ?>assets/img/demo/iphoneview.png" class="pull-right display-image" alt=""
+                         style="width:210px">
 
                 </div>
 

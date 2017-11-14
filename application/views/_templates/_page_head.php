@@ -54,29 +54,7 @@
             <!-- END AJAX-DROPDOWN -->
         </div>
 
-        <!-- #PROJECTS: projects dropdown -->
-        <!--<div class="project-context hidden-xs">
 
-            <span class="label">Notification:</span>
-            <span class="project-selector dropdown-toggle" data-toggle="dropdown">Recent Notifications <i class="fa fa-angle-down"></i></span>
--->
-            <!-- Suggestion: populate this list with fetch and push technique -->
-        <!--<ul class="dropdown-menu">
-             <li>
-                 <a href="javascript:void(0);">Online - attaching integration with the </a>
-             </li>
-             <li>
-                 <a href="javascript:void(0);">Notes on pipeline upgradee</a>
-             </li>
-             <li>
-                 <a href="javascript:void(0);">Assesment Report for merchant account</a>
-             </li>
-             <li class="divider"></li>
-             <li>
-                 <a href="javascript:void(0);"><i class="fa fa-power-off"></i> Clear</a>
-             </li>
-         </ul>-->
-         <!-- end dropdown-menu-->
 
         <!-- </div>-->
         <div class="btn-header transparent ">
@@ -135,11 +113,11 @@
                         </li>
                          <li class="divider"></li>
                         <li>
-                            <a href="<?= base_url('theatre/my_logbook') ?>" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-list-ol"></i> <u>M</u>y log book</a>
+                            <a href="<?= base_url('booking/my_logbook') ?>" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-list-ol"></i> <u>M</u>y log book</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="<?= base_url('users/profile') ?>" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-lock"></i> <u>C</u>hange Password</a>
+                            <a href="<?= base_url('users/change_password') ?>" class="padding-10 padding-top-0 padding-bottom-0"> <i class="fa fa-lock"></i> <u>C</u>hange Password</a>
                         </li>
                         
                         <li class="divider"></li>

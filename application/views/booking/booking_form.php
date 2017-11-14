@@ -80,9 +80,11 @@
                                         <select name="procedure" id="procedure">
                                             <option value="0" selected="" disabled="">Procedure</option>
                                             <?php
-                                            foreach ($procedures as $row) {
-                                                $selected = isset($procedures->procedure_id) && $procedures->procedure_id == $row->procedure_id ? 'selected="selected"' : '';
-                                                echo '<option ' . $selected . ' value="' . $row->procedure_id . '">' . $row->procedure_name . '</option>';
+                                            if(!empty($procedures)) {
+                                                foreach ($procedures as $row) {
+                                                    $selected = isset($procedures) && $procedures->procedure_id == $row->procedure_id ? 'selected="selected"' : '';
+                                                    echo '<option ' . $selected . ' value="' . $row->procedure_id . '">' . $row->procedure_name . '</option>';
+                                                }
                                             }
                                             ?>
 
@@ -125,9 +127,11 @@
                                         <select name="theatre">
                                             <option value="0" selected="" disabled="">Theatre</option>
                                             <?php
+                                            if(!empty($theatre)) {
                                             foreach ($theatre as $row) {
-                                                $selected = isset($booking->theatre_id) && $booking->theatre_id == $row->theatre_id ? 'selected="selected"' : '';
+                                                $selected = isset($booking) && $booking->theatre_id == $row->theatre_id ? 'selected="selected"' : '';
                                                 echo '<option ' . $selected . ' value="' . $row->theatre_id . '">' . $row->theatre_name . '</option>';
+                                            }
                                             }
                                             ?>
                                         </select> <i></i> </label>
@@ -138,9 +142,11 @@
                                         <select name="ward">
                                             <option value="0" selected="" disabled="">Ward/Location</option>
                                             <?php
-                                            foreach ($wards as $row) {
-                                                $selected = isset($booking->ward_id) && $booking->ward_id == $row->ward_id ? 'selected="selected"' : '';
-                                                echo '<option ' . $selected . ' value="' . $row->ward_id . '">' . $row->ward_name . '</option>';
+                                            if(!empty($wards)) {
+                                                foreach ($wards as $row) {
+                                                    $selected = isset($booking->ward_id) && $booking->ward_id == $row->ward_id ? 'selected="selected"' : '';
+                                                    echo '<option ' . $selected . ' value="' . $row->ward_id . '">' . $row->ward_name . '</option>';
+                                                }
                                             }
                                             ?>
                                         </select> <i></i> </label>
@@ -154,9 +160,11 @@
                                         <select name="priority">
                                             <option value="0" selected="" disabled="">Priority</option>
                                             <?php
-                                            foreach ($priorities as $row) {
-                                                $selected = isset($priorities->priority_id) && $priorities->priority_id == $row->priority_id ? 'selected="selected"' : ($row->priority_id=='1'?'selected="selected"':'');
-                                                echo '<option ' . $selected . ' value="' . $row->priority_id . '">' . $row->priority_name . '</option>';
+                                            if(!empty($priorities)) {
+                                                foreach ($priorities as $row) {
+                                                    $selected = isset($priorities) && $priorities->priority_id == $row->priority_id ? 'selected="selected"' : ($row->priority_id == '1' ? 'selected="selected"' : '');
+                                                    echo '<option ' . $selected . ' value="' . $row->priority_id . '">' . $row->priority_name . '</option>';
+                                                }
                                             }
                                             ?>
                                         </select> <i></i> </label>
@@ -167,10 +175,13 @@
                                                 <select name="firm" id="booking_firm">
                                                     <option value="0" selected="" disabled="">Firm</option>
                                                     <?php
-                                                    foreach ($firms as $row) {
-                                                        $selected = (isset($booking_details->firm_id) && $booking_details->firm_id == $row->firm_id) || $myfirm == $row->firm_id ? 'selected="selected"' : '';
-                                                        echo '<option ' . $selected . ' value="' . $row->firm_id . '">' . $row->firm_name . '</option>';
+                                                    if(!empty($firms)){
+                                                        foreach ($firms as $row) {
+                                                            $selected = (isset($booking_details) && $booking_details->firm_id == $row->firm_id) || $myfirm == $row->firm_id ? 'selected="selected"' : '';
+                                                            echo '<option ' . $selected . ' value="' . $row->firm_id . '">' . $row->firm_name . '</option>';
+                                                        }
                                                     }
+
                                                     ?>
                                                 </select> <i></i> </label>
                                 </section>
@@ -180,9 +191,11 @@
                                         <select name="duration">
                                             <option value="0" selected="" disabled="">Duration</option>
                                             <?php
-                                            foreach ($slots as $row) {
-                                                $selected = isset($booking_details->slot_id) && $booking_details->slot_id == $row->slot_id ? 'selected="selected"' : '';
-                                                echo '<option ' . $selected . ' value="' . $row->slot_id . '">' . $row->slot_name . '</option>';
+                                            if(!empty($slots)) {
+                                                foreach ($slots as $row) {
+                                                    $selected = isset($booking_details) && $booking_details->slot_id == $row->slot_id ? 'selected="selected"' : '';
+                                                    echo '<option ' . $selected . ' value="' . $row->slot_id . '">' . $row->slot_name . '</option>';
+                                                }
                                             }
                                             ?>
                                         </select> <i></i> </label>
@@ -193,9 +206,11 @@
                                         <select name="booked_by" required="required" id="booked_by" >
                                             <option value="0" selected="" disabled="">Booked By</option>
                                             <?php
-                                            foreach ($bookedby as $row) {
-                                                $selected = (isset($myuserid) && $myuserid == $row->userid ) || $myuserid == $row->userid ? 'selected="selected"' : '';
-                                                echo '<option ' . $selected . ' value="' . $row->userid . '">' . $row->surgeon . '</option>';
+                                            if(!empty($bookedby)) {
+                                                foreach ($bookedby as $row) {
+                                                    $selected = (isset($myuserid) && $myuserid == $row->userid) || $myuserid == $row->userid ? 'selected="selected"' : '';
+                                                    echo '<option ' . $selected . ' value="' . $row->userid . '">' . $row->surgeon . '</option>';
+                                                }
                                             }
                                             ?>
                                         </select> <i></i> </label>

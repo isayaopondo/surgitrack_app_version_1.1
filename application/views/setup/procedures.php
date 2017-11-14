@@ -12,19 +12,7 @@
 
             <!-- Widget ID (each widget will need unique ID)-->
             <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-2" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
-                <!-- widget options:
-                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-                data-widget-colorbutton="false"
-                data-widget-editbutton="false"
-                data-widget-togglebutton="false"
-                data-widget-deletebutton="false"
-                data-widget-fullscreenbutton="false"
-                data-widget-custombutton="false"
-                data-widget-collapsed="true"
-                data-widget-sortable="false"
-
-                -->
                 <header>
                     <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
                     <h2>Add/Edit  Procedure By Department </h2>
@@ -44,7 +32,7 @@
                     <!-- widget content -->
                     <div class="widget-body">
                         <?=$message?>
-                        <form id="procedure-department-form" class="" method="POST" action="<?= base_url('settings/assign_departmental_procedures') ?>"  novalidate="novalidate">
+                        <form id="procedure-department-form" class="" method="POST" action="<?= base_url('setup/assign_setup_procedures') ?>"  novalidate="novalidate">
                             <fieldset>
                                 <div class="form-group">
                                     <label>Department </label>
@@ -54,21 +42,20 @@
                                         <option value="0" selected="" disabled="">Department</option>
                                         <?php
                                         foreach ($departments as $row) {
-                                            $selected = isset($firm->department_id) && $firm->department_id == $row->department_id ? 'selected="selected"' : '';
-                                            echo '<option ' . $selected . ' value="' . $row->department_id . '">' . $row->department_name . '</option>';
+                                            echo '<option  value="' . $row->department_id . '">' . $row->department_name . '</option>';
                                         }
                                         ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Category</label>
-                                    <select class="form-control" name="category" id="procedure_category" style="width:100%">
-                                        <option value="0" selected="" >All Category</option>
+                                    <label>Groups</label>
+                                    <select class="form-control" name="procedure_group" id="procedure_group" style="width:100%">
+                                        <option value="0" selected="" >All Groups</option>
                                         <?php
-                                        foreach ($category as $row) {
-                                            $selected = isset($booking->category_id) && $booking->category_id == $row->category_id ? 'selected="selected"' : '';
-                                            echo '<option ' . $selected . ' value="' . $row->category_id . '">' . $row->category_name . '</option>';
+                                        foreach ($procedure_groups as $row) {
+
+                                            echo '<option  value="' . $row->id . '">' . $row->group_name . '</option>';
                                         }
                                         ?>
 
@@ -80,8 +67,8 @@
                             <select name="procedure_dual[]" id="initializeDuallistbox" multiple="multiple" size="10">
                                 <?php
                                 foreach ($procedures as $row) {
-                                    $selected = isset($rpl_procedures->procedure_id) && $rpl_procedures->procedure_id == $row->procedure_id ? 'selected="selected"' : '';
-                                    echo '<option ' . $selected . ' value="' . $row->procedure_id . '">' . $row->procedure_name . '</option>';
+
+                                    echo '<option  value="' . $row->id . '">' . $row->rpl_code . ': ' . $row->procedure_name . '</option>';
                                 }
                                 ?>
 
@@ -138,7 +125,7 @@
                     <!-- widget content -->
                     <div class="widget-body no-padding">
 
-                        <table id="" class="table table-striped table-bordered" >
+                        <table id="procedure_department" class="table table-striped table-bordered" >
 
                             <thead>
                             <tr>

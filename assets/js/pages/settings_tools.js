@@ -24,6 +24,7 @@ $(document).ready(function () {
     var responsiveHelper_procedure_subgroup = undefined;
     var responsiveHelper_procedure_groups = undefined;
     var responsiveHelper_terminologies_procedures =undefined;
+    var responsiveHelper_procedure_department=undefined;
 
     var breakpointDefinition = {
         tablet: 1024,
@@ -136,7 +137,6 @@ $(document).ready(function () {
         "deferLoading": 57,
         "columns": [
             {"width": "30%", "orderable": true, data: "ward_name"},
-            {"width": "20%", "orderable": false, data: "facility_name"},
             {"width": "20%", "orderable": false, data: "ward_phone"},
             {"width": "20%", "orderable": false, data: "ward_info"},
             {
@@ -217,7 +217,6 @@ $(document).ready(function () {
         "deferLoading": 57,
         "columns": [
             {"width": "30%", "orderable": true, data: "theatre_name"},
-            {"width": "20%", "orderable": false, data: "facility_name"},
             {"width": "20%", "orderable": false, data: "theatre_phone"},
             {"width": "20%", "orderable": false, data: "theatre_info"},
             {
@@ -279,7 +278,6 @@ $(document).ready(function () {
         "deferLoading": 57,
         "columns": [
             {"width": "30%", "orderable": true, data: "department_name"},
-            {"width": "20%", "orderable": false, data: "facility_name"},
             {"width": "20%", "orderable": false, data: "department_phone"},
             {"width": "20%", "orderable": false, data: "department_info"},
             {
@@ -1131,6 +1129,70 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
                 .column($(this).parent().index() + ':visible')
                 .search(this.value)
                 .draw();
+
+    });
+
+
+    var procedure_department = $('#procedure_department').dataTable({
+        "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "autoWidth": true,
+        "oLanguage": {
+            "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+        },
+        "preDrawCallback": function () {
+            // Initialize the responsive datatables helper once.
+            if (!responsiveHelper_procedure_department) {
+                responsiveHelper_procedure_department = new ResponsiveDatatablesHelper($('#procedure_department'), breakpointDefinition);
+            }
+        },
+        "rowCallback": function (nRow) {
+            responsiveHelper_procedure_department.createExpandIcon(nRow);
+        },
+        "drawCallback": function (oSettings) {
+            responsiveHelper_procedure_department.respond();
+        },
+        processing: true,
+        serverSide: false,
+        "iDisplayLength": 5,
+        ajax: {
+            "url": jsonPath + "/settings/procedure_department_data/",
+            "type": "POST"
+        },
+        "deferLoading": 57,
+        "columns": [
+            {"width": "10%", "orderable": false, data: "department_name"},
+            {"width": "10%", "orderable": false, data: "rpl_code"},
+            {"width": "10%", "orderable": false, data: "procedure_name"},
+            {"width": "15%", "orderable": false, data: "service_fee"},
+            {
+                "width": "20%",
+                targets: -1,
+                data: 'procedure_id',
+                render: function (data, type, full, meta) {
+                    return   '<a href="' + jsonPath + '/settings/procedure_subgroups/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+<a href="' + jsonPath + '/settings/delete_procedure_subgroups/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
+                }
+
+            }
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5', 'print'
+        ]
+    });
+
+    // Apply the filter
+    $("#procedure_department thead th input[type=text]").on('keyup change', function () {
+
+        procedure_department
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 

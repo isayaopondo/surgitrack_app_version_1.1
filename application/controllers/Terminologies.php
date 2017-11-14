@@ -21,31 +21,31 @@ class Terminologies extends MY_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->library(array( 'form_validation', 'alerts'));
+        $this->load->library(array('form_validation', 'alerts'));
         $this->load->helper(array('url', 'language'));
 
-        $this->load->model(array('settings_model', 'terminologies_model','setup_model'));
+        $this->load->model(array('settings_model', 'terminologies_model', 'setup_model'));
 
         $this->pagescripts .= "<!-- PAGE RELATED PLUGIN(S) -->";
-        $this->pagescripts .= "<script src=\"" . base_url()  . "assets/js/plugin/datatables/jquery.dataTables.min.js\"></script>
-		<script src=\"" . base_url()  . "assets/js/plugin/datatables/dataTables.colVis.min.js\"></script>
-		<script src=\"" . base_url()  . "assets/js/plugin/datatables/dataTables.tableTools.min.js\"></script>
-		<script src=\"" . base_url()  . "assets/js/plugin/datatables/dataTables.bootstrap.min.js\"></script>
-		<script src=\"" . base_url()  . "assets/js/plugin/datatable-responsive/datatables.responsive.min.js\"></script> 
-                <script src=\"" . base_url()  . "assets/js/bootstrap/bootstrap-colorpicker.js\"></script>
-                <script src=\"" . base_url()  . "assets/js/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js\"></script>
+        $this->pagescripts .= "<script src=\"" . base_url() . "assets/js/plugin/datatables/jquery.dataTables.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatables/dataTables.colVis.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatables/dataTables.tableTools.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatables/dataTables.bootstrap.min.js\"></script>
+		<script src=\"" . base_url() . "assets/js/plugin/datatable-responsive/datatables.responsive.min.js\"></script> 
+                <script src=\"" . base_url() . "assets/js/bootstrap/bootstrap-colorpicker.js\"></script>
+                <script src=\"" . base_url() . "assets/js/plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js\"></script>
                ";
         $this->jree = '
-                    <script src="' . base_url()  . 'assets/js/plugins/jtree/jstree.js"></script> ';
+                    <script src="' . base_url() . 'assets/js/plugins/jtree/jstree.js"></script> ';
         $this->settings_tools = ''
-            . ' <script src="' . base_url()  . 'assets/js/pages/table_tools.js"></script> ';
-        $this->settings_tools = '<script src="' . base_url()  . 'assets/js/pages/filters.js"></script>'
-            . ' <script src="' . base_url()  . 'assets/js/pages/settings_tools.js"></script> ';
+            . ' <script src="' . base_url() . 'assets/js/pages/table_tools.js"></script> ';
+        $this->settings_tools = '<script src="' . base_url() . 'assets/js/pages/filters.js"></script>'
+            . ' <script src="' . base_url() . 'assets/js/pages/settings_tools.js"></script> ';
 
 
         $this->general_tools = '
-                 <script src="' . base_url()  . 'assets/js/pages/general_tools.js"></script> '
-            . '<script src="' . base_url()  . 'assets/js/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>	';
+                 <script src="' . base_url() . 'assets/js/pages/general_tools.js"></script> '
+            . '<script src="' . base_url() . 'assets/js/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>	';
 
         $this->is_logged_in();
         if ($this->require_min_level(1)) {
@@ -101,7 +101,8 @@ class Terminologies extends MY_Controller
 
     }
 
-    public function rpl_codes(){
+    public function rpl_codes()
+    {
         $this->data['departments'] = $this->settings_model->get_departments_list();
         $this->data['procedures'] = $this->settings_model->get_procedure();
         $this->data['category'] = $this->settings_model->get_category();

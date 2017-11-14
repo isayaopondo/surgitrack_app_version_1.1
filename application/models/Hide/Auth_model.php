@@ -38,6 +38,7 @@ class Auth_model extends MY_Model {
             'user_id',
             'banned'
         ];
+
         // User table query
         $query = $this->db->select( $selected_columns )
             ->from( $this->db_table('user_table') )
@@ -145,6 +146,7 @@ class Auth_model extends MY_Model {
             'u.user_id',
             'u.banned'
         ];
+
         $this->db->select( $selected_columns )
             ->from( $this->db_table('user_table') . ' u' )
             ->join( $this->db_table('auth_sessions_table') . ' s', 'u.user_id = s.user_id' )

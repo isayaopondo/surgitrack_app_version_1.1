@@ -89,28 +89,6 @@
                                     <i class="fa fa-print"></i> Print Admission List 
                                 </button>
 
-                                <!--<button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-print"></i> Print Admission List <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#" onclick="print_admission_list();">Full List</a>
-                                    </li>
-                                    <li class="divider"></li>
-
-                                    <li>
-                                        <a href="javascript:void(0);"onclick="firm_admission_list_print();">By Firm</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="javascript:void(0);" onclick="date_admission_list_print();">By Date</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="javascript:void(0);" onclick="multi_admission_list_print();">By Multi-Factor</a>
-                                    </li>
-                                    
-                                </ul>-->
                             </div>
                         </div>
                     </header>
@@ -318,9 +296,12 @@
                                     <select name="firm" id="firm">
                                         <option value="0" selected="" disabled="">Firm</option>
                                         <?php
-                                        foreach ($fdepartment_firms as $row) {
-                                            echo '<option  value="' . $row->firm_id . '">' . $row->firm_name . '</option>';
+                                        if(!empty($fdepartment_firms)){
+                                            foreach ($fdepartment_firms as $row) {
+                                                echo '<option  value="' . $row->firm_id . '">' . $row->firm_name . '</option>';
+                                            }
                                         }
+
                                         ?>
                                     </select> <i></i> </label>
                             </section>
@@ -423,9 +404,12 @@
                                 <label class="select">
                                     <select class="select-multiple" name="firm[]" multiple="multiple" id="firm-2">
                                         <?php
-                                        foreach ($department_firms as $row) {
-                                            echo '<option  value="' . $row->firm_id . '">  ' . $row->firm_name . '</option>';
+                                        if(!empty($department_firms)){
+                                            foreach ($department_firms as $row) {
+                                                echo '<option  value="' . $row->firm_id . '">  ' . $row->firm_name . '</option>';
+                                            }
                                         }
+
                                         ?>
                                     </select> <i></i> </label>
                             </section>

@@ -112,16 +112,16 @@
                                         
                                             <div class="form-group">
                                                 <label>Procedure Groups</label>
-                                                <select class="form-control" name="category" id="procedure_category" style="width:100%">
-                                                    <option value="0" selected="" >All Groups</option>
+                                                <select class="form-control" name="procedure_group" id="procedure_group" style="width:100%">
+                                                    <option value="0" selected="" >All Groups </option>
                                                     <?php
-                                                    foreach ($category as $row) {
-                                                        $selected = isset($booking->category_id) && $booking->category_id == $row->category_id ? 'selected="selected"' : '';
-                                                        echo '<option ' . $selected . ' value="' . $row->category_id . '">' . $row->category_name . '</option>';
+                                                    foreach ($procedure_groups as $row) {
+
+                                                        echo '<option  value="' . $row->id . '">' . $row->group_name . '</option>';
                                                     }
                                                     ?>
 
-                                                </select> 
+                                                </select>
                                             </div>
                                         
                                 </fieldset>
@@ -130,7 +130,7 @@
                                     <?php
                                     foreach ($procedures as $row) {
                                         $selected = isset($rpl_procedures->procedure_id) && $rpl_procedures->procedure_id == $row->procedure_id ? 'selected="selected"' : '';
-                                        echo '<option ' . $selected . ' value="' . $row->procedure_id . '">' . $row->procedure_name . '</option>';
+                                        echo '<option ' . $selected . ' value="' . $row->procedure_id . '">' . $row->rpl_code . ':' . $row->procedure_name . '</option>';
                                     }
                                     ?>
 
@@ -187,7 +187,7 @@
                         <!-- widget content -->
                         <div class="widget-body no-padding">
 
-                            <table id="" class="table table-striped table-bordered" >
+                            <table id="procedure_department" class="table table-striped table-bordered" >
 
                                 <thead>
                                     <tr>

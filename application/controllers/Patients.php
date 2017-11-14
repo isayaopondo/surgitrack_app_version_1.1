@@ -73,7 +73,8 @@ class Patients extends MY_Controller
         $this->general_tools = ''
             . ' <script src="' . base_url() . 'assets/js/plugin/select2/js/select2.js"></script>'
             . ' <script src="' . base_url() . 'assets/js/pages/booking_tools.js"></script> '
-            . ' <script src="' . base_url() . 'assets/js/pages/patients_module_tools.js"></script> ';
+            . ' <script src="' . base_url() . 'assets/js/pages/patients_module_tools.js"></script> 
+                <script src="' . base_url() . 'assets/js/pages/booking_tools.js"></script> ';
     }
 
     public function lists()
@@ -88,7 +89,7 @@ class Patients extends MY_Controller
     public function add_patient($patient_id = '', $booking_id = '')
     {
 
-        if( in_array( $this->auth_role, ['doctor','nurse'] ) ) {
+        if( in_array( $this->auth_role, ['doctor'] ) ) {
             $user_id = $this->auth_user_id;
             $this->data['patient_id'] = $patient_id;
             if (isset($patient_id) && $patient_id != '') {
@@ -103,6 +104,8 @@ class Patients extends MY_Controller
             if (!empty($myfirm)) {
                 $this->data['myfirm'] = $myfirm->firm_id;
             }
+
+
             $department = $this->settings_model->get_mydepartment($this->auth_user_id);
             if (!empty($department)) {
                 $this->data['bookedby'] = $this->settings_model->get_department_users($department->department_id);
@@ -126,7 +129,7 @@ class Patients extends MY_Controller
 
     public function patient_page($patient_id = '', $booking = '')
     {
-        if( in_array( $this->auth_role, ['admin','doctor','nurse'] ) ) {
+        if( in_array( $this->auth_role, ['admin','doctor'] ) ) {
             $this->data['patient_id'] = $patient_id;
             if (isset($patient_id) && $patient_id != '') {
                 $this->data['patient_details'] = $this->patients_model->get_patient_details($patient_id);
@@ -195,6 +198,7 @@ class Patients extends MY_Controller
                 'phone3' => $this->input->post('phone3'),
                 'postal_code' => $this->input->post('postal_code'),
                 'suburb_id' => $this->input->post('suburb'),
+                'facility_id' => $this->auth_facilityid,
                 //'insuranceco_id' => $this->input->post('insurance'),
                 //'insurance_number' => $this->input->post('insurance_number'),
                 'additional_info' => $this->input->post('additional_info'),
@@ -211,7 +215,7 @@ class Patients extends MY_Controller
                 $log_action = 'Patient Registration';
                 $log_info = 'Created new patient on ' . date('Y-m-d H:i:s', strtotime('now'));
                 $this->writelog->patientlog($this->auth_user_id, $patientid, $log_action, $log_info);
-                $this->session->set_flashdata('message', "You have succesifully created a new booking");
+                $this->session->set_flashdata('message', "You have successfully created a new patient");
                 redirect('patients/add_patient/' . $patientid);
             }
         } else {
@@ -224,7 +228,7 @@ class Patients extends MY_Controller
                     $log_info = 'Edited patient details on ' . date('Y-m-d H:i:s', strtotime('now'));
                     $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
-                    $this->session->set_flashdata('message', "You have succesifully Updated '" . $this->input->post('surname') . "' details");
+                    $this->session->set_flashdata('message', "You have successfully Updated Patient: '" . $this->input->post('surname') . "' details");
                     !empty($this->input->post('postal_code')) ? $this->calculate_distance($patient_id) : '';
                     redirect('patients/add_patient/' . $patient_id);
                 }

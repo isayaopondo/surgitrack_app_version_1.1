@@ -17,6 +17,9 @@
                 <h1 class="txt-color-red "><span class="login-header-big">SurgiTrack</span>
                 </h1>
 
+                <h3 class="txt-color-red "> <span class="page-title">
+                       A Surgical Workflow, <br> System
+                    </span></h3>
                 <div class="hero">
 
                     <div class="pull-left login-desc-box-l">

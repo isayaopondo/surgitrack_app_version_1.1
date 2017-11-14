@@ -244,6 +244,117 @@ class Users extends MY_Controller
     }
 
 
+    public function password_change()
+    {
+        $this->load->helper('auth');
+        $this->load->model('Authorization/authorization_model');
+        $this->load->model('Authorization/validation_callables');
+        $this->load->library('form_validation');
+
+        $admin = $this->input->post();
+
+
+        $this->form_validation->set_data($admin);
+
+        $validation_rules = [
+            [
+                'field' => 'old_password',
+                'label' => 'old_password',
+                'rules' => 'required|callback_oldpassword_check',
+                'errors' => [
+                    'required' => 'Current password field is required.'
+                ]
+
+            ],
+
+
+            [
+                'field' => 'new_confirm_password',
+                'label' => 'Confirm password',
+                'rules'   => 'required|matches[new_password]',
+                'errors' => [
+                    'required' => 'Password confirmation don\'t match.'
+                ]
+
+            ],
+            [
+                'field' => 'new_password',
+                'label' => 'New Password',
+                'rules' => [
+                    'trim',
+                    'required',
+                    [
+                        '_check_password_strength',
+                        [$this->validation_callables, '_check_password_strength']
+                    ]
+                ],
+                'errors' => [
+                    'required' => 'The new password field is required.'
+                ]
+            ],
+
+
+        ];
+
+        $this->form_validation->set_rules($validation_rules);
+
+
+        if ($this->form_validation->run()) {
+
+            $password = $this->authentication->hash_passwd($admin['new_password']);
+
+            $modified_at = date('Y-m-d H:i:s');
+
+            //Update password
+            $this->authorization_model->_reset_password($this->auth_user_id,$password);
+            $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-check"></i>
+                                    <strong>Success</strong> Password changed successfully
+                            </div> ');
+            }else{
+            $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa fa-fw  fa-check"></i>
+                                    <strong>Error</strong> Password changed failed.
+                            </div> ');
+        }
+
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
+
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('users/change_password', $this->data, true);
+
+    }
+
+    public function oldpassword_check($old_password){
+        $this->load->helper('auth');
+        $this->load->model('Authorization/authorization_model');
+        $this->load->model('Authorization/validation_callables');
+        $this->load->library('form_validation');
+
+        $old_password_hash = $this->authentication->hash_passwd($old_password);
+        $old_password_db_hash = $this->authorization_model->fetchPasswordHashFromDB($this->auth_user_id)->passwd;
+
+
+        if($this->authentication->check_passwd($old_password_db_hash, $old_password_hash))
+        {
+            $this->form_validation->set_message('oldpassword_check', '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa fa-fw  fa-check"></i>
+                                    <strong>Error</strong> Old password not match.
+                            </div> ');
+            return FALSE;
+        }
+        return TRUE;
+    }
+
     // create a new user
 
     function _get_csrf_nonce()
@@ -555,6 +666,15 @@ class Users extends MY_Controller
 
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('users/audit_trail', $this->data, true);
+    }
+
+    public function change_password()
+    {
+        //_get_csrf_nonce();
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
+
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('users/change_password', $this->data, true);
     }
 
     public function profile()

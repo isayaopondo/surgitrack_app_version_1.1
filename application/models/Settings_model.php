@@ -35,21 +35,22 @@ class Settings_model extends MY_Model
 //        if (isset($facility_id) && $facility_id != null) {
 //            $this->db->where('p.facility_id', $facility_id);
 //        }
-        $this->db->where(array('p.facility_id'=>$this->auth_facilityid,'p.isdeleted' => '1'));
+        $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
         $this->db->select('*')
             ->from('strack_facility_procedures p')
+            ->join('strack_departments d ', 'd.department_id=p.department_id', 'LEFT')
             ->join('strack_facility_procedure_groups pg ', 'pg.group_id=p.group_id', 'LEFT')
             ->join('strack_facility_procedure_categories pc', 'pc.category_id=p.category_id', 'LEFT')
             ->join('strack_facility_procedure_subgroups psg', 'p.subgroup_id=psg.subgroup_id', 'LEFT');
 
-        $this->db->order_by("procedure_name", "asc");
+        $this->db->order_by("p.rpl_code", "asc");
         $query = $this->db->get();
         $result = $query->result();
         return $result;
     }
 
 
-    public function get_procedure($facility_id='',$group = '', $sub_group = '')
+    public function get_procedure($facility_id = '', $group = '', $sub_group = '')
     {
         if (isset($facility_id) && $facility_id != null) {
             $this->db->where('p.facility_id', $facility_id);
@@ -60,7 +61,7 @@ class Settings_model extends MY_Model
         } elseif (isset($sub_group) && $sub_group != null) {
             $this->db->where('p.subgroup_id', $sub_group);
         }
-        $this->db->where(array('p.facility_id'=>$this->auth_facilityid,'p.isdeleted' => '1'));
+        $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
         $this->db->select('*')
             ->from('strack_facility_procedures p')
             ->join('strack_facility_procedure_groups pg', 'pg.group_id=p.group_id', 'LEFT')
@@ -73,12 +74,12 @@ class Settings_model extends MY_Model
         return $result;
     }
 
-    public function get_rplprocedures($facility_id='')
+    public function get_rplprocedures($facility_id = '')
     {
 //        if (isset($facility_id) && $facility_id != null) {
 //            $this->db->where('p.facility_id', $facility_id);
 //        }
-        $this->db->where(array('p.facility_id'=>$this->auth_facilityid,'p.isdeleted' => '1'));
+        $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
         $this->db->select('p.*,c.rpl_code')
             ->from('strack_facility_procedures p')
             ->join('strack_rpl_procedure_codes c', 'c.procedure_id=p.procedure_id', 'LEFT');
@@ -128,14 +129,13 @@ class Settings_model extends MY_Model
         return $result;
     }
 
-    public function ajaxget_by_procedure_category($id)
+    public function ajaxget_by_procedure_groups($id)
     {
         if ($id != '0') {
-            $this->db->where("p.category_id", $id);
+            $this->db->where("p.group_id", $id);
         }
-        $this->db->where(array('p.isdeleted' => '1'));
         $this->db->select('*')
-            ->from('strack_facility_procedures p');
+            ->from('procedures p');
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -143,7 +143,7 @@ class Settings_model extends MY_Model
 
     public function get_procedure_list()
     {
-        $this->db->where(array('p.facility_id'=>$this->auth_facilityid,'p.isdeleted' => '1'));
+        $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
         $this->db->select('procedure_id,procedure_name, procedure_description');
         $this->db->order_by("procedure_name", "asc");
         $this->db->from('strack_facility_procedures p')
@@ -185,16 +185,16 @@ class Settings_model extends MY_Model
     {
 
         $this->db->where(array('procedure_id' => $procedure_id, 'department_id' => $department_id));
-        $q = $this->db->get('strack_department_procedures');
+        $q = $this->db->get('strack_facility_procedures');
         if ($q->num_rows() > 0) {
-            $this->db->update('strack_department_procedures', array('isdeleted' => '0', 'modified' => date('Y-m-d H:i:s', strtotime('now')), 'modified_by' => $deleted_by), array('department_id' => $department_id));
+            $this->db->update('strack_facility_procedures', array('isdeleted' => '0', 'modified' => date('Y-m-d H:i:s', strtotime('now')), 'modified_by' => $deleted_by), array('department_id' => $department_id));
             if ($this->db->affected_rows() >= 1) {
                 return true;
             } else {
                 return false;
             }
         } else {
-            $this->db->insert('strack_department_procedures', $data);
+            $this->db->insert('strack_facility_procedures', $data);
             if ($this->db->affected_rows() >= 1) {
                 return true;
             } else {
@@ -206,7 +206,7 @@ class Settings_model extends MY_Model
     public function procedure_department_update($data, $id)
     {
         $this->db->where('procedure_id', $id);
-        $this->db->update('strack_department_procedures', $data);
+        $this->db->update('strack_facility_procedures', $data);
         if ($this->db->affected_rows() >= 1) {
             return true;
         } else {
@@ -216,12 +216,47 @@ class Settings_model extends MY_Model
 
     public function delete_procedure_department($department_id, $modified_by)
     {
-        $this->db->update('strack_department_procedures', array('isdeleted' => '1', 'deleted_on' => date('Y-m-d H:i:s', strtotime('now')), 'modified_by' => $deleted_by), array('department_id' => $department_id));
+        $this->db->update('strack_facility_procedures', array('isdeleted' => '1', 'deleted_on' => date('Y-m-d H:i:s', strtotime('now')), 'modified_by' => $modified_by), array('department_id' => $department_id));
         if ($this->db->affected_rows() >= 1) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public function reset_procedure_department($department_id, $modified_by)
+    {
+        $this->db->where(array('department_id' => $department_id));
+        $q = $this->db->get('strack_facility_procedures');
+        if ($q->num_rows() > 0) {
+            $this->delete_procedure_department($department_id, $modified_by);
+        }
+        return false;
+    }
+
+    public function get_global_procedure_by_id($id)
+    {
+        $this->db->where("id", $id);
+        $this->db->select('*')
+            ->from('procedures p');
+        $q = $this->db->get();
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function get_procedure_department(){
+
+        $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
+        $this->db->select('*')
+            ->from('strack_facility_procedures p')
+            ->join('strack_departments d ', 'd.department_id=p.department_id', 'LEFT');
+
+        $this->db->order_by("p.rpl_code", "asc");
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
     }
 
     //===================================
@@ -321,7 +356,7 @@ class Settings_model extends MY_Model
     //===================================
     //       CATEGORIES
     //===================================
-    public function get_category($facility_id='')
+    public function get_category($facility_id = '')
     {
         if (isset($facility_id) && $facility_id != null) {
             $this->db->where('facility_id', $facility_id);
@@ -343,7 +378,7 @@ class Settings_model extends MY_Model
         return false;
     }
 
-    public function get_category_list($facility_id='')
+    public function get_category_list($facility_id = '')
     {
         if (isset($facility_id) && $facility_id != null) {
             $this->db->where('facility_id', $facility_id);
@@ -612,7 +647,7 @@ class Settings_model extends MY_Model
     //===================================
     public function get_facility_theatres($facility_id = "")
     {
-        $this->db->where('t.facility_id',$this->auth_facilityid);
+        $this->db->where('t.facility_id', $this->auth_facilityid);
 
         $this->db->select('*')
             ->from('strack_facility_theatres t')
@@ -625,7 +660,7 @@ class Settings_model extends MY_Model
     public function get_theatres($facility_id = '')
     {
 
-        $this->db->where('t.facility_id',$this->auth_facilityid);
+        $this->db->where('t.facility_id', $this->auth_facilityid);
         $this->db->select('*')
             ->from('strack_facility_theatres t')
             ->join('strack_facilities f', 'f.facility_id=t.facility_id', 'LEFT');
@@ -646,7 +681,7 @@ class Settings_model extends MY_Model
 
     public function get_theatres_list($facility_id = '')
     {
-        $this->db->where('facility_id',$this->auth_facilityid);
+        $this->db->where('facility_id', $this->auth_facilityid);
         $this->db->select('theatre_id,theatre_name, theatre_info,facility_id,theatre_phone');
         $this->db->order_by("theatre_name", "asc");
         $this->db->from('strack_facility_theatres');
@@ -700,7 +735,7 @@ class Settings_model extends MY_Model
 
     public function get_wards($facility_id = '')
     {
-        $this->db->where(array('w.facility_id'=>$this->auth_facilityid,'w.isdeleted' => '0'));
+        $this->db->where(array('w.facility_id' => $this->auth_facilityid, 'w.isdeleted' => '0'));
         $this->db->select('*')
             ->from('strack_facility_wards w')
             ->join('strack_facilities f', 'f.facility_id=w.facility_id', 'LEFT');
@@ -721,7 +756,7 @@ class Settings_model extends MY_Model
 
     public function get_wards_list($facility_id = "")
     {
-        $this->db->where(array('facility_id'=>$this->auth_facilityid,'isdeleted' => '0'));
+        $this->db->where(array('facility_id' => $this->auth_facilityid, 'isdeleted' => '0'));
         $this->db->select('ward_id,ward_name, ward_info,facility_id,ward_phone');
         $this->db->order_by("ward_name", "asc");
         $this->db->from('strack_facility_wards');
@@ -800,7 +835,7 @@ class Settings_model extends MY_Model
     //===================================
     public function get_timeslots($facility_id = '')
     {
-       // $this->db->where(array('facility_id'=>$this->auth_facilityid));
+        // $this->db->where(array('facility_id'=>$this->auth_facilityid));
         $this->db->select('*')
             ->from('strack_facility_time_slots');
         $this->db->order_by("slot_value", "asc");
@@ -819,9 +854,9 @@ class Settings_model extends MY_Model
         return false;
     }
 
-    public function get_timeslots_list($facility_id='')
+    public function get_timeslots_list($facility_id = '')
     {
-      //  $this->db->where(array('facility_id'=>$this->auth_facilityid));
+        //  $this->db->where(array('facility_id'=>$this->auth_facilityid));
         $this->db->select('slot_id,slot_name,slot_value');
         $this->db->order_by("slot_value", "asc");
         $this->db->from('strack_facility_time_slots');
@@ -858,7 +893,7 @@ class Settings_model extends MY_Model
     //===================================
     public function get_firms($auth_facilityid)
     {
-        $this->db->where(array('d.facility_id'=>$auth_facilityid));
+        $this->db->where(array('d.facility_id' => $auth_facilityid));
         $this->db->select('*')
             ->from('strack_department_firms f')
             ->join('strack_departments d', 'd.department_id=f.department_id', 'LEFT');
@@ -901,7 +936,7 @@ class Settings_model extends MY_Model
         return $result;
     }
 
-    public function get_all_firms_by_department($department_id='')
+    public function get_all_firms_by_department($department_id = '')
     {
         if (isset($department_id) && $department_id != null && $department_id != '') {
             $this->db->where(array("department_id" => $department_id));
@@ -929,7 +964,7 @@ class Settings_model extends MY_Model
 
     public function get_myfirms_list($user_id)
     {
-        $this->db->where(array('user_id'=> $user_id,'d.facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('user_id' => $user_id, 'd.facility_id' => $this->auth_facilityid));
         $this->db->select('fu.firm_id,firm_name,current_user, firm_info,f.department_id,firm_phone,approved,user_id');
         $this->db->order_by("firm_name", "asc");
         $this->db->from('strack_department_firms_users fu')
@@ -982,7 +1017,7 @@ class Settings_model extends MY_Model
 
     public function get_department_users($department_id)
     {
-        $this->db->where(array('strack_department_users.department_id' => $department_id, 'approved' => '1', 'current_user' => '1'));
+        $this->db->where(array('strack_department_users.department_id' => $department_id,  'current_user' => '1'));
         $this->db->select('DISTINCT(users.user_id) as userid,CONCAT(first_name, " ", last_name) as surgeon');
         $this->db->from('strack_department_users')
             ->join("users", "users.user_id=strack_department_users.user_id");
@@ -994,7 +1029,7 @@ class Settings_model extends MY_Model
 
     public function get_firms_users($firm_id)
     {
-        $this->db->where(array('strack_department_firms_users.firm_id' => $firm_id, 'approved' => '1', 'current_user' => '1'));
+        $this->db->where(array('strack_department_firms_users.firm_id' => $firm_id,  'current_user' => '1'));
         $this->db->select('DISTINCT(users.user_id) as userid,CONCAT(first_name, " ", last_name) as surgeon');
         $this->db->from('strack_department_firms_users')
             ->join("users", "users.user_id=strack_department_firms_users.user_id");
@@ -1047,7 +1082,7 @@ class Settings_model extends MY_Model
     //===================================
     public function get_departments()
     {
-        $this->db->where(array('f.facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('f.facility_id' => $this->auth_facilityid));
         $this->db->select('*')
             ->from('strack_departments d')
             ->join('strack_facilities f', 'f.facility_id=d.facility_id', 'LEFT');
@@ -1094,7 +1129,7 @@ class Settings_model extends MY_Model
 
     public function get_departments_list()
     {
-        $this->db->where(array('facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('facility_id' => $this->auth_facilityid));
         $this->db->select('department_id,department_name,facility_id,department_phone');
         $this->db->order_by("department_name", "asc");
         $this->db->from('strack_departments');
@@ -1105,7 +1140,7 @@ class Settings_model extends MY_Model
 
     public function get_mydepartments_list($user_id)
     {
-        $this->db->where(array('user_id'=> $user_id,'d.facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('user_id' => $user_id, 'd.facility_id' => $this->auth_facilityid));
         $this->db->select('DISTINCT(d.department_id),department_name,f.facility_id,facility_name,department_phone,current_user,approved,user_id');
         $this->db->order_by("department_name", "asc");
         $this->db->from('strack_departments d')
@@ -1138,7 +1173,7 @@ class Settings_model extends MY_Model
             ->join('strack_facilities', 'strack_facilities.facility_id=strack_departments.facility_id', 'LEFT');
         $query = $this->db->get();
         $result = $query->row();
-       return $result;
+        return $result;
     }
 
     public function check_user_has_department($user_id)
@@ -1155,7 +1190,8 @@ class Settings_model extends MY_Model
     }
 
 
-    public function get_myfirm($user_id) {
+    public function get_myfirm($user_id)
+    {
         $this->db->select('*')
             ->from('strack_department_firms_users')
             ->join("strack_department_firms", "strack_department_firms_users.firm_id=strack_department_firms.firm_id", 'LEFT')
@@ -1256,9 +1292,9 @@ class Settings_model extends MY_Model
     //===================================
     //       Insurance Companies
     //===================================
-    public function get_insurance_companies($facility_id='')
+    public function get_insurance_companies($facility_id = '')
     {
-        $this->db->where(array('facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('facility_id' => $this->auth_facilityid));
         $this->db->select('*')
             ->from('strack_insurance_companies');
         $query = $this->db->get();
@@ -1276,9 +1312,9 @@ class Settings_model extends MY_Model
         return false;
     }
 
-    public function get_insurance_companies_list($facility_id='')
+    public function get_insurance_companies_list($facility_id = '')
     {
-        $this->db->where(array('facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('facility_id' => $this->auth_facilityid));
         $this->db->select('insuranceco_id,insuranceco_name, insuranceco_phone,insuranceco_email,created_by');
         $this->db->order_by("insuranceco_name", "asc");
         $this->db->from('strack_insurance_companies');
@@ -1426,7 +1462,7 @@ class Settings_model extends MY_Model
 
     public function get_rpl_procedurecodes()
     {
-        $this->db->where(array('facility_id'=>$this->auth_facilityid));
+        $this->db->where(array('facility_id' => $this->auth_facilityid));
         $this->db->select('*')
             ->from('strack_facility_procedures');
         $query = $this->db->get();
