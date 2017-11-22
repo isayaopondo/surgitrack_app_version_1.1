@@ -92,7 +92,7 @@ class Authorization_model extends MY_Model {
         $this->load->library('form_validation');
 
         // Load form validation rules
-        $this->load->model('examples/validation_callables');
+        $this->load->model('Authorization/validation_callables');
         $this->form_validation->set_rules([
             [
                 'field' => 'passwd',

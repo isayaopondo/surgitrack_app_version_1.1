@@ -377,8 +377,10 @@ class Auth extends MY_Controller
         if ($on_hold = $this->authentication->current_hold_status(TRUE)) {
             $view_data['disabled'] = 1;
         } else {
+            //$this->tokens->match &&
+
             // If the form post looks good
-            if ($this->tokens->match && $this->input->post('email')) {
+            if ( $this->input->post('email')) {
                 if ($user_data = $this->authorization_model->get_recovery_data($this->input->post('email'))) {
                     // Check if user is banned
                     if ($user_data->banned == '1') {
@@ -430,6 +432,7 @@ class Auth extends MY_Controller
                     $view_data['no_match'] = 1;
                 }
             }
+
         }
 
         $this->_render_page('auth/recover_form', (isset($view_data)) ? $view_data : '', false);
@@ -497,15 +500,13 @@ class Auth extends MY_Controller
              * If form submission is attempting to change password
              */
             if ($this->tokens->match) {
-                $this->examples_model->recovery_password_change();
+                $this->authorization_model->recovery_password_change();
             }
         }
 
-        echo $this->load->view('examples/page_header', '', TRUE);
 
-        echo $this->load->view('examples/choose_password_form', $view_data, TRUE);
+        $this->_render_page('auth/choose_password_form', (isset($view_data)) ? $view_data : '', false);
 
-        echo $this->load->view('examples/page_footer', '', TRUE);
     }
 
     // --------------------------------------------------------------
