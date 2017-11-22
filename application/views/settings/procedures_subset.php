@@ -93,13 +93,15 @@
                         <!-- widget content -->
                         <div class="widget-body">
                             <?=$message?>
+                            <div id="message"></div>
+
                             <form id="procedure-department-form" class="" method="POST" action="<?= base_url('settings/assign_departmental_procedures') ?>"  novalidate="novalidate">
                                 <fieldset>
                                     <div class="form-group">
                                                 <label>Department </label>
                                                 <input class="form-control rounded" type="hidden"  id="firm_id" name="firm_id" value="<?= isset($firm->firm_id) ? $firm->firm_id : '' ?>">
 
-                                                <select class="form-control" name="department" style="width:100%">
+                                                <select class="form-control" id="department"  name="department" style="width:100%">
                                                     <option value="0" selected="" disabled="">Department</option>
                                                     <?php
                                                     foreach ($departments as $row) {

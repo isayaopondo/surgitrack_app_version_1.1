@@ -38,7 +38,7 @@
                                     <label>Department </label>
                                     <input class="form-control rounded" type="hidden"  id="firm_id" name="firm_id" value="<?= isset($firm->firm_id) ? $firm->firm_id : '' ?>">
 
-                                    <select class="form-control" name="department" style="width:100%">
+                                    <select class="form-control" id="department" name="department" style="width:100%">
                                         <option value="0" selected="" disabled="">Department</option>
                                         <?php
                                         foreach ($departments as $row) {

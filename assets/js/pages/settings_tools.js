@@ -17,14 +17,14 @@ $(document).ready(function () {
     var responsiveHelper_mapt_list = undefined;
     var responsiveHelper_procedures = undefined;
     var responsiveHelper_category = undefined;
-    var responsiveHelper_nappi_consumables =undefined;    
+    var responsiveHelper_nappi_consumables = undefined;
     var responsiveHelper_insurance = undefined;
     var responsiveHelper_rpl_procedurecodes = undefined;
-    var responsiveHelper_rpl_nappi_codes= undefined;
+    var responsiveHelper_rpl_nappi_codes = undefined;
     var responsiveHelper_procedure_subgroup = undefined;
     var responsiveHelper_procedure_groups = undefined;
-    var responsiveHelper_terminologies_procedures =undefined;
-    var responsiveHelper_procedure_department=undefined;
+    var responsiveHelper_terminologies_procedures = undefined;
+    var responsiveHelper_procedure_department = undefined;
 
     var breakpointDefinition = {
         tablet: 1024,
@@ -32,9 +32,9 @@ $(document).ready(function () {
     };
     var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-                sURLVariables = sPageURL.split('&'),
-                sParameterName,
-                i;
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
 
         for (i = 0; i < sURLVariables.length; i++) {
             sParameterName = sURLVariables[i].split('=');
@@ -47,8 +47,8 @@ $(document).ready(function () {
 
     var facilities = $('#facilitiestable').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -82,7 +82,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'facility_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/facilities/' + data + '"  class=" btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/facilities/' + data + '"  class=" btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_facilities/' + data + '"  class=" btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -101,17 +101,17 @@ $(document).ready(function () {
     $("#facilitiestable thead th input[type=text]").on('keyup change', function () {
 
         facilities
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
 
     var wards = $('#wardstable').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -144,7 +144,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'ward_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/wards/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/wards/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_wards/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -163,17 +163,17 @@ $(document).ready(function () {
     $("#wardstable thead th input[type=text]").on('keyup change', function () {
 
         wards
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
 
     var theatres = $('#theatrestable').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oTableTools": {
             "aButtons": [
@@ -224,7 +224,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'theatre_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/theatres/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/theatres/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_theatres/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -243,16 +243,16 @@ $(document).ready(function () {
     $("#theatrestable thead th input[type=text]").on('keyup change', function () {
 
         theatres
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
     var departments = $('#departmentstable').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -285,7 +285,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'department_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/departments/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/departments/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_departments/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -304,17 +304,17 @@ $(document).ready(function () {
     $("#departmentstable thead th input[type=text]").on('keyup change', function () {
 
         departments
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
 
     var suburbs = $('#suburbstable').DataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -348,7 +348,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'suburb_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/suburbs/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/suburbs/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_suburbs/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -367,16 +367,16 @@ $(document).ready(function () {
     $("#suburbstable thead th input[type=text]").on('keyup change', function () {
 
         suburbs
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
     var firms = $('#firmstable').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -411,7 +411,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'firm_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/firms/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/firms/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_firms/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>\n\
 <button onclick="create_dropbox_folder(' + data + ');"  class="btn btn-primary btn-xs rounded"><i class="fa fa-dropbox"></i></button>';
                 }
@@ -431,16 +431,16 @@ $(document).ready(function () {
     $("#firmstable thead th input[type=text]").on('keyup change', function () {
 
         firms
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
     var mapt_list = $('#mapt_list_table').DataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -465,7 +465,8 @@ $(document).ready(function () {
         },
         "deferLoading": 57,
         "columns": [
-            {"width": "30%",
+            {
+                "width": "30%",
                 "orderable": true,
                 data: "mapt_name",
                 "class": 'mapt-control'
@@ -477,7 +478,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'mapt_id',
                 render: function (data, type, full, meta) {
-                    return   '<button title="Delete MAPT" onclick="delete_mapt(' + data + ');"  class=" btn btn-danger btn-xs rounded"><i class="fa fa-minus"></i></a>\n\
+                    return '<button title="Delete MAPT" onclick="delete_mapt(' + data + ');"  class=" btn btn-danger btn-xs rounded"><i class="fa fa-minus"></i></a>\n\
                               <button title="Add Criteria" onclick="add_mapt_cretaria(' + data + ');"  class=" btn btn-success btn-xs rounded"><i class="fa fa-plus"></i></a>\n\
                               <button title="View Criteria" onclick="preview_mapt_cretaria(' + data + ');"  class=" btn btn-primary btn-xs rounded"><i class="fa fa-search"></i></a>';
                 }
@@ -495,9 +496,9 @@ $(document).ready(function () {
     $("#mapt_list_table thead th input[type=text]").on('keyup change', function () {
 
         mapt_list
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
     });
 
     $('#mapt_list_table tbody').on('click', 'td.mapt-control', function () {
@@ -510,8 +511,8 @@ $(document).ready(function () {
     });
     var procedures = $('#procedures').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -539,7 +540,7 @@ $(document).ready(function () {
             {"width": "10%", "orderable": true, data: "rpl_code"},
             {"width": "10%", "orderable": true, data: "procedure_fullname"},
             {"width": "10%", "orderable": false, data: "procedure_name"},
-             {"width": "10%", "orderable": false, data: "category_name"},
+            {"width": "10%", "orderable": false, data: "category_name"},
             {"width": "15%", "orderable": true, data: "group_name"},
             {"width": "15%", "orderable": true, data: "subgroup_name"},
             {"width": "15%", "orderable": false, data: "service_fee"},
@@ -548,7 +549,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'procedure_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/procedures/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/procedures/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 \n\<a href="' + jsonPath + '/settings/rpl_nappi_consumables/' + data + '"  class="indicatoritem btn btn-primary btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Add/View Consumables"><i class="fa fa-plus"></i></a> \n\
 <button class="btn btn-danger btn-xs rounded" onclick="delete_procedure(' + data + ')"><i class="fa fa-times"></i></button>';
                 }
@@ -568,16 +569,16 @@ $(document).ready(function () {
     $("#procedures thead th input[type=text]").on('keyup change', function () {
 
         procedures
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
-    
-     var terminologies_procedures = $('#terminologies_procedures').dataTable({
+
+    var terminologies_procedures = $('#terminologies_procedures').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -605,11 +606,11 @@ $(document).ready(function () {
             {"width": "10%", "orderable": true, data: "rpl_code"},
             {"width": "10%", "orderable": true, data: "procedure_fullname"},
             {"width": "10%", "orderable": false, data: "procedure_name"},
-             {"width": "10%", "orderable": false, data: "category_name"},
+            {"width": "10%", "orderable": false, data: "category_name"},
             {"width": "15%", "orderable": true, data: "group_name"},
             {"width": "15%", "orderable": true, data: "subgroup_name"},
             {"width": "15%", "orderable": false, data: "service_fee"}
-            
+
         ],
         dom: 'Bfrtip',
         buttons: [
@@ -624,16 +625,16 @@ $(document).ready(function () {
     $("#terminologies_procedures thead th input[type=text]").on('keyup change', function () {
 
         terminologies_procedures
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
     var timeslot = $('#timeslot_table').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         buttons: [
             'copy', 'excel', 'pdf'
@@ -669,7 +670,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'slot_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/timeslots/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/timeslots/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_timeslots/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -682,16 +683,16 @@ $(document).ready(function () {
     $("#timeslot_table thead th input[type=text]").on('keyup change', function () {
 
         timeslot
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
     var surg_category = $('#surg_category').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -724,7 +725,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'category_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/category/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/category/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_category/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -743,16 +744,16 @@ $(document).ready(function () {
     $("#surg_category thead th input[type=text]").on('keyup change', function () {
 
         surg_category
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
-    
+
     var procedure_groups = $('#procedure_groups').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -785,7 +786,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'group_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/procedure_groups/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/procedure_groups/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_procedure_groups/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -804,17 +805,17 @@ $(document).ready(function () {
     $("#procedure_groups thead th input[type=text]").on('keyup change', function () {
 
         procedure_groups
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
-    
-    
+
+
     var procedure_subgroup = $('#procedure_subgroup').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -848,7 +849,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'subgroup_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/procedure_subgroups/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/procedure_subgroups/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_procedure_subgroups/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -867,16 +868,16 @@ $(document).ready(function () {
     $("#procedure_subgroup thead th input[type=text]").on('keyup change', function () {
 
         procedure_subgroup
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
-    
+
     var insurance = $('#insurancetable').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -909,7 +910,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'insuranceco_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/insurance_companies/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/insurance_companies/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_insurance_companies/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -928,18 +929,17 @@ $(document).ready(function () {
     $("#insurancetable thead th input[type=text]").on('keyup change', function () {
 
         insurance
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
 
-
     var nappi_consumables = $('#nappi_consumables').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -975,7 +975,7 @@ $(document).ready(function () {
                 targets: -1,
                 data: 'consumable_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/nappi_consumables/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/nappi_consumables/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_nappi_consumables/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
@@ -994,19 +994,17 @@ $(document).ready(function () {
     $("#nappi_consumables thead th input[type=text]").on('keyup change', function () {
 
         nappi_consumables
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
 
-
-
-var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
+    var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -1032,7 +1030,7 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
         "deferLoading": 57,
         "columns": [
             {"width": "10%", "orderable": false, data: "rpl_code"},
-            {"width": "20%", "orderable": true, data: "procedure_name"},            
+            {"width": "20%", "orderable": true, data: "procedure_name"},
             {"width": "10%", "orderable": false, data: "service_fee"},
             {"width": "20%", "orderable": false, data: "rpl_decsription"},
             {
@@ -1040,7 +1038,7 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
                 targets: -1,
                 data: 'rpl_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/rpl_procedures/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/rpl_procedures/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 <a href="' + jsonPath + '/settings/rpl_nappi_consumables/' + data + '"  class="indicatoritem btn btn-primary btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Add/View Consumables"><i class="fa fa-plus"></i></a> \n\
 <a href="' + jsonPath + '/settings/delete_rpl_procedure/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
@@ -1060,18 +1058,18 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
     $("#rpl_procedurecodes thead th input[type=text]").on('keyup change', function () {
 
         rpl_procedurecodes
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
-    
-    
-     var rpl_id= $('#rpl_id').val();
-     var rpl_nappi_codes = $('#rpl_nappi_codes').dataTable({
+
+
+    var rpl_id = $('#rpl_id').val();
+    var rpl_nappi_codes = $('#rpl_nappi_codes').dataTable({
         "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
         "autoWidth": true,
         "oLanguage": {
             "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -1093,7 +1091,7 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
         ajax: {
             "url": jsonPath + "/settings/rpl_nappi_codes_data/",
             "type": "POST",
-              data: {rpl_id:rpl_id}
+            data: {rpl_id: rpl_id}
         },
         "deferLoading": 57,
         "columns": [
@@ -1108,7 +1106,7 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
                 targets: -1,
                 data: 'id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="#" onclick="remove_rpl_nappi_codes(\'' + data + '\')"  class=" btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
+                    return '<a href="#" onclick="remove_rpl_nappi_codes(\'' + data + '\')"  class=" btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
             }
@@ -1126,9 +1124,9 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
     $("#rpl_nappi_codes thead th input[type=text]").on('keyup change', function () {
 
         rpl_nappi_codes
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
 
     });
 
@@ -1171,8 +1169,8 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
                 targets: -1,
                 data: 'procedure_id',
                 render: function (data, type, full, meta) {
-                    return   '<a href="' + jsonPath + '/settings/procedure_subgroups/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
-<a href="' + jsonPath + '/settings/delete_procedure_subgroups/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
+                    return '<a href="' + jsonPath + '/settings/edit_department_procedure/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+<a href="#" onclick="delete_department_procedure(' + data + ')"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
                 }
 
             }
@@ -1185,8 +1183,6 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
             'pdfHtml5', 'print'
         ]
     });
-
-    // Apply the filter
     $("#procedure_department thead th input[type=text]").on('keyup change', function () {
 
         procedure_department
@@ -1195,6 +1191,74 @@ var rpl_procedurecodes = $('#rpl_procedurecodes').dataTable({
             .draw();
 
     });
+
+    $('#department').on('change', function () {
+        if ($('#procedure_department').length > 0) {
+            var departmentid = $('#department').val();
+
+            $('#procedure_department').DataTable().clear().destroy();
+
+
+            var procedure_department2 = $('#procedure_department').DataTable({
+
+                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
+                "t" +
+                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "autoWidth": true,
+                "bDestroy": true,
+                "iDisplayLength": 10,
+                ajax: {
+                    "url": jsonPath + "/settings/procedure_department_data/",
+                    "type": "POST",
+                    data: {departmentid: departmentid}
+                },
+                "iDisplayLength": 15,
+                "deferLoading": 57,
+                "order": [[2, "desc"]],
+                "columns": [
+                    {"width": "10%", "orderable": false, data: "department_name"},
+                    {"width": "10%", "orderable": false, data: "rpl_code"},
+                    {"width": "10%", "orderable": false, data: "procedure_name"},
+                    {"width": "15%", "orderable": false, data: "service_fee"},
+                    {
+                        "width": "20%",
+                        targets: -1,
+                        data: 'procedure_id',
+                        render: function (data, type, full, meta) {
+                            return '<a href="' + jsonPath + '/settings/edit_department_procedure/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+<a href="#" onclick="delete_department_procedure(' + data + ')"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
+                        }
+
+                    }
+                ],
+                dom: 'Bfrtip'
+            });
+
+            // Apply the filter
+            $("#procedure_department thead th input[type=text]").on('keyup change', function () {
+
+                procedure_department2
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+
+            });
+
+
+
+        }
+
+        $("#procedure_department thead th input[type=text]").on('keyup change', function () {
+
+            procedure_department
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+
+        });
+    });
+    // Apply the filter
+
 
     function view_mapt_cretaria(d) {
         var jsonPath = SurgiTrack.handleBaseURL();

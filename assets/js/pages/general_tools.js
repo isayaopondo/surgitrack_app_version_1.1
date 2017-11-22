@@ -1389,6 +1389,28 @@ function remove_booking_procedure(procedure_id, booking_id) {
     });
 }
 
+function delete_department_procedure(procedure_id) {
+    var jsonPath = SurgiTrack.handleBaseURL();
+    bootbox.confirm({
+        message: "You are about to delete a Procedure, continue?",
+        callback: function (result) {
+            if (result == true) {
+                $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    url: jsonPath + "/settings/delete_department_procedure",
+                    data: {procedure_id: procedure_id},
+                    success: function (data) {
+                        $("#message").html(data.message);
+                        $('#procedure_department').DataTable().ajax.reload();
+                    }
+
+                });
+            }
+        }
+    });
+}
+
 
 
 

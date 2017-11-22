@@ -172,7 +172,7 @@ class Settings_model extends MY_Model
         if ($q->num_rows() > 0) {
             return false;
         } else {
-            $this->db->update('strack_facility_procedures', array('isdeleted' => '0'), array('procedure_id' => $id));
+            $this->db->delete('strack_facility_procedures', array('procedure_id' => $id));
             if ($this->db->affected_rows() >= 1) {
                 return true;
             } else {
@@ -246,9 +246,12 @@ class Settings_model extends MY_Model
         return false;
     }
 
-    public function get_procedure_department(){
+    public function get_procedure_department($departmentid=''){
 
         $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
+        if (isset($departmentid) && $departmentid != null) {
+            $this->db->where('p.department_id', $departmentid);
+        }
         $this->db->select('*')
             ->from('strack_facility_procedures p')
             ->join('strack_departments d ', 'd.department_id=p.department_id', 'LEFT');
@@ -257,6 +260,10 @@ class Settings_model extends MY_Model
         $query = $this->db->get();
         $result = $query->result();
         return $result;
+    }
+
+    public function remove_procedure_department(){
+
     }
 
     //===================================
@@ -431,9 +438,8 @@ class Settings_model extends MY_Model
     public function get_procedure_groups()
     {
         $this->db->select('*')
-            ->from('strack_facility_procedure_groups');
+            ->from('rplgroups');
         $this->db->order_by("group_name", "asc");
-        $this->db->where(array('isdeleted' => '0'));
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -441,8 +447,8 @@ class Settings_model extends MY_Model
 
     public function procedure_groups_by_id($id)
     {
-        $this->db->where("group_id", $id);
-        $q = $this->db->get('strack_facility_procedure_groups');
+        $this->db->where("id", $id);
+        $q = $this->db->get('rplgroups');
         if ($q->num_rows() > 0) {
             return $q->row();
         }
@@ -451,9 +457,9 @@ class Settings_model extends MY_Model
 
     public function procedure_groups_list()
     {
-        $this->db->select('group_id,group_name,group_description');
+        $this->db->select('id,group_name');
         $this->db->order_by("group_name", "asc");
-        $this->db->from('strack_facility_procedure_groups');
+        $this->db->from('rplgroups');
         $this->db->where(array('isdeleted' => '0'));
         $query = $this->db->get();
         $result = $query->result();
@@ -462,7 +468,7 @@ class Settings_model extends MY_Model
 
     function procedure_groups_insert($data)
     {
-        $this->db->insert('strack_facility_procedure_groups', $data);
+        $this->db->insert('rplgroups', $data);
         if ($this->db->affected_rows() >= 1) {
             return true;
         } else {
@@ -472,8 +478,8 @@ class Settings_model extends MY_Model
 
     public function procedure_groups_update($data, $id)
     {
-        $this->db->where('group_id', $id);
-        $this->db->update('strack_facility_procedure_groups', $data);
+        $this->db->where('id', $id);
+        $this->db->update('rplgroups', $data);
         if ($this->db->affected_rows() >= 1) {
             return true;
         } else {
@@ -499,8 +505,7 @@ class Settings_model extends MY_Model
     public function get_procedure_subgroups()
     {
         $this->db->select('*')
-            ->from('strack_facility_procedure_subgroups');
-        $this->db->where(array('isdeleted' => '0'));
+            ->from('rplsubgroups');
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -508,8 +513,8 @@ class Settings_model extends MY_Model
 
     public function procedure_subgroups_by_id($id)
     {
-        $this->db->where("subgroup_id", $id);
-        $q = $this->db->get('strack_facility_procedure_subgroups');
+        $this->db->where("id", $id);
+        $q = $this->db->get('rplsubgroups');
         if ($q->num_rows() > 0) {
             return $q->row();
         }
@@ -518,12 +523,10 @@ class Settings_model extends MY_Model
 
     public function procedure_subgroups_list()
     {
-        $this->db->select('subgroup_id,subgroup_name, subgroup_description,group_name')
-            ->from('strack_facility_procedure_subgroups')
-            ->join('strack_facility_procedure_groups', 'strack_facility_procedure_groups.group_id=strack_facility_procedure_subgroups.group_id', 'LEFT');
-        $this->db->order_by("subgroup_name", "asc");
-
-        $this->db->where(array('strack_facility_procedure_subgroups.isdeleted' => '0'));
+        $this->db->select('rplsubgroups.id,sub_group_name,group_name')
+            ->from('rplsubgroups')
+            ->join('rplgroups', 'rplgroups.id=rplsubgroups.group_id', 'LEFT');
+        $this->db->order_by("sub_group_name", "asc");
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -531,7 +534,7 @@ class Settings_model extends MY_Model
 
     function procedure_subgroups_insert($data)
     {
-        $this->db->insert('strack_facility_procedure_subgroups', $data);
+        $this->db->insert('rplsubgroups', $data);
         if ($this->db->affected_rows() >= 1) {
             return true;
         } else {
@@ -541,8 +544,8 @@ class Settings_model extends MY_Model
 
     public function procedure_subgroups_update($data, $id)
     {
-        $this->db->where('subgroup_id', $id);
-        $this->db->update('strack_facility_procedure_subgroups', $data);
+        $this->db->where('id', $id);
+        $this->db->update('rplsubgroups', $data);
         if ($this->db->affected_rows() >= 1) {
             return true;
         } else {
@@ -553,12 +556,12 @@ class Settings_model extends MY_Model
     function delete_procedure_subgroups($id)
     {
 
-        $this->db->where("subgroup_id", $id);
-        $q = $this->db->get('strack_procedure');
+        $this->db->where("group_id", $id);
+        $q = $this->db->get('strack_facility_procedures');
         if ($q->num_rows() > 0) {
             return 1;
         } else {
-            $this->db->update('strack_facility_procedure_subgroups', array('isdeleted' => '1'), array('subgroup_id' => $id));
+            $this->db->delete('rplsubgroups',  array('id' => $id));
         }
     }
 

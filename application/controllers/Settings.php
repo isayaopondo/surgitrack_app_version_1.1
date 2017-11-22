@@ -178,6 +178,45 @@ class Settings extends MY_Controller
         redirect('settings/procedures');
     }
 
+
+    public function create_facility_procedure(){
+        $this->data['title'] = "Create Procedures";
+        $id = $this->input->post('procedure_id');
+        // validate form input
+
+        $this->form_validation->set_rules('procedure_name', 'Procedure name', 'required');
+        $this->form_validation->set_rules('category', 'Category', 'required');
+        $this->form_validation->set_rules('sub_group_id', 'Sub Group', 'required');
+        $this->form_validation->set_rules('group_id', 'Group', 'required');
+        $this->form_validation->set_rules('procedure_description', 'Procedure description', 'required', 'trim');
+
+
+        if ($this->form_validation->run() == true) {
+
+            $data = array(
+                'alias_name' => $this->input->post('procedure_fullname'),
+                'service_fee' => $this->input->post('service_fee'),
+                'procedure_description' => $this->input->post('procedure_description'),
+                'created_on' => date('Y-m-d H:i:s', strtotime('now')),
+                'created_by' => $this->auth_user_id,
+            );
+        }
+
+        if ($id == 0) {
+            if ($this->form_validation->run() == true && $this->settings_model->procedure_insert($data)) {
+
+                $this->session->set_flashdata('message', "You have succesfully created a new Procedure");
+            }
+        } else {
+            if ($this->form_validation->run() == true && $this->settings_model->procedure_update($data, $id)) {
+
+                $this->session->set_flashdata('message', "you have succesfully Updated '" . $this->input->post('procedure_name') . "' details");
+            }
+        }
+        redirect('settings/procedures');
+
+    }
+
     //delete Procedures
     public function delete_procedure_o()
     {
@@ -204,6 +243,49 @@ class Settings extends MY_Controller
                 'success' => 0);
             echo json_encode($return);
         }
+    }
+
+
+    public function delete_department_procedure()
+    {
+        $procedure_id = $this->input->post('procedure_id');
+        if ($this->settings_model->delete_procedure($procedure_id)) {
+            $return = array('procedure_id' => $procedure_id,
+                'message' => '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Success!</strong> You have succesfully deleted a  procedure
+                            </div',
+                'success' => 1);
+            echo json_encode($return);
+        } else {
+            $return = array('procedure_id' => $procedure_id,
+                'message' => '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Error!</strong> You cannot delete this Procedure as it attached to cases
+                            </div>',
+                'success' => 0);
+            echo json_encode($return);
+        }
+
+
+    }
+
+    public function edit_department_procedure($procedure_id){
+
+        $this->data['procedure'] = $this->settings_model->get_procedure_by_id($procedure_id);
+        $this->data['departments'] = $this->settings_model->get_departments_list();
+        $this->data['category'] = $this->settings_model->get_category();
+        $this->data['procedure_groups'] = $this->settings_model->get_procedure_groups();
+        $this->data['procedure_subgroups'] = $this->settings_model->procedure_subgroups_list();
+        $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('settings/edit_procedures', $this->data, true);
     }
 
     public function assign_departmental_procedures()
@@ -271,7 +353,9 @@ class Settings extends MY_Controller
 
     public function procedure_department_data()
     {
-        $json = $this->settings_model->get_procedure_department($this->auth_facilityid);
+
+        $departmentid = !empty($this->input->post('departmentid'))? $this->input->post('departmentid') : '';
+        $json = $this->settings_model->get_procedure_department($departmentid);
 
         $this->output->set_header("Pragma: no-cache");
         $this->output->set_header("Cache-Control: no-store, no-cache");
