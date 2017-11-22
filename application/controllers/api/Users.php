@@ -16,21 +16,36 @@ class Users extends REST_Controller
     {
         parent::__construct($config);
 
+        $this->_load_dependencies();
+
+
+
+        header('Access-Control-Allow-Origin: *');
+    }
+
+    /**
+     * Load dependencies
+     */
+    private function _load_dependencies()
+    {
         $this->load->database();
+        $this->load->add_package_path(APPPATH . 'third_party/community_auth/');
+        $this->load->database();
+        $this->config->load('db_tables');
         $this->config->load('authentication');
         $this->load->library([
             'session', 'tokens', 'authentication'
         ])->helper([
             'serialization', 'cookie'
-        ])->model('Auth_model');
-        if (config_item('declared_auth_model') != 'Auth_model')
+        ])->model('auth_model');
+        if (config_item('declared_auth_model') != 'auth_model')
             $this->load->model(config_item('declared_auth_model'));
+
         $this->load->model(array('api_model'));
         $this->load->model('Authorization/authorization_model');
         $this->load->model('Authorization/validation_callables');
         $this->load->library('notificationmanager');
         $this->load->helper('password');
-        header('Access-Control-Allow-Origin: *');
     }
 
     public function create_post()
