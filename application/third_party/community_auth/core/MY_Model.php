@@ -185,17 +185,19 @@ class MY_Model extends CI_Model
             ->join($this->db_table('facilities') . ' f', 'u.facility_id = f.facility_id')
             ->where('u.user_id', $user_id)
             ->where('u.current_user', '1')
+            ->limit(1)
             ->get();
 
+        $facilities = $query->row();
+        $department=$this->get_mydefault_department($user_id, $facilities->facility_id);
+        $facl= array_merge($facilities,$department);
 
-        if ($query->num_rows() > 1) {
+       /* if ($query->num_rows() > 1) {
             $facl = $query->result();
 
         } else {
-            $facilities = $query->row();
-            $department=$this->get_mydefault_department($user_id, $facilities->facility_id);
-            $facl= array_merge($facilities,$department);
-        }
+
+        }*/
 
 
         if ($called_during_auth OR $user_id == config_item('auth_user_id'))

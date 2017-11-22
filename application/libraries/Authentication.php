@@ -659,9 +659,9 @@ class Authentication
 
         // For security, force regenerate the session ID
         $sess= $this->CI->session->sess_regenerate(config_item('sess_regenerate_destroy'));
-        $session_id = is_null($sess) ?session_id() : $sess;
+        //$session_id = is_null($sess) ? session_id() : $sess;
 
-
+        $session_id =  session_id();
 
         // Update user record in database
         $this->CI->{$this->auth_model}->login_update(
