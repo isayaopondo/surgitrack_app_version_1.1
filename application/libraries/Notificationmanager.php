@@ -9,6 +9,7 @@ class Notificationmanager {
         $this->CI = & get_instance();
         $this->CI->load->library('gcm');
         $this->CI->load->library('writelog');
+        $this->CI->load->helper('url');
     }
 
     public function sendMessage($sender_type, $sender_id, $sender_name, $sender_photo, $recipient, $message_text, $message_title, $message_type, $message_action = array(), $message_action_code = "") {

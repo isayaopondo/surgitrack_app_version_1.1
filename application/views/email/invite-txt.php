@@ -4,7 +4,7 @@ You are invited to <?php echo $site_name; ?> as Facility Administrator of:
 <?php echo $facilityname; ?>
 To login and setup facility details, please follow this link:
 
-http://app.surgitrack.co.za/login
+<?=base_url()?>
 
 
 Please verify your email within <?php echo $activation_period; ?> hours, otherwise your registration will become invalid and you will have to register again.

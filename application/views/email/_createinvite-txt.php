@@ -7,7 +7,7 @@ You are invited to <?php echo $site_name; ?> as Facility Administrator of:<br />
 <?php echo $facilityname; ?>!
 To login and setup facility details, please follow this link:<br />
 
-<?php echo APP_URL.'/auth/login'; ?>
+<?php echo base_url().'/auth/login'; ?>
 
 
 <?php if (strlen($username) > 0) { ?>
