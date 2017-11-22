@@ -207,7 +207,6 @@ class MY_Model extends CI_Model
 
         if ($called_during_auth OR $user_id == config_item('auth_user_id'))
             $this->facl = $facl;
-
         return $facl;
 
 

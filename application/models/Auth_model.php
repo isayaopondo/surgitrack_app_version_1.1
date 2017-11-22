@@ -205,7 +205,8 @@ class Auth_model extends MY_Model {
 
             if($this->multi_facilities_query( $user_id, TRUE )=='1' && $facility==''){
                 $facl = $this->facilities_query( $user_id, TRUE );
-              $return=  ['facl' => $facl,'auth_level'=>$facl->auth_level,'auth_facilityid'=>'none','auth_facilityname'=>'none','auth_departmentid'=>'none','auth_facilityname'=>'none'] ;
+
+                $return=  ['facl' => $facl,'auth_level'=>$facl->auth_level,'auth_facilityid'=>'none','auth_facilityname'=>'none','auth_departmentid'=>'none','auth_facilityname'=>'none'] ;
             }
             else{
                 if (isset($facility) && $facility != null)

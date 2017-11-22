@@ -454,7 +454,7 @@ class Auth extends MY_Controller
             $view_data['disabled'] = 1;
         } else {
             // Load resources
-            $this->load->model('authorization/authorization_model');
+            $this->load->model('Authorization/authorization_model');
 
             if (
                 /**
