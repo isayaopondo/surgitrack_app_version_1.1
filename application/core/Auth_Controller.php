@@ -447,6 +447,7 @@ class Auth_Controller extends CI_Controller
     protected function check_facility($facility_id = '')
     {
 
+
         // Has user already been authenticated?
         if (!is_null($this->auth_facilityid) && $this->auth_facilityid == $facility_id) {
             return TRUE;

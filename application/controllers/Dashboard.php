@@ -49,7 +49,7 @@ class Dashboard extends MY_Controller
             $this->usergroup = $this->auth_role;
 
             if (config_item('add_facility_check')) {
-                if ($this->multi_facl == '1' && (! empty($this->auth_facilityid) || $this->auth_facilityid=='none')){
+                if ($this->multi_facl == '1' && (empty($this->auth_facilityid) || $this->auth_facilityid=='none')){
                     redirect('auth/facility_toggle', 'refresh');
                 }
                 elseif($this->auth_facilityid=='none'){

@@ -675,7 +675,9 @@ class Auth extends MY_Controller
     public function facility_toggle()
     {
         $this->is_logged_in();
-        $this->data['facilities'] = (array)$this->facl;
+        $auth_model = $this->authentication->auth_model;
+
+        $this->data['facilities'] = $this->{$auth_model}->get_facilities_query($this->auth_user_id);
         $this->data['message'] = (validation_errors() ? validation_errors() : ($this->session->flashdata('message')));
         $this->_render_page('auth/toggle_facilities', $this->data, false);
     }
@@ -683,7 +685,7 @@ class Auth extends MY_Controller
     public function facility_select($facility_id)
     {
         $this->is_logged_in();
-        $this->check_facility($facility_id);
+        $this->toggle_facility($facility_id);
         redirect('dashboard', 'refresh');
     }
 

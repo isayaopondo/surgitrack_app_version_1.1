@@ -177,7 +177,7 @@ class Auth_model extends MY_Model {
             $facl =$this->add_facilities_to_auth_data( $row['user_id'] ,$facility);
 
             $multi_facl=$this->add_multi_facilities_to_auth_data( $row['user_id'] );
- return (object) array_merge( $row, $acl,$facl,$multi_facl );
+            return (object) array_merge( $row, $acl,$facl,$multi_facl );
         }
 
         return FALSE;
@@ -197,6 +197,7 @@ class Auth_model extends MY_Model {
      */
     public function add_facilities_to_auth_data( $user_id ,$facility='')
     {
+
         $facl= [];
 
         // Add FACL query check only if turned on in authentication config
@@ -209,8 +210,9 @@ class Auth_model extends MY_Model {
                 $return=  ['facl' => $facl,'auth_level'=>$facl->auth_level,'auth_facilityid'=>'none','auth_facilityname'=>'none','auth_departmentid'=>'none','auth_facilityname'=>'none'] ;
             }
             else{
-                if (isset($facility) && $facility != null)
+                if (isset($facility) && $facility != null){
                     $facl = $this->facilities_query( $user_id, TRUE ,$facility);
+                }
                 else
                     $facl = $this->facilities_query( $user_id, TRUE );
 
@@ -662,6 +664,31 @@ class Auth_model extends MY_Model {
 				WHERE modified_at < CURDATE() - INTERVAL ' . config_item('sess_expiration') . ' SECOND
 			');
         }
+    }
+
+    public function get_facilities_query($user_id)
+    {
+        $facl = [];
+        // Selected user table data
+        $selected_columns = [
+            'u.facility_id',
+            'f.facility_name',
+            'u.auth_level',
+        ];
+
+        $query = $this->db->select($selected_columns)
+            ->from($this->db_table('facility_users') . ' u')
+            ->join($this->db_table('facilities') . ' f', 'u.facility_id = f.facility_id')
+            ->where('u.user_id', $user_id)
+            ->where('u.current_user', '1')
+            ->get();
+
+
+        $facl = $query->result();
+
+        return $facl;
+
+
     }
 
     // -----------------------------------------------------------------------
