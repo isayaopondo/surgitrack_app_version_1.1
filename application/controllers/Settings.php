@@ -127,11 +127,7 @@ class Settings extends MY_Controller
         echo json_encode($this->settings_model->ajaxget_category_by_procedureid($id));
     }
 
-    public function ajaxget_by_procedure_groups()
-    {
-        $id = $this->input->post('proceduregroup');
-        echo json_encode($this->settings_model->ajaxget_by_procedure_groups($id));
-    }
+
 
     //Add_edit Christian Union
     public function create_procedure()
@@ -1798,6 +1794,12 @@ class Settings extends MY_Controller
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('settings/procedures_subset', $this->data, true);
+    }
+
+    public function ajaxget_by_procedure_groups()
+    {
+        $id = $this->input->post('proceduregroup');
+        echo $this->setup_model->procedures_by_groups($id);
     }
 
 }

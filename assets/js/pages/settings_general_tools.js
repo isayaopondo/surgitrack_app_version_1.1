@@ -20,8 +20,7 @@ $(document).ready(function () {
                 url: jsonPath + "/settings/ajaxget_department_firms/",
                 data: {department_id: $(this).val()},
                 success: function (data) {
-                    for (var i = 0; i < data.length; i++)
-                    {
+                    for (var i = 0; i < data.length; i++) {
                         $("<option />").val(data[i].firm_id)
                             .text(data[i].firm_name)
                             .appendTo($('select#user_firm'));
@@ -33,6 +32,30 @@ $(document).ready(function () {
 
     });
 
+
+    if ($('#procedure_group3').length > 0) {
+        $('select#procedure_groupss').html('');
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: "http://accounts.surgitrack.co.za/api/v1/groups",
+            success: function (data) {
+                alert(data.length);
+                for (var i = 0; i < data.length; i++) {
+                    $("<option />").val(data[i].id)
+                        .text(data[i].group_name)
+                        .appendTo($('select#procedure_group'));
+                }
+            }
+
+        });
+
+
+    }
+
+
+
+
     $('#procedure_dual').bootstrapDualListbox({
         selectedListLabel: 'Selected',
         preserveSelectionOnMove: 'moved',
@@ -43,24 +66,23 @@ $(document).ready(function () {
         selectedListLabel: 'Selected',
         preserveSelectionOnMove: 'moved',
         moveOnSelect: true,
-        setRemoveAllLabel:true,
-        bootstrap2compatible : true
+        setRemoveAllLabel: true,
+        bootstrap2compatible: true
         //nonSelectedFilter: 'ion ([7-9]|[1][0-2])'
     });
 
     $('#procedure_group').on('change', function () {
         if ($('#initializeDuallistbox').length > 0) {
-           $('#initializeDuallistbox').empty();
+            $('#initializeDuallistbox').empty();
             $.ajax({
                 type: "POST",
                 dataType: 'json',
                 url: jsonPath + "/settings/ajaxget_by_procedure_groups/",
                 data: {proceduregroup: $(this).val()},
                 success: function (data) {
-                    for (var i = 0; i < data.length; i++)
-                    {
-                        initializeDuallistbox.append('<option value="' + data[i].id + '" selected>'+ data[i].rpl_code + ': ' + data[i].procedure_name + '</option>');
-                        initializeDuallistbox.bootstrapDualListbox('setRemoveSelectedLabel',data[i].id);
+                    for (var i = 0; i < data.length; i++) {
+                        initializeDuallistbox.append('<option value="' + data[i].id + '" selected>' + data[i].rpl_code + ': ' + data[i].procedure_name + '</option>');
+                        initializeDuallistbox.bootstrapDualListbox('setRemoveSelectedLabel', data[i].id);
                     }
                     initializeDuallistbox.bootstrapDualListbox('refresh', true);
                 }

@@ -169,4 +169,6 @@ defined('SYSTEM_NAME') or define('SYSTEM_NAME', 'SurgiTrack ');
 
 defined('NOREPLY') or define('NOREPLY', 'noreply@surgitrack.co.za');
 
-defined('APP_URL')or define('APP_URL', 'https://app.surgitrack.co.za');
+defined('APP_URL')or define('APP_URL', 'http://app.surgitrack.co.za');
+
+defined('ACCOUNTS_URL')or define('ACCOUNTS_URL', 'http://accounts.surgitrack.co.za');

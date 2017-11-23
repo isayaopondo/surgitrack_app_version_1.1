@@ -98,12 +98,14 @@
                             <form id="procedure-department-form" class="" method="POST" action="<?= base_url('settings/assign_departmental_procedures') ?>"  novalidate="novalidate">
                                 <fieldset>
                                     <div class="form-group">
+
                                                 <label>Department </label>
                                                 <input class="form-control rounded" type="hidden"  id="firm_id" name="firm_id" value="<?= isset($firm->firm_id) ? $firm->firm_id : '' ?>">
 
                                                 <select class="form-control" id="department"  name="department" style="width:100%">
                                                     <option value="0" selected="" disabled="">Department</option>
                                                     <?php
+
                                                     foreach ($departments as $row) {
                                                         $selected = isset($firm->department_id) && $firm->department_id == $row->department_id ? 'selected="selected"' : '';
                                                         echo '<option ' . $selected . ' value="' . $row->department_id . '">' . $row->department_name . '</option>';
@@ -119,20 +121,26 @@
                                                     <?php
                                                     foreach ($procedure_groups as $row) {
 
-                                                        echo '<option  value="' . $row->id . '">' . $row->group_name . '</option>';
+                                                    echo '<option ' . $selected . ' value="' . $row->id . '">' . $row->group_name . '</option>';
                                                     }
                                                     ?>
 
                                                 </select>
                                             </div>
+                                    <?php
+                                    /*foreach ($procedure_groups as $row) {
+
+                                        echo '<option  value="' . $row->id . '">' . $row->group_name . '</option>';
+                                    }*/
+                                    ?>
                                         
                                 </fieldset>
 
                                 <select name="procedure_dual[]" id="initializeDuallistbox" multiple="multiple" size="10">
                                     <?php
                                     foreach ($procedures as $row) {
-                                        $selected = isset($rpl_procedures->procedure_id) && $rpl_procedures->procedure_id == $row->procedure_id ? 'selected="selected"' : '';
-                                        echo '<option ' . $selected . ' value="' . $row->procedure_id . '">' . $row->rpl_code . ':' . $row->procedure_name . '</option>';
+                                        $selected = isset($rpl_procedures->procedure_id) && $rpl_procedures->procedure_id == $row->id ? 'selected="selected"' : '';
+                                        echo '<option ' . $selected . ' value="' . $row->id . '">' . $row->rpl_code . ':' . $row->procedure_name . '</option>';
                                     }
                                     ?>
 

@@ -83,9 +83,8 @@ class Auth_model extends MY_Model {
 
         $this->db->where( 'user_id' , $user_id )
             ->update( $this->db_table('user_table') , $data );
-
         $data = [
-            'id'         => $session_id,
+            'id'         => is_null($session_id) ? $this->session->session_id : $session_id,
             'user_id'    => $user_id,
             'login_time' => $login_time,
             'ip_address' => $this->input->ip_address(),

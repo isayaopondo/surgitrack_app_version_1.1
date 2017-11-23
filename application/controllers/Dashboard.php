@@ -23,6 +23,7 @@ class Dashboard extends MY_Controller
     {
         parent::__construct();
 
+
         // Force SSL
         //$this->force_ssl();
 

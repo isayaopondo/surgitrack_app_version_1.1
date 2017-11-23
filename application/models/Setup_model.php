@@ -101,21 +101,56 @@ class Setup_model extends MY_Model
 
     public function get_full_procedure_list()
     {
-        $this->db->select('*')
-            ->from('procedures');
-        $query = $this->db->get();
-        $result = $query->result();
-        return $result;
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => ACCOUNTS_URL.'/api/v1/procedures'
+        ));
+        // Send the request & save response to $resp
+        $procedures = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return json_decode($procedures) ;
 
     }
 
     public function get_procedure_groups()
     {
-        $this->db->select('*')
-            ->from('rplgroups');
-        $query = $this->db->get();
-        $result = $query->result();
-        return $result;
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => ACCOUNTS_URL.'/api/v1/groups'
+        ));
+        // Send the request & save response to $resp
+        $procedures = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return json_decode($procedures) ;
     }
+
+    public function procedures_by_groups($group_id)
+    {
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => ACCOUNTS_URL.'/api/v1/procedures/groups/'.$group_id
+        ));
+        // Send the request & save response to $resp
+        $procedures = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return $procedures ;
+    }
+
+
 
 }
