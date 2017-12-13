@@ -57,7 +57,6 @@ class BulkSMS {
          * despite what the PHP documentation suggests: cUrl will turn it into in a
          * multipart formpost, which is not supported:
          */
-        die( var_dump(curl_version()));
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -69,10 +68,8 @@ class BulkSMS {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
 
         $response_string = curl_exec($ch);
-        die(var_dump($response_string));
        
         $curl_info = curl_getinfo($ch);
- die(var_dump($curl_info));
         $sms_result = array();
         $sms_result['success'] = 0;
         $sms_result['details'] = '';
@@ -257,10 +254,8 @@ class BulkSMS {
     public function testCurl() {
 
         if (in_array('curl', get_loaded_extensions())) {
-            die('CURL');
             //return true;
         } else {
-            die('No CURL');
             //return false;
         }
     }
