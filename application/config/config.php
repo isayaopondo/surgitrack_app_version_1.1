@@ -1,5 +1,5 @@
 <?php
-$config['version'] = '0.1.3';
+$config['version'] = '0.1.4';
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
