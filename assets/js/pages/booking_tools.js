@@ -227,6 +227,139 @@ $(document).ready(function () {
         });
     });
 
+    $('#send_dropbox').on('click', function () {
+        var d = $('#booking_id').val();
+        bootbox.confirm({
+            message: "You are about to send the notes to Dropbox, continue?",
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: jsonPath + "/booking/send_opnotes_dropbox",
+                        data: {booking_id: d},
+                        success: function (data) {
+                            $("#message").text(data.message);
+                        }
+
+                    });
+                }
+            }
+        });
+    });
+    $('#sendadmissionsms').on('click', function () {
+
+        bootbox.confirm({
+            message: "You are about to send SMS Notification, continue?",
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        dataType: 'json',
+                        type: "POST",
+                        url: jsonPath + "/booking/send_admission_sms",
+                        data: $('#send-admission-sms').serialize(),
+                        beforeSend: function () {
+                            $("#listsq").css("background", "#FFF url(" + jsonPath + "/assets/img/ajax-loader.gif) no-repeat 165px");
+                        },
+                        success: function (data) {
+                            $(".modal-body #message").html('');
+                            $('.modal-body #alertMessage').show();
+                            $(".modal-body #message").html(data.message);
+                            $('.modal-body #send-admission-sms')[0].reset();
+
+                            bootbox.confirm({
+                                message: data.message,
+                                callback: function (result) {
+                                    if (result == true) {
+                                        $('#myModalAdmissionSMS').modal('hide');
+                                    }
+                                }
+                            });
+
+
+                        }
+                    });
+                }
+            }
+        });
+    });
+    $('#send_generalsms').on('click', function () {
+        var folder_number = $('#folder_number').val();
+        $('#myModalSendGeneralSMS').modal('show');
+        $.ajax({
+            type: "POST",
+            url: jsonPath + "/patients/patients_details_by_foldernumber",
+            data: {folder_number: folder_number},
+            success: function (data) {
+                $(".modal-body #patient_details").html(data);
+            }
+
+        });
+    });
+
+    $('#send_generalsms_patient').on('click', function () {
+        var folder_number = $('#folder_number_patient').val();
+        $('#myModalSendGeneralSMS').modal('show');
+        $.ajax({
+            type: "POST",
+            url: jsonPath + "/patients/patients_details_by_foldernumber",
+            data: {folder_number: folder_number},
+            success: function (data) {
+                $(".modal-body #patient_details").html(data);
+            }
+
+        });
+    });
+    $('#send_sms_general').on('click', function () {
+        bootbox.confirm({
+            message: "You are about to send SMS, continue?",
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        dataType: 'json',
+                        type: "POST",
+                        url: jsonPath + "/booking/send_general_sms",
+                        data: $('#sendgeneralsms').serialize(),
+                        beforeSend: function () {
+                            $("#listsq").css("background", "#FFF url(" + jsonPath + "/assets/img/ajax-loader.gif) no-repeat 165px");
+                        },
+                        success: function (data) {
+                            $("#message").html('');
+                            $('#alertMessage').show();
+                            $("#message").html(data.message);
+                            $('#send_generalsms')[0].reset();
+                            bootbox.confirm({
+                                message: data.message,
+                                callback: function (result) {
+                                    if (result == true) {
+                                        $('#myModalSendGeneralSMS').modal('hide');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    });
+    $("#search_text").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: jsonPath + "/patients/search_patient",
+                dataType: "jsonp",
+                data: {
+                    term: request.term
+                },
+                success: function (data) {
+                    response(data);
+                }
+            });
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            log("Selected: " + ui.item.value + " aka " + ui.item.id);
+        }
+    });
+
 });
 
 function check_user_department() {
@@ -422,7 +555,7 @@ function opnotes_drobox(d) {
             if (result == true) {
                 $.ajax({
                     type: "POST",
-                    url: jsonPath + "/theatre/send_opnotes_dropbox",
+                    url: jsonPath + "/booking/send_opnotes_dropbox",
                     data: {booking_id: d},
                     success: function (data) {
                         $("#message").text(data.message);
@@ -479,7 +612,7 @@ function delete_mapt(d) {
                 $.ajax({
                     dataType: 'json',
                     type: "POST",
-                    url: jsonPath + "/theatre/delete_mapt",
+                    url: jsonPath + "/booking/delete_mapt",
                     data: {mapt_id: d},
                     success: function (data) {
                         $("#message").text(data.message);
@@ -501,7 +634,7 @@ function remove_booking_procedure(procedure_id, booking_id) {
                 $.ajax({
                     dataType: 'json',
                     type: "POST",
-                    url: jsonPath + "/theatre/remove_booking_procedure",
+                    url: jsonPath + "/booking/remove_booking_procedure",
                     data: {procedure_id: procedure_id, booking_id: booking_id},
                     success: function (data) {
                         $("#message").html(data.message);
@@ -518,13 +651,13 @@ function remove_booking_procedure(procedure_id, booking_id) {
 function add_procedure_consumables(procedure_id, booking_id) {
     var jsonPath = SurgiTrack.handleBaseURL();
     bootbox.confirm({
-        message: "You are about to add Counsumables associated with this Procedure, continue?",
+        message: "You are about to add Consumables associated with this Procedure, continue?",
         callback: function (result) {
             if (result == true) {
                 $.ajax({
                     type: "POST",
                     dataType: 'json',
-                    url: jsonPath + "/theatre/add_procedure_consumables",
+                    url: jsonPath + "/booking/add_procedure_consumables",
                     data: {procedure_id: procedure_id, booking_id: booking_id},
                     success: function (data) {
                         $("#message").html(data.message);
@@ -593,7 +726,7 @@ function remove_unused_consumable(d, e) {
                 $.ajax({
                     dataType: 'json',
                     type: "POST",
-                    url: jsonPath + "/theatre/remove_unused_consumable",
+                    url: jsonPath + "/booking/remove_unused_consumable",
                     data: {booking_consumable_id: d, booking_id: e},
                     success: function (data) {
                         $("#message").html(data.message);
@@ -770,7 +903,7 @@ function back_to_admission(d) {
             if (result == true) {
                 $.ajax({
                     type: "POST",
-                    url: jsonPath + "/theatre/back_to_admission",
+                    url: jsonPath + "/booking/back_to_admission",
                     data: {booking_id: d},
                     success: function (data) {
                         refresh();
@@ -790,7 +923,7 @@ function back_to_waiting(d) {
             if (result == true) {
                 $.ajax({
                     type: "POST",
-                    url: jsonPath + "/theatre/back_to_waiting",
+                    url: jsonPath + "/booking/back_to_waiting",
                     data: {booking_id: d},
                     success: function (data) {
                         refresh();
@@ -810,7 +943,7 @@ function remove_booking(d) {
             if (result == true) {
                 $.ajax({
                     type: "POST",
-                    url: jsonPath + "/theatre/remove_booking",
+                    url: jsonPath + "/booking/remove_booking",
                     data: {booking_id: d},
                     success: function (data) {
                         refresh();
@@ -964,7 +1097,7 @@ function print_theatre_list(d) {
         callback: function (result) {
             if (result == true) {
                 // window.location.href=jsonPath + "/theatre/print_theatre_list";
-                window.open(jsonPath + "/theatre/print_full_theatre_list", '_blank');
+                window.open(jsonPath + "/booking/print_full_theatre_list", '_blank');
             }
         }
     });
@@ -985,7 +1118,7 @@ function print_waiting_list() {
         callback: function (result) {
             if (result == true) {
                 // window.location.href=jsonPath + "/theatre/print_theatre_list";
-                window.open(jsonPath + "/theatre/print_waiting_list", '_blank');
+                window.open(jsonPath + "/booking/print_waiting_list", '_blank');
             }
         }
     });
@@ -1022,7 +1155,7 @@ function print_admission_list() {
         message: "Generating Current Admission list, continue?",
         callback: function (result) {
             if (result == true) {
-                window.open(jsonPath + "/theatre/print_admission_list", '_blank');
+                window.open(jsonPath + "/booking/print_admission_list", '_blank');
             }
         }
     });
