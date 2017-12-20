@@ -18,7 +18,7 @@ function filter_list_firm(cat, d) {
             "iDisplayLength": 15,
             ajax:
                     {
-                        "url": jsonPath + "/theatre/mywaiting_list_data/",
+                        "url": jsonPath + "/booking/mywaiting_list_data/",
                         "type": "POST",
                         "data": {firm_id: d}
                     },
@@ -81,7 +81,7 @@ function filter_list_firm(cat, d) {
             "iDisplayLength": 15,
             ajax:
                     {
-                        "url": jsonPath + "/theatre/mytheatre_list_data/",
+                        "url": jsonPath + "/booking/mytheatre_list_data/",
                         "type": "POST",
                         "data": {firm_id: d}
                     },
@@ -150,7 +150,7 @@ function filter_list_firm(cat, d) {
             "iDisplayLength": 15,
             ajax:
                     {
-                        "url": jsonPath + "/theatre/myadmission_list_data/",
+                        "url": jsonPath + "/booking/myadmission_list_data/",
                         "type": "POST",
                         "data": {firm_id: d}
                     },
@@ -220,7 +220,7 @@ function filter_list_firm(cat, d) {
             "bDestroy": true,
             "iDisplayLength": 15,
             ajax: {
-                "url": jsonPath + "/theatre/procedure_summary_data/",
+                "url": jsonPath + "/booking/procedure_summary_data/",
                 "type": "POST",
                 "data": {firm_id: d}
             },
@@ -342,7 +342,7 @@ function admissionlist_format(d) {
             '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-default pull-right text-align-left" onclick="add_comments(' + d.booking_id + ');"><i class="fa fa-comment"></i> Add Comments</button> </td>' +
             '</tr>' +
             '<tr>' +
-            '<td><a href="' + jsonPath + '/theatre/patient_log/' + d.patient_id + '" style="margin-left:5px;margin-right:5px"  class="btn btn-block btn-info btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a></td>' +
+            '<td><a href="' + jsonPath + '/booking/patient_log/' + d.patient_id + '" style="margin-left:5px;margin-right:5px"  class="btn btn-block btn-info btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a></td>' +
             '</tr>' +
             '<tr>' +
             '<td ><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-danger pull-right text-align-left" onclick="remove_booking(' + d.booking_id + ');"> <i class="fa fa-remove"></i> Remove Booking </button> ' +
@@ -454,7 +454,7 @@ function theatrelist_format(d) {
             '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-default pull-right text-align-left" onclick="add_comments(' + d.booking_id + ');"><i class="fa fa-comment"></i> Add Comments</button> </td>' +
             '</tr>' +
             '<tr>' +
-            '<td><a href="' + jsonPath + '/theatre/patient_log/' + d.patient_id + '" style="margin-left:5px;margin-right:5px"  class="btn btn-block btn-info btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a></td>' +
+            '<td><a href="' + jsonPath + '/booking/patient_log/' + d.patient_id + '" style="margin-left:5px;margin-right:5px"  class="btn btn-block btn-info btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a></td>' +
             '</tr>' +
             '<tr>' +
             '<td ><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-danger pull-right text-align-left" onclick="remove_booking(' + d.booking_id + ');"> <i class="fa fa-remove"></i> Remove Booking </button> ' +
@@ -526,7 +526,7 @@ function waitinglist_format(d) {
             '</tr>' +
             '<tr>' +
             '<td>Action:</td>' +
-            '<td><a href="' + jsonPath + '/index.php/theatre/patient_log/' + d.patient_id + '" style="margin-left:5px"  class="btn btn-primary btn-xs pull-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a>' +
+            '<td><a href="' + jsonPath + '/booking/patient_log/' + d.patient_id + '" style="margin-left:5px"  class="btn btn-primary btn-xs pull-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a>' +
             '<a href="' + jsonPath + '/index.php/patients/add_patient/' + d.patient_id + '/' + d.booking_id + '" style="margin-left:5px"  class=" btn btn-info btn-xs rounded pull-right" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> Edit</a>' +
             '<button style="margin-left:5px;margin-right:5px" class="btn btn-xs btn-danger pull-right" onclick="remove_booking(' + d.booking_id + ');"> <i class="fa fa-remove"></i> Remove Booking </button> ' +
             '</td></tr>' +

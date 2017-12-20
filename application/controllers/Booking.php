@@ -811,10 +811,13 @@ class Booking extends MY_Controller
     {
         $json = '';
         if ($this->verify_role('doctor,nurse')) {
+            $default_firm = $this->settings_model->get_myfirm($this->auth_user_id);
+
+            $myfirm_id = $default_firm ? $default_firm->firm_id : '';
             $frm = $this->input->post('firm_id');
             // $getfirm_id = $this->user_model->get_users_firm($user_id)->firm_id;
 
-            $firm_id = isset($frm) && $frm !== '' ? $frm : '';
+            $firm_id = isset($frm) && $frm !== '' ? $frm : $myfirm_id;
             $json = $this->booking_model->get_procedure_summaries($firm_id);
         }
 
