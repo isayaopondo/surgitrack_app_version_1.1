@@ -13,7 +13,7 @@ var SurgiTrack = function () {
         handleBaseURL: function () {
             var getUrl = window.location,
                     //baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
-                  baseUrl = getUrl .protocol + "//" + getUrl.host ;
+                  baseUrl = getUrl.protocol + "//" + getUrl.host ;
             return baseUrl;
         }
     };
