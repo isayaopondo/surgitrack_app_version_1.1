@@ -45,7 +45,7 @@ class Authorization_model extends MY_Model {
      */
     public function get_recovery_data( $email )
     {
-        $query = $this->db->select( 'u.user_id, u.email, u.banned' )
+        $query = $this->db->select( 'u.user_id, u.email, u.banned,u.username,u.first_name,u.last_name' )
             ->from( $this->db_table('user_table') . ' u' )
             ->where( 'LOWER( u.email ) =', strtolower( $email ) )
             ->limit(1)

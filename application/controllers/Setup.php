@@ -63,6 +63,8 @@ class Setup extends MY_Controller
                 $this->user_id = $this->auth_user_id;
                 $this->usergroup = $this->auth_role;
 
+            }elseif($this->auth_role!='admin'){
+                redirect('auth/errors', 'refresh');
             } else {
                 redirect('auth', 'refresh');
             }

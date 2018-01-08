@@ -21,6 +21,7 @@ class Administrator_model extends CI_Model {
         $this->db->select('block_id,blocked_date as start,blocked_enddate as end ,blocked_reason as title,'
                 . 'blocked_reason_details as description,department_id,'. $status_query.','.$blocked_color)
                 ->from('strack_admin_calendar');
+        $this->db->where(array('facility_id' => $this->auth_facilityid));
         $query = $this->db->get();
         $result = $query->result();
         return $result;

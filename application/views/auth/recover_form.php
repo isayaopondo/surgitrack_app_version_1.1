@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 
     <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Need an account?</span> <a
-                href="<?= base_url('auth/register') ?>" class="btn btn-danger">Create account</a> </span>
+                href="<?= base_url('auth/login') ?>" class="btn btn-danger">Login</a> </span>
 
 </header>
 
@@ -81,11 +81,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                        <b>Account Recovery is Disabled.</b> 
                                     </p>
                                     <p>
-                                        If you have exceeded the maximum login attempts, or exceeded
-                                        the allowed number of password recovery attempts, account recovery 
-                                        will be disabled for a short period of time. 
-                                        Please wait ' . ((int)config_item('seconds_on_hold') / 60) . ' 
-                                        minutes, or contact us if you require assistance gaining access to your account.
+                                    <div class="alert alert-danger fade in">
+                                        <button class="close" data-dismiss="alert">
+                                                ×
+                                        </button>
+                                        <i class="fa-fw fa fa-check"></i>
+                                            If you have exceeded the maximum login attempts, or exceeded
+                                            the allowed number of password recovery attempts, account recovery 
+                                            will be disabled for a short period of time. 
+                                            Please wait ' . ((int)config_item('seconds_on_hold') / 60) . ' 
+                                            minutes, or contact us if you require assistance gaining access to your account.
+                                      </div>
                                     </p>
                                 </div>
                             ';
@@ -112,20 +118,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </p>
                                     
                                     <p>
-                                        "We have sent you an email with instructions on how 
-                                        to recover your account."
+                                        
+                                    <div class="alert alert-success fade in">
+                                            <button class="close" data-dismiss="alert">
+                                                    ×
+                                            </button>
+                                            <i class="fa-fw fa fa-check"></i>
+                                            <strong>Success!</strong> We have sent you an email with instructions on how 
+                                                to recover your account.
+                                    </div>
                                     </p>
-                                    <p>
-                                        This is the account recovery link:
-                                    </p>
-                                    <p>' . $special_link . '</p>
+                                    
                                 </div>
                             ';
                     } else if (isset($no_match)) {
                         echo '
                     <div  style="padding: 15px;">
                         <p class="feedback_header">
-                            Supplied email did not match any record.
+                            
+                            <div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-check"></i>
+                                    <strong>Error!</strong> Supplied email did not match any record.
+                            </div>
                         </p>
                     </div>
                 ';

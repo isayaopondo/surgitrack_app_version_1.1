@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 
     <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Need an account?</span> <a
-                href="<?= base_url('auth/register') ?>" class="btn btn-danger">Create account</a> </span>
+                href="<?= base_url('auth/login') ?>" class="btn btn-danger">Login</a> </span>
 
 </header>
 
@@ -81,6 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<p>
 				The following error occurred while changing your password:
 			</p>
+			
 			<ul>
 				' . $validation_errors . '
 			</ul>
@@ -97,10 +98,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         echo '
 		<div style="border:1px solid green;">
 			<p>
-				You have successfully changed your password.
+				
+				<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-check"></i>
+                                    <strong>Success!</strong> You have successfully changed your password.
+                            </div>
 			</p>
 			<p>
-				You can now <a href="/' . LOGIN_PAGE . '">login</a>
+				You can now <a href="'.base_url().'/auth/login">login</a>
 			</p>
 		</div>
 	';
@@ -110,14 +118,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     if (isset($recovery_error)) {
                         echo '
 		<div style="border:1px solid red;">
-			<p>
+			
+			<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-check"></i>
+                                    <strong>Error!</strong> <p>
 				No usable data for account recovery.
 			</p>
+                            </div>
 			<p>
 				Account recovery links expire after 
 				' . ((int)config_item('recovery_code_expiration') / (60 * 60)) . ' 
 				hours.<br />You will need to use the 
-				<a href="'.APP_URL.'/auth/recover">Account Recovery</a> form 
+				<a href="'.base_url().'auth/recover">Account Recovery</a> form 
 				to send yourself a new link.
 			</p>
 		</div>

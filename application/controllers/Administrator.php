@@ -311,6 +311,7 @@ class Administrator extends MY_Controller {
                 'blocked_date' => $this->input->post('blocked_date'),
                 'blocked_enddate' => $this->input->post('blocked_enddate'),
                 'blocked_type' => $this->input->post('blocked_type'),
+                'facility_id' => $this->auth_facilityid,
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
                 'created_by' => $this->auth_user_id
             );

@@ -264,6 +264,8 @@ class Auth extends MY_Controller
 
             if ($this->db->affected_rows() == 1)
                 echo '<h1>Congratulations</h1>' . '<p>User ' . $user_data['username'] . ' was created.</p>';
+
+
         } else {
             echo '<h1>User Creation Error(s)</h1>' . validation_errors();
         }
@@ -380,7 +382,7 @@ class Auth extends MY_Controller
             //$this->tokens->match &&
 
             // If the form post looks good
-            if ( $this->input->post('email')) {
+            if ($this->input->post('email')) {
                 if ($user_data = $this->authorization_model->get_recovery_data($this->input->post('email'))) {
                     // Check if user is banned
                     if ($user_data->banned == '1') {
@@ -415,14 +417,18 @@ class Auth extends MY_Controller
 
                         // Set URI of link
                         $link_uri = 'auth/recovery_verification/' . $user_data->user_id . '/' . $recovery_code;
-
-                        $view_data['special_link'] = anchor(
+                        $special_link = anchor(
                             site_url($link_uri, $link_protocol),
                             site_url($link_uri, $link_protocol),
                             'target ="_blank"'
                         );
 
+                        $view_data['special_link'] = $special_link;
+
+                        $this->send_recovery_mail($special_link, $this->input->post('email'),$user_data->username);
                         $view_data['confirmation'] = 1;
+
+
                     }
                 } // There was no match, log an error, and display a message
                 else {
@@ -506,6 +512,17 @@ class Auth extends MY_Controller
 
 
         $this->_render_page('auth/choose_password_form', (isset($view_data)) ? $view_data : '', false);
+
+    }
+
+    private function send_recovery_mail($special_link, $email, $username, $mailtype = 'recover')
+    {
+        $this->load->library('notificationmanager');
+        $info = array(
+            'special_link' => $special_link,
+            'username'=>$username,
+        );
+        $this->notificationmanager->sendMail(0, $mailtype, 'Recover Password', $email, $info);
 
     }
 
@@ -671,7 +688,6 @@ class Auth extends MY_Controller
     }
 
 
-
     public function facility_toggle()
     {
         $this->is_logged_in();
@@ -707,7 +723,26 @@ class Auth extends MY_Controller
         $this->_render_page('auth/login', $this->data, false);
     }
 
+    public function update_user_id()
+    {
 
+        $this->load->model('Authorization/authorization_model');
+        $this->load->model('user_model');
+        //getusers
+        $users = $this->user_model->get_users_list();
+
+        foreach ($users as $user) {
+            $id = $user->_id;
+            $new_id = $this->authorization_model->get_unused_id();
+            $this->user_model->update_userid($id, $new_id);
+        }
+    }
+
+    public function errors()
+    {
+        $this->data['message'] = (validation_errors() ? validation_errors() : ($this->session->flashdata('message')));
+        $this->_render_page('errors/error_permissions', $this->data, false);
+    }
     // -----------------------------------------------------------------------
 }
 

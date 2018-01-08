@@ -55,6 +55,9 @@ class Settings extends MY_Controller
                 // $default_firm = $this->settings_model->get_myfirm($user_id);
                 //$this->data['default_firm'] = $default_firm->firm_name;
                 // $default_department = $this->user_model->get_users_department($user_id);
+            }
+            elseif($this->auth_role!='admin'){
+                redirect('auth/errors', 'refresh');
             } else {
                 redirect('auth', 'refresh');
             }

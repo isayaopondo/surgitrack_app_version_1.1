@@ -4,7 +4,8 @@
         <span id="logo"> <img src="<?= base_url() ?>assets/img/logo.png" alt="SurgiTrack"> </span>
     </div>
 
-    <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Need an account?</span> <a href="<?= base_url('auth/register') ?>" class="btn btn-danger">Create account</a> </span>
+    <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Need an account?</span> <a
+                href="<?= base_url('auth/login') ?>" class="btn btn-danger">Login</a> </span>
 
 </header>
 
