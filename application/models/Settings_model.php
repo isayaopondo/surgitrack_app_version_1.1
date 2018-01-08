@@ -135,7 +135,7 @@ class Settings_model extends MY_Model
             $this->db->where("p.group_id", $id);
         }
         $this->db->select('*')
-            ->from('procedures p');
+            ->from('strack_facility_procedures p');
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -238,7 +238,7 @@ class Settings_model extends MY_Model
     {
         $this->db->where("id", $id);
         $this->db->select('*')
-            ->from('procedures p');
+            ->from('strack_facility_procedures p');
         $q = $this->db->get();
         if ($q->num_rows() > 0) {
             return $q->row();
@@ -491,7 +491,7 @@ class Settings_model extends MY_Model
     {
 
         $this->db->where("group_id", $id);
-        $q = $this->db->get('strack_procedure');
+        $q = $this->db->get('strack_facility_procedures');
         if ($q->num_rows() > 0) {
             return 1;
         } else {

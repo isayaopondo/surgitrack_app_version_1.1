@@ -904,5 +904,14 @@ class Setup extends MY_Controller
         $this->_render_setupfail('dashboard/no_setup', $this->data, false);
     }
 
+    public function change_password()
+    {
+        //_get_csrf_nonce();
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
+
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_render_setup('users/change_password', $this->data, true);
+    }
+
 
 }
