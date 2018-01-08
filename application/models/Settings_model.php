@@ -187,7 +187,7 @@ class Settings_model extends MY_Model
         $this->db->where(array('procedure_id' => $procedure_id, 'department_id' => $department_id));
         $q = $this->db->get('strack_facility_procedures');
         if ($q->num_rows() > 0) {
-            $this->db->update('strack_facility_procedures', array('isdeleted' => '0', 'modified' => date('Y-m-d H:i:s', strtotime('now')), 'modified_by' => $deleted_by), array('department_id' => $department_id));
+            $this->db->update('strack_facility_procedures', array('isdeleted' => '0', 'modified' => date('Y-m-d H:i:s', strtotime('now'))), array('department_id' => $department_id));
             if ($this->db->affected_rows() >= 1) {
                 return true;
             } else {
