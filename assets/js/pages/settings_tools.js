@@ -540,9 +540,6 @@ $(document).ready(function () {
             {"width": "10%", "orderable": true, data: "rpl_code"},
             {"width": "10%", "orderable": true, data: "procedure_name"},
             {"width": "10%", "orderable": false, data: "procedure_fullname"},
-            {"width": "10%", "orderable": false, data: "category_name"},
-            {"width": "15%", "orderable": true, data: "group_name"},
-            {"width": "15%", "orderable": true, data: "subgroup_name"},
             {"width": "15%", "orderable": false, data: "service_fee"},
             {
                 "width": "20%",
@@ -564,6 +561,11 @@ $(document).ready(function () {
             'pdfHtml5', 'print'
         ]
     });
+
+
+   // {"width": "10%", "orderable": false, data: "category_name"},
+   // {"width": "15%", "orderable": true, data: "group_name"},
+   // {"width": "15%", "orderable": true, data: "subgroup_name"},
 
     // Apply the filter
     $("#procedures thead th input[type=text]").on('keyup change', function () {

@@ -95,15 +95,7 @@
                                         <th class="hasinput" style="width:20%">
                                             <input type="text" class="form-control" placeholder="Filter Short Title" />
                                         </th>
-                                        <th class="hasinput" style="width:10%">
-                                            <input type="text" class="form-control" placeholder="Filter Category" />
-                                        </th>
-                                        <th class="hasinput" style="width:10%">
-                                            <input type="text" class="form-control" placeholder="Filter Group" />
-                                        </th>
-                                        <th class="hasinput" style="width:10%">
-                                            <input type="text" class="form-control" placeholder="Filter Subgroup" />
-                                        </th>
+
                                         <th class="hasinput" style="width:5%"> </th>
                                         <th style="width:15%"></th> 
                                     </tr>
@@ -111,9 +103,7 @@
                                         <th>RPL Code</th>
                                         <th>Full Name</th>
                                         <th>Short Name</th>
-                                        <th>Category</th>
-                                        <th>Group</th>
-                                        <th >Sub Group</th> 
+
                                         <th >Service Fee</th>     
                                         <th></th>     
                                     </tr>
@@ -128,6 +118,20 @@
 
                     </div>
                     <!-- end widget div -->
+
+                    <!-- <th class="hasinput" style="width:10%">
+                                            <input type="text" class="form-control" placeholder="Filter Category" />
+                                        </th>
+                                        <th class="hasinput" style="width:10%">
+                                            <input type="text" class="form-control" placeholder="Filter Group" />
+                                        </th>
+                                        <th class="hasinput" style="width:10%">
+                                            <input type="text" class="form-control" placeholder="Filter Subgroup" />
+                                        </th>-->
+
+                    <!-- <th>Category</th>
+                                        <th>Group</th>
+                                        <th >Sub Group</th> -->
 
                 </div>
                 <!-- end widget -->

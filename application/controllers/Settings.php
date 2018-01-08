@@ -84,9 +84,9 @@ class Settings extends MY_Controller
     public function procedures($id = "")
     {
 
-        $this->data['category'] = $this->settings_model->get_category();
-        $this->data['procedure_groups'] = $this->settings_model->get_procedure_groups();
-        $this->data['procedure_subgroups'] = $this->settings_model->procedure_subgroups_list();
+        //$this->data['category'] = $this->settings_model->get_category();
+        //$this->data['procedure_groups'] = $this->settings_model->get_procedure_groups();
+        //$this->data['procedure_subgroups'] = $this->settings_model->procedure_subgroups_list();
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('settings/procedures', $this->data, true);

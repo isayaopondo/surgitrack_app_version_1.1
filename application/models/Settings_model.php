@@ -52,9 +52,7 @@ class Settings_model extends MY_Model
 
     public function get_procedure($facility_id = '', $group = '', $sub_group = '')
     {
-        if (isset($facility_id) && $facility_id != null) {
-            $this->db->where('p.facility_id', $facility_id);
-        }
+
 
         if (isset($group) && $group != null) {
             $this->db->where('p.group_id', $group);
@@ -63,10 +61,10 @@ class Settings_model extends MY_Model
         }
         $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
         $this->db->select('*')
-            ->from('strack_facility_procedures p')
-            ->join('strack_facility_procedure_groups pg', 'pg.group_id=p.group_id', 'LEFT')
-            ->join('strack_facility_procedure_categories c', 'c.category_id=p.category_id', 'LEFT')
-            ->join('strack_facility_procedure_subgroups psg', 'psg.subgroup_id=p.subgroup_id', 'LEFT');
+            ->from('strack_facility_procedures p');
+           // ->join('strack_facility_procedure_groups pg', 'pg.group_id=p.group_id', 'LEFT')
+           // ->join('strack_facility_procedure_categories c', 'c.category_id=p.category_id', 'LEFT')
+           // ->join('strack_facility_procedure_subgroups psg', 'psg.subgroup_id=p.subgroup_id', 'LEFT');
 
         $this->db->order_by("procedure_name", "asc");
         $query = $this->db->get();
