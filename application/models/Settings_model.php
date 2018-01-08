@@ -234,17 +234,7 @@ class Settings_model extends MY_Model
         return false;
     }
 
-    public function get_global_procedure_by_id($id)
-    {
-        $this->db->where("id", $id);
-        $this->db->select('*')
-            ->from('strack_facility_procedures p');
-        $q = $this->db->get();
-        if ($q->num_rows() > 0) {
-            return $q->row();
-        }
-        return false;
-    }
+
 
     public function get_procedure_department($departmentid=''){
 
@@ -1477,7 +1467,7 @@ class Settings_model extends MY_Model
     {
         $this->db->where("procedure_id", $id);
         $this->db->select('*')
-            ->from('strack_procedure');
+            ->from('strack_facility_procedures');
         $q = $this->db->get();
         if ($q->num_rows() > 0) {
             return $q->row();
@@ -1522,4 +1512,33 @@ class Settings_model extends MY_Model
         return $query->row();
     }
 
+    public function get_global_procedure_by_id_local($id)
+    {
+        $this->db->where("id", $id);
+        $this->db->select('*')
+            ->from('strack_facility_procedures p');
+        $q = $this->db->get();
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function get_global_procedure_by_id($id)
+    {
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => ACCOUNTS_URL.'/api/v1/procedures/'.$id
+        ));
+        // Send the request & save response to $resp
+        $procedures = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return json_decode($procedures,true) ;
+
+    }
 }

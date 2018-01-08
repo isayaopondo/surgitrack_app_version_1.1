@@ -134,6 +134,23 @@ class Setup_model extends MY_Model
         return json_decode($procedures) ;
     }
 
+    public function get_procedure_subgroups()
+    {
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => ACCOUNTS_URL.'/api/v1/subgroups'
+        ));
+        // Send the request & save response to $resp
+        $procedures = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return json_decode($procedures) ;
+    }
+
     public function procedures_by_groups($group_id)
     {
         // Get cURL resource
@@ -150,6 +167,8 @@ class Setup_model extends MY_Model
 
         return $procedures ;
     }
+
+
 
 
 

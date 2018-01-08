@@ -117,9 +117,14 @@
                             <a href="#"><i class="fa fa-lg fa-fw fa-language"></i> Terminologies</a>
                             <ul>
 
-                                <li class="<?= ($this->router->fetch_class() == 'settings' ) && ($this->router->fetch_method() == 'procedures_subset' ) ? 'active' : '' ?>">
-                                    <a href="<?= base_url() ?>settings/procedures_subset"><i class="fa fa-lg fa-fw fa-codepen"></i> RPL Codes</a>
+                                <li class="<?= ($this->router->fetch_class() == 'settings' ) && ($this->router->fetch_method() == 'procedures' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>settings/procedures"><i class="fa fa-lg fa-fw fa-codepen"></i> RPL Codes</a>
                                 </li>
+
+                                <li class="<?= ($this->router->fetch_class() == 'settings' ) && ($this->router->fetch_method() == 'procedures_subset' ) ? 'active' : '' ?>">
+                                    <a href="<?= base_url() ?>settings/procedures_subset"><i class="fa fa-lg fa-fw fa-codepen"></i> RPL Codes Subset</a>
+                                </li>
+
                                 <li class="<?= ($this->router->fetch_class() == 'settings' ) && ($this->router->fetch_method() == 'nappi_consumables' ) ? 'active' : '' ?>">
                                     <a href="<?= base_url() ?>settings/nappi_consumables"><i class="fa fa-lg fa-fw fa-product-hunt"></i> Nappi Codes</a>
                                 </li>
