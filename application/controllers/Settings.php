@@ -315,7 +315,7 @@ class Settings extends MY_Controller
                         'rpl_code' => $procedure['rplcode'],
                         'group_id' => $procedure['group_id'],
                         'subgroup_id' => $procedure['subgroup_id'],
-                        'alias_name' => $procedure['alias_name'],
+                        'procedure_fullname' => $procedure['alias_name'],
 
 
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
