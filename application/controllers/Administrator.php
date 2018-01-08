@@ -84,7 +84,6 @@ class Administrator extends MY_Controller {
     public function mapt() {
        
             $user_id = $this->auth_user_id;
-            $department_id = $this->user_model->get_users_department($user_id)->department_id;
             $this->data['departments'] = $this->settings_model->get_departments_list();
             $this->data['procedures'] = $this->settings_model->get_procedure();
             $this->data['category'] = $this->settings_model->get_category();

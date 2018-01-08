@@ -84,9 +84,9 @@ class Settings extends MY_Controller
     public function procedures($id = "")
     {
 
-        $this->data['category'] = $this->settings_model->get_category();
-        $this->data['procedure_groups'] = $this->settings_model->get_procedure_groups();
-        $this->data['procedure_subgroups'] = $this->settings_model->procedure_subgroups_list();
+        //$this->data['category'] = $this->settings_model->get_category();
+        //$this->data['procedure_groups'] = $this->settings_model->get_procedure_groups();
+        //$this->data['procedure_subgroups'] = $this->settings_model->procedure_subgroups_list();
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('settings/procedures', $this->data, true);
@@ -187,13 +187,13 @@ class Settings extends MY_Controller
         $this->form_validation->set_rules('category', 'Category', 'required');
         $this->form_validation->set_rules('sub_group_id', 'Sub Group', 'required');
         $this->form_validation->set_rules('group_id', 'Group', 'required');
-        $this->form_validation->set_rules('procedure_description', 'Procedure description', 'required', 'trim');
+        $this->form_validation->set_rules('procedure_description', 'Procedure description',  'trim');
 
 
         if ($this->form_validation->run() == true) {
 
             $data = array(
-                'alias_name' => $this->input->post('procedure_fullname'),
+                'procedure_fullname' => $this->input->post('procedure_fullname'),
                 'service_fee' => $this->input->post('service_fee'),
                 'procedure_description' => $this->input->post('procedure_description'),
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
@@ -280,8 +280,8 @@ class Settings extends MY_Controller
         $this->data['procedure'] = $this->settings_model->get_procedure_by_id($procedure_id);
         $this->data['departments'] = $this->settings_model->get_departments_list();
         $this->data['category'] = $this->settings_model->get_category();
-        $this->data['procedure_groups'] = $this->settings_model->get_procedure_groups();
-        $this->data['procedure_subgroups'] = $this->settings_model->procedure_subgroups_list();
+        $this->data['procedure_groups'] = $this->setup_model->get_procedure_groups();
+        $this->data['procedure_subgroups'] = $this->setup_model->get_procedure_subgroups();
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools . $this->general_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('settings/edit_procedures', $this->data, true);
@@ -303,17 +303,20 @@ class Settings extends MY_Controller
                 // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
 
                 foreach ($procedure_dual as $val) {
-                    $procedure = $this->settings_model->get_global_procedure_by_id($val);
+                    $procedures= $this->settings_model->get_global_procedure_by_id($val);
+                    $procedure=$procedures['data'];
                     $data = array(
                         'facility_id' => $this->auth_facilityid,
                         'department_id' => $department_id,
                         'procedure_fk_id' => $val,
 
-                        'procedure_name' => $procedure->procedure_name,
-                        'category_id' => $procedure->category_id,
-                        'rpl_code' => $procedure->rpl_code,
-                        'group_id' => $procedure->group_id,
-                        'subgroup_id' => $procedure->subgroup_id,
+                        'procedure_name' => $procedure['procedure_name'],
+                        'category_id' => $procedure['category'],
+                        'rpl_code' => $procedure['rplcode'],
+                        'group_id' => $procedure['group_id'],
+                        'subgroup_id' => $procedure['subgroup_id'],
+                        'procedure_fullname' => $procedure['alias_name'],
+
 
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
                         'created_by' => $user_id,

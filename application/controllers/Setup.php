@@ -280,17 +280,19 @@ class Setup extends MY_Controller
                 // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
 
                 foreach ($procedure_dual as $val) {
-                    $procedure= $this->settings_model->get_global_procedure_by_id($val);
+                    $procedures= $this->settings_model->get_global_procedure_by_id($val);
+                    $procedure=$procedures['data'];
                     $data = array(
                         'facility_id' => $this->auth_facilityid,
                         'department_id' => $department_id,
                         'procedure_fk_id' => $val,
 
-                        'procedure_name' => $procedure->procedure_name,
-                        'category_id' => $procedure->category_id,
-                        'rpl_code' => $procedure->rpl_code,
-                        'group_id' => $procedure->group_id,
-                        'subgroup_id' => $procedure->subgroup_id,
+                        'procedure_name' => $procedure['procedure_name'],
+                        'category_id' => $procedure['category'],
+                        'rpl_code' => $procedure['rplcode'],
+                        'group_id' => $procedure['group_id'],
+                        'subgroup_id' => $procedure['subgroup_id'],
+                        'procedure_fullname' => $procedure['alias_name'],
 
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
                         'created_by' => $user_id,
@@ -361,17 +363,19 @@ class Setup extends MY_Controller
                 // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
 
                 foreach ($procedure_dual as $val) {
-                    $procedure= $this->settings_model->get_global_procedure_by_id($val);
+                    $procedures= $this->settings_model->get_global_procedure_by_id($val);
+                    $procedure=$procedures['data'];
                     $data = array(
                         'facility_id' => $this->auth_facilityid,
                         'department_id' => $department_id,
                         'procedure_fk_id' => $val,
 
-                        'procedure_name' => $procedure->procedure_name,
-                        'category_id' => $procedure->category_id,
-                        'rpl_code' => $procedure->rpl_code,
-                        'group_id' => $procedure->group_id,
-                        'subgroup_id' => $procedure->subgroup_id,
+                        'procedure_name' => $procedure['procedure_name'],
+                        'category_id' => $procedure['category'],
+                        'rpl_code' => $procedure['rplcode'],
+                        'group_id' => $procedure['group_id'],
+                        'subgroup_id' => $procedure['subgroup_id'],
+                        'procedure_fullname' => $procedure['alias_name'],
 
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
                         'created_by' => $user_id,
@@ -902,6 +906,15 @@ class Setup extends MY_Controller
         $this->data['pagescripts'] = $this->general_tools;
         $this->data['message'] = (validation_errors() ? validation_errors() : ($this->session->flashdata('message')));
         $this->_render_setupfail('dashboard/no_setup', $this->data, false);
+    }
+
+    public function change_password()
+    {
+        //_get_csrf_nonce();
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
+
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_render_setup('users/change_password', $this->data, true);
     }
 
 

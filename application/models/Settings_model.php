@@ -52,9 +52,7 @@ class Settings_model extends MY_Model
 
     public function get_procedure($facility_id = '', $group = '', $sub_group = '')
     {
-        if (isset($facility_id) && $facility_id != null) {
-            $this->db->where('p.facility_id', $facility_id);
-        }
+
 
         if (isset($group) && $group != null) {
             $this->db->where('p.group_id', $group);
@@ -63,10 +61,10 @@ class Settings_model extends MY_Model
         }
         $this->db->where(array('p.facility_id' => $this->auth_facilityid, 'p.isdeleted' => '1'));
         $this->db->select('*')
-            ->from('strack_facility_procedures p')
-            ->join('strack_facility_procedure_groups pg', 'pg.group_id=p.group_id', 'LEFT')
-            ->join('strack_facility_procedure_categories c', 'c.category_id=p.category_id', 'LEFT')
-            ->join('strack_facility_procedure_subgroups psg', 'psg.subgroup_id=p.subgroup_id', 'LEFT');
+            ->from('strack_facility_procedures p');
+           // ->join('strack_facility_procedure_groups pg', 'pg.group_id=p.group_id', 'LEFT')
+           // ->join('strack_facility_procedure_categories c', 'c.category_id=p.category_id', 'LEFT')
+           // ->join('strack_facility_procedure_subgroups psg', 'psg.subgroup_id=p.subgroup_id', 'LEFT');
 
         $this->db->order_by("procedure_name", "asc");
         $query = $this->db->get();
@@ -135,7 +133,7 @@ class Settings_model extends MY_Model
             $this->db->where("p.group_id", $id);
         }
         $this->db->select('*')
-            ->from('procedures p');
+            ->from('strack_facility_procedures p');
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -234,17 +232,7 @@ class Settings_model extends MY_Model
         return false;
     }
 
-    public function get_global_procedure_by_id($id)
-    {
-        $this->db->where("id", $id);
-        $this->db->select('*')
-            ->from('procedures p');
-        $q = $this->db->get();
-        if ($q->num_rows() > 0) {
-            return $q->row();
-        }
-        return false;
-    }
+
 
     public function get_procedure_department($departmentid=''){
 
@@ -491,7 +479,7 @@ class Settings_model extends MY_Model
     {
 
         $this->db->where("group_id", $id);
-        $q = $this->db->get('strack_procedure');
+        $q = $this->db->get('strack_facility_procedures');
         if ($q->num_rows() > 0) {
             return 1;
         } else {
@@ -1477,7 +1465,7 @@ class Settings_model extends MY_Model
     {
         $this->db->where("procedure_id", $id);
         $this->db->select('*')
-            ->from('strack_procedure');
+            ->from('strack_facility_procedures');
         $q = $this->db->get();
         if ($q->num_rows() > 0) {
             return $q->row();
@@ -1522,4 +1510,33 @@ class Settings_model extends MY_Model
         return $query->row();
     }
 
+    public function get_global_procedure_by_id_local($id)
+    {
+        $this->db->where("id", $id);
+        $this->db->select('*')
+            ->from('strack_facility_procedures p');
+        $q = $this->db->get();
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function get_global_procedure_by_id($id)
+    {
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => ACCOUNTS_URL.'/api/v1/procedures/'.$id
+        ));
+        // Send the request & save response to $resp
+        $procedures = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return json_decode($procedures,true) ;
+
+    }
 }

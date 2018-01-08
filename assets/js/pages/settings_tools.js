@@ -538,18 +538,15 @@ $(document).ready(function () {
         "deferLoading": 57,
         "columns": [
             {"width": "10%", "orderable": true, data: "rpl_code"},
-            {"width": "10%", "orderable": true, data: "procedure_fullname"},
-            {"width": "10%", "orderable": false, data: "procedure_name"},
-            {"width": "10%", "orderable": false, data: "category_name"},
-            {"width": "15%", "orderable": true, data: "group_name"},
-            {"width": "15%", "orderable": true, data: "subgroup_name"},
+            {"width": "10%", "orderable": true, data: "procedure_name"},
+            {"width": "10%", "orderable": false, data: "procedure_fullname"},
             {"width": "15%", "orderable": false, data: "service_fee"},
             {
                 "width": "20%",
                 targets: -1,
                 data: 'procedure_id',
                 render: function (data, type, full, meta) {
-                    return '<a href="' + jsonPath + '/settings/procedures/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
+                    return '<a href="' + jsonPath + '/settings/edit_department_procedure/' + data + '"  class=" btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
 \n\<a href="' + jsonPath + '/settings/rpl_nappi_consumables/' + data + '"  class="indicatoritem btn btn-primary btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Add/View Consumables"><i class="fa fa-plus"></i></a> \n\
 <button class="btn btn-danger btn-xs rounded" onclick="delete_procedure(' + data + ')"><i class="fa fa-times"></i></button>';
                 }
@@ -564,6 +561,11 @@ $(document).ready(function () {
             'pdfHtml5', 'print'
         ]
     });
+
+
+   // {"width": "10%", "orderable": false, data: "category_name"},
+   // {"width": "15%", "orderable": true, data: "group_name"},
+   // {"width": "15%", "orderable": true, data: "subgroup_name"},
 
     // Apply the filter
     $("#procedures thead th input[type=text]").on('keyup change', function () {
