@@ -675,11 +675,11 @@ class Patients extends MY_Controller
 
         $filename = preg_replace('/\s+/', '', $patient_details->surname . '_' . preg_replace('/[^a-zA-Z0-9\-\._]/', '', $patient_details->folder_number) . '_' . $patient_details->procedure_name . '_' . date('d_m_Y') . '.pdf');
         $this->preview_op_notes($booking_id, $filename, $patient_details->procedure_name, $return);
-        $file_path = base_url() . 'folder/opnotes/' . $filename;
+        $file_path = base_url() . 'folder/opnotes/' .$this->auth_facilityid.'/'. $filename;
         $iframe = '<iframe src="' . $file_path . '" id="iView" style="width:100%;min-height:500px;border:dotted 1px red" frameborder="0"></iframe>';
         $returns = array(
             'file_iframe' => $iframe,
-            'file_path' => OPNOTES_REPOSITORY . $filename
+            'file_path' => OPNOTES_REPOSITORY .$this->auth_facilityid.'/'. $filename
         );
         echo json_encode($returns);
     }
@@ -774,11 +774,11 @@ class Patients extends MY_Controller
 
         $filename = preg_replace('/\s+/', '', $patient_details->surname . '_' . preg_replace('/[^a-zA-Z0-9\-\._]/', '', $patient_details->folder_number) . '_' . $patient_details->procedure_name . '_' . date('d_m_Y') . '.pdf');
         $this->preview_patient_coding($booking_id, $filename, $patient_details->folder_number, $return);
-        $file_path = base_url() . 'folder/opcoding/' . $filename;
+        $file_path = base_url() . 'folder/opcoding/' .$this->auth_facilityid.'/'. $filename;
         $iframe = '<iframe src="' . $file_path . '" id="iView" style="width:100%;min-height:500px;border:dotted 1px red" frameborder="0"></iframe>';
         $returns = array(
             'file_iframe' => $iframe,
-            'file_path' => OPCODING_REPOSITORY . $filename
+            'file_path' => OPCODING_REPOSITORY . $this->auth_facilityid.'/'.$filename
         );
         echo json_encode($returns);
     }

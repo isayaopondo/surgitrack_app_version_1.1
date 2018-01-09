@@ -216,7 +216,6 @@ class Booking extends MY_Controller
         $data = array();
 
         $this->form_validation->set_rules('procedure', 'procedure', 'required', 'trim');
-        $this->form_validation->set_rules('priority', 'priority', 'required');
         $this->form_validation->set_rules('theatre', 'theatre', 'required');
         $this->form_validation->set_rules('booking_date', 'Booking Date', 'required');
         $this->form_validation->set_rules('surgery_indication', 'Surgery Indication', 'required');
@@ -231,7 +230,7 @@ class Booking extends MY_Controller
                 'category_id' => $this->input->post('category'),
                 'booking_date' => $this->input->post('booking_date'),
                 'theatre_id' => $this->input->post('theatre'),
-                'priority_id' => $this->input->post('priority'),
+
                 'slot_id' => $this->input->post('duration'),
                 'firm_id' => $this->input->post('firm'),
                 'anesthesia' => $this->input->post('anesthesia'),

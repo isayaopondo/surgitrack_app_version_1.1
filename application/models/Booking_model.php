@@ -440,7 +440,7 @@ class Booking_model extends MY_Model
                 END) AS status_name";
 
         $this->db->select('pl.patient_id,booking_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)," ",SUBSTRING(SUBSTRING_INDEX(other_names, " ", -1),1,1)) as fullname,other_names,surname,dateofbirth,IF(gender = "1","Male","Female") AS gender,'
-            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,priority_name,category_name,surgery_indication,booking_status,b.procedure_id,'
+            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,category_name,surgery_indication,booking_status,b.procedure_id,'
             . 'procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,DATEDIFF( date(Now()),date(b.booking_date)) as leadtime,'
             . 'anesthesia,postopbed,laterality,b.firm_id,strack_department_firms.department_id,booked_by,admitted_by,'
             . 'ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25) as age,firm_name,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE) as end,'
@@ -449,7 +449,7 @@ class Booking_model extends MY_Model
         $this->db->join('strack_patients_list pl', 'b.patient_id=pl.patient_id');
         $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
         $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id');
-        $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+        //$this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_facility_wards w', 'b.ward_id=w.ward_id', 'LEFT');
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_departments', 'strack_departments.department_id=strack_department_firms.department_id', 'LEFT');
@@ -519,7 +519,7 @@ class Booking_model extends MY_Model
                 END) AS status_name";
 
         $this->db->select('pl.patient_id,booking_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)," ",SUBSTRING(SUBSTRING_INDEX(other_names, " ", -1),1,1)) as fullname,other_names,surname,dateofbirth,IF(gender = "1","Male","Female") AS gender,'
-            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,priority_name,category_name,surgery_indication,booking_status,b.procedure_id,'
+            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,category_name,surgery_indication,booking_status,b.procedure_id,'
             . 'procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,DATEDIFF( date(Now()),date(b.booking_date)) as leadtime,booked_by,admitted_by,'
             . 'anesthesia,postopbed,laterality,b.firm_id,phone,'
             . 'ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25) as age,firm_name,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE) as end,'
@@ -528,7 +528,7 @@ class Booking_model extends MY_Model
         $this->db->join('strack_patients_list pl', 'b.patient_id=pl.patient_id');
         $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
         $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id');
-        $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+        //$this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_facility_wards w', 'b.ward_id=w.ward_id', 'LEFT');
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
@@ -591,7 +591,7 @@ class Booking_model extends MY_Model
         //$userquery = "IFNULL(b.surgeon_name, CONCAT(SUBSTRING(users.first_name,1,1),'. ',users.last_name)) AS surgeon_name";
 
         $this->db->select('pl.patient_id,booking_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)) as fullname,other_names,surname,dateofbirth,IF(gender = "1","Male","Female") AS gender,'
-            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,priority_name,category_name,surgery_indication,booking_status,b.procedure_id,'
+            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,category_name,surgery_indication,booking_status,b.procedure_id,'
             . 'procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,DATEDIFF( date(b.op_date_start),date(b.booking_date)) as leadtime,'
             . 'operation_done,booked_by,admitted_by,phone,'
             . 'ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25) as age,firm_name,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE) as end,op_date_start as operationdate,'
@@ -601,7 +601,7 @@ class Booking_model extends MY_Model
         $this->db->join('strack_patients_list pl', 'b.patient_id=pl.patient_id');
         $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
         $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id');
-        $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+        //$this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_facility_wards w', 'b.ward_id=w.ward_id', 'LEFT');
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
@@ -652,7 +652,7 @@ class Booking_model extends MY_Model
                 END) AS status_name";
 
         $this->db->select('pl.patient_id,b.booking_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)) as fullname,other_names,surname,dateofbirth,IF(gender = "1","Male","Female") AS gender,'
-            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,priority_name,category_name,surgery_indication,booking_status,b.procedure_id,'
+            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,category_name,surgery_indication,booking_status,b.procedure_id,'
             . 'procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,DATEDIFF( date(b.op_date_start),date(b.booking_date)) as leadtime,'
             . 'operation_done,booked_by,admitted_by,phone,op_role,'
             . 'ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25) as age,firm_name,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE) as end,op_date_start as operationdate,'
@@ -664,7 +664,7 @@ class Booking_model extends MY_Model
         $this->db->join('strack_patients_list pl', 'b.patient_id=pl.patient_id');
         $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
         $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id');
-        $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+        //$this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_facility_wards w', 'b.ward_id=w.ward_id', 'LEFT');
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
@@ -698,14 +698,14 @@ class Booking_model extends MY_Model
             $this->db->where(array("strack_department_firms.department_id" => $department_id));
         }
         $this->db->select('pl.patient_id,booking_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)) as fullname,other_names,surname,IF(gender = "1","Male","Female") AS gender,'
-            . 'dateofbirth,theatre_name,surgerydate,priority_name,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE), slot_value,'
+            . 'dateofbirth,theatre_name,surgerydate,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE), slot_value,'
             . 'procedure_name,admission_date,additional_info,insuranceco_name,insurance_number')
             ->from('strack_booking b');
         $this->db->join('strack_patients_list pl', 'b.patient_id=pl.patient_id');
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
         $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id');
-        $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+       // $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_insurance_companies', 'pl.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
 
         $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.booking_status" => '2'));
@@ -784,7 +784,7 @@ class Booking_model extends MY_Model
         $this->db->join('strack_patients_list pl', 'b.patient_id=pl.patient_id');
         $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
         $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id');
-        $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+        //$this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
         $this->db->join('strack_insurance_companies', 'pl.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
@@ -826,7 +826,7 @@ class Booking_model extends MY_Model
             $userquery = "IFNULL(b.surgeon_name, CONCAT(SUBSTRING(users.first_name,1,1),'. ',users.last_name)) AS surgeon_name";
 
             $this->db->select('pl.patient_id,booking_id,folder_number,surname,other_names,IF(gender = "1","Male","Female") AS gender,'
-                . 'dateofbirth,theatre_name,surgerydate,priority_name,icon,date(b.created_on) as bookingdate,pl.phone,firm_name,duration,slot_value,'
+                . 'dateofbirth,theatre_name,surgerydate,date(b.created_on) as bookingdate,pl.phone,firm_name,duration,slot_value,'
                 . 'procedure_name,admission_date,additional_info,insuranceco_name,insurance_number,DATEDIFF( date(Now()),date(b.booking_date)) as leadtime,booked_by,operation_done,'
                 . 'ADDTIME(surgerydate, (slot_value*100)) as end, slot_value,language_id,CONCAT(ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25), " Years") as age,'
                 . 'ward_name,op_notes,surgery_indication,anethesia_start,anethesia_end,op_date_start,op_date_end,surgeon_uid,b.procedure_id,slot_name,DATE(op_date_start) as operation_date'
@@ -839,7 +839,7 @@ class Booking_model extends MY_Model
             $this->db->join('strack_facility_wards w', 'b.ward_id=w.ward_id', 'LEFT ');
 
             $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id', 'LEFT ');
-            $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+           // $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
             $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
             $this->db->join('strack_insurance_companies', 'pl.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
             $this->db->join("users", "b.surgeon_uid=users.user_id", 'LEFT');
@@ -1222,7 +1222,7 @@ class Booking_model extends MY_Model
 
         $this->db->select('pl.patient_id,booking_id,folder_number,'
             . 'CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)," ",SUBSTRING(SUBSTRING_INDEX(other_names, " ", -1),1,1)) as fullname,other_names,surname,dateofbirth,IF(gender = "1","Male","Female") AS gender,'
-            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,priority_name,category_name,surgery_indication,booking_status,'
+            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,category_name,surgery_indication,booking_status,'
             . 'bproc.procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,DATEDIFF( date(Now()),date(b.booking_date)) as leadtime,booked_by,'
             . 'CONCAT(users.first_name," ",users.last_name) AS bookedby,oproc.procedure_name as op_procedure_name,op_notes,op_date_start,op_date_end,op_recorded_by,op_recorded_on,surgeon_name,duration,'
             . 'postopbed,anesthesia,'
@@ -1233,7 +1233,7 @@ class Booking_model extends MY_Model
         $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
         $this->db->join('strack_facility_procedures bproc', 'b.procedure_id=bproc.procedure_id', 'LEFT');
         $this->db->join('strack_facility_procedures oproc', 'b.op_procedure=oproc.procedure_id', 'LEFT');
-        $this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
+        //$this->db->join('strack_priorities', 'b.priority_id=strack_priorities.priority_id', 'LEFT');
         $this->db->join('strack_facility_wards w', 'b.ward_id=w.ward_id', 'LEFT');
         $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
         $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
