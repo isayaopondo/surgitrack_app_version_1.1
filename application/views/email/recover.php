@@ -13,13 +13,9 @@ $special_link = str_replace( '"','',$special_link );
                 <h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: black;"> Hello <?=$username?>!</h2>
                 <br/>
                 <p>You are receiving this email because we received a password reset request for your account.</p>
+
                 <br/>
-                <?php
-                echo '<a href="'.$special_link.'" style="font-family:Avenir,Helvetica,sans-serif;box-sizing:border-box;border-radius:3px;color:#fff;display:inline-block;text-decoration:none;background-color:#3097d1;border-top:10px solid #3097d1;border-right:18px solid #3097d1;border-bottom:10px solid #3097d1;border-left:18px solid #3097d1" target="_blank">
-                    Reset Password </a>';
-                ?>
-                <br/>
-                OR click on this link:
+                Click on this link to reset your password:
                 <br/>
                 <?=$special_link?>
                 <br/>
