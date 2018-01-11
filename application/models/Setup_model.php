@@ -28,7 +28,7 @@ class Setup_model extends MY_Model
 
     public function get_Users($facilityid)
     {
-        $this->db->select('u.user_id,u.first_name,u.email,u.last_name,fu.auth_level,d.department_name,')
+        $this->db->select('DISTINCT(`u`.`user_id`) as user_id,u.first_name,u.email,u.last_name,fu.auth_level,d.department_name,')
             ->from('users u')
             ->where('fu.facility_id', $facilityid)
             ->join("strack_department_users du", "u.user_id=du.user_id AND current_user='1'", 'LEFT')

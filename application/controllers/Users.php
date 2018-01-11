@@ -18,9 +18,9 @@ class Users extends MY_Controller
         parent::__construct();
         $this->load->database();
         $this->load->library(array( 'form_validation', 'alerts'));
-        $this->load->helper(array('url', 'language', 'form', 'string'));
+        $this->load->helper(array('url', 'language', 'password', 'form', 'string'));
         $this->load->library('notificationmanager');
-        $this->load->model(array('user_model', 'settings_model','setup_model'));
+        $this->load->model(array('user_model', 'settings_model','setup_model','api_model'));
 
 
         $this->pagescripts .= "<!-- Full Calendar -->
@@ -42,6 +42,10 @@ class Users extends MY_Controller
         $this->general_tools = ''
             . ' <script src="' . base_url() . 'assets/js/plugin/select2/js/select2.js"></script>'
             . ' <script src="' . base_url() . 'assets/js/pages/general_tools.js"></script> ';
+
+        $this->settings_tools = ''
+            . '<script src="' . base_url() . 'assets/js/plugin/bootstrap-duallistbox/jquery.bootstrap-duallistbox.js"></script>	'
+            . ' <script src="' . base_url() . 'assets/js/pages/settings_general_tools.js"></script> ';
 
         $this->is_logged_in();
         if ($this->require_min_level(1)) {
