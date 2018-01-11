@@ -83,7 +83,7 @@ class Users extends MY_Controller
 
         $this->data['departments'] = $this->settings_model->get_departments($this->auth_facilityid);
         $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
-        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools;
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools.$this->settings_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_smart_render('users/index', $this->data, true);
 

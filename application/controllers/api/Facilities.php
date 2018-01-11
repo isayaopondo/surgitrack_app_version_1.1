@@ -16,6 +16,8 @@ class Facilities extends REST_Controller
 
         $this->load->database();
         $this->load->model(array('api_model'));
+        $this->load->library('notificationmanager');
+        $this->load->library(array('writelog'));
         header('Access-Control-Allow-Origin: *');
     }
 

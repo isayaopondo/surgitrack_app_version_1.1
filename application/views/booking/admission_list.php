@@ -135,9 +135,7 @@
                                         <th class="hasinput " style="width:15%">
                                             <input type="text" class="form-control" placeholder="Indication" />
                                         </th>
-                                        <th class="hasinput" style="width:8%">
-                                            <input type="text" class="form-control" placeholder=" Priotity" />
-                                        </th>
+
                                         <th class="hasinput" style="width:17%">
                                             <input type="text" class="form-control" placeholder="Theatre" />
                                         </th>
@@ -152,7 +150,6 @@
                                         <th data-hide="expand" >Admission date</th>
                                         <th data-hide="expand">Lead Time(Days)</th>
                                         <th data-hide="expand">Indication</th>
-                                        <th data-hide="expand">Priority</th>
                                         <th data-class="expand">Theatre</th>
                                     </tr>
                                 </thead>

@@ -320,19 +320,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <section class="col col-3">
-                                                <label>Priority</label>
-                                                <label class="select">
-                                                    <select name="priority">
-                                                        <option value="0" selected="" disabled="">Priority</option>
-                                                        <?php
-                                                        foreach ($priorities as $row) {
-                                                            $selected = isset($booking_details->priority_id) && $booking_details->priority_id == $row->priority_id ? 'selected="selected"' : '';
-                                                            echo '<option ' . $selected . ' value="' . $row->priority_id . '">' . $row->priority_name . '</option>';
-                                                        }
-                                                        ?>
-                                                    </select> <i></i> </label>
-                                            </section>
+
                                             <section class="col col-3">
                                                 <label>Firm</label>
                                                 <label class="select">

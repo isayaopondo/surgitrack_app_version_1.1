@@ -288,9 +288,7 @@
                             <button type="button" id="save_opnotes" class="btn btn-success">
                                 <i class="fa fa-save"></i> Save to local 
                             </button>
-                            <button type="button" id="send_dropbox"  class="btn btn-info">
-                                <i class="fa fa-dropbox"></i> Send to Dropbox
-                            </button>
+
                         </footer>
                     </form>
                 </div>

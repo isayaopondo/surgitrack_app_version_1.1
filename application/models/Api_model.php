@@ -23,7 +23,7 @@ class Api_model extends CI_Model
                 $this->db->insert('strack_facilities', $data);
                 if ($this->db->affected_rows() >= 1) {
                     $id = $this->db->insert_id();
-
+                    $this->create_facility_repository($id);
                     $data_setup = [
                         'facility_id' => $id,
                         'is_complete' => 0,
@@ -62,6 +62,7 @@ class Api_model extends CI_Model
             $this->db->update('strack_facilities_setup', $data);
             if ($this->db->affected_rows() >= 1) {
                 $this->check_facility_setup_completenes($id);
+                $this->create_facility_repository($id);
                 return true;
             } else {
                 return false;
@@ -275,6 +276,42 @@ class Api_model extends CI_Model
             ->get();
         return $query->row();
 
+    }
+
+    public function create_facility_repository($facilityid){
+        $codingfolderPath= OPCODING_REPOSITORY . $facilityid;
+        if(FALSE !== ($path = $this->folder_exist($codingfolderPath)))
+        {
+            $log_action = 'OPCODING_REPOSITORY Exists';
+            $log_info = $path;
+            $this->writelog->writelog(0, $log_action, $log_info);
+        }else{
+            mkdir($codingfolderPath, 0777, true) || chmod($codingfolderPath, 0777);
+        }
+
+
+        $notesfolderPath= OPNOTES_REPOSITORY . $facilityid;
+        if(FALSE !== ($notespath = $this->folder_exist($notesfolderPath)))
+        {
+            $log_action = 'OPNOTES_REPOSITORY Exists';
+            $log_info = $notespath;
+            $this->writelog->writelog(0, $log_action, $log_info);
+        }else{
+            mkdir($notesfolderPath, 0777, true) || chmod($notesfolderPath, 0777);
+        }
+
+
+    }
+
+
+
+    public function folder_exist($folder)
+    {
+        // Get canonicalized absolute pathname
+        $path = realpath($folder);
+
+        // If it exist, check if it's a directory
+        return ($path !== false AND is_dir($path)) ? $path : false;
     }
 
 

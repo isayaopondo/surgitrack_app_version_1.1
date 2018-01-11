@@ -111,7 +111,6 @@ $(document).ready(function () {
             {data: "surname"},
             {data: "dateofbirth"},
             {data: "surgerydate"},
-            {data: "priority_name"},
             {
                 "width": "20%",
                 targets: -1,
@@ -264,7 +263,6 @@ $(document).ready(function () {
             {data: "age"},
             {data: "procedure_name"},
             {data: "surgery_indication"},
-            {data: "priority_name"},
             {data: "booking_date"},
             {data: "leadtime"},
             {data: "mapt"},
@@ -434,7 +432,6 @@ $(document).ready(function () {
             {data: "admission_date"},
             {data: "leadtime"},
             {data: "surgery_indication"},
-            {data: "priority_name"},
             {data: "theatre_name"},
         ],
         "order": [[5, 'asc']]
@@ -533,10 +530,7 @@ $(document).ready(function () {
             '<td style="width:100px"><b>Lead time:</b></td>' +
             '<td>' + d.leadtime + '</td>' +
             '</tr>' +
-            '<tr>' +
-            '<td style="width:100px"><b>Priority:</b></td>' +
-            '<td>' + d.priority_name + '</td>' +
-            '</tr>' +
+
             '<tr>' +
             '<td style="width:100px"><b>Indication:</b></td>' +
             '<td>' + d.surgery_indication + '</td>' +
@@ -745,10 +739,7 @@ $(document).ready(function () {
             '<td style="width:100px"><b>Surgery Duration:</b></td>' +
             '<td>' + d.surgery_time + '</td>' +
             '</tr>' +
-            '<tr>' +
-            '<td style="width:100px"><b>Priority:</b></td>' +
-            '<td>' + d.priority_name + '</td>' +
-            '</tr>' +
+
             '<tr>' +
             '<td style="width:100px"><b>Indication:</b></td>' +
             '<td>' + d.surgery_indication + '</td>' +
@@ -921,10 +912,7 @@ $(document).ready(function () {
             '<td style="width:100px"><b>Surgery Duration:</b></td>' +
             '<td>' + d.surgery_time + '</td>' +
             '</tr>' +
-            '<tr>' +
-            '<td style="width:100px"><b>Priority:</b></td>' +
-            '<td>' + d.priority_name + '</td>' +
-            '</tr>' +
+
             '<tr>' +
             '<td style="width:100px"><b>Indication:</b></td>' +
             '<td>' + d.surgery_indication + '</td>' +

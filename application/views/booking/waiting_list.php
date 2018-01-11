@@ -150,11 +150,6 @@
                                         </th>
 
 
-
-                                        <th class="hasinput" style="width:8%">
-                                            <input type="text" class="form-control" placeholder=" Priotity" />
-                                        </th>
-
                                         <th class="hasinput icon-addon" >
                                             <input id="dateselect_filter" type="text" placeholder="Filter Date" class="form-control datepicker" data-dateformat="yy-mm-dd">
                                         </th>
@@ -175,8 +170,7 @@
                                         <th>Name</th>
                                         <th data-hide="expand">Age(Yrs)</th>                                        
                                         <th data-hide="expand">Procedure</th>
-                                        <th data-hide="expand">Indication</th>           
-                                        <th data-hide="expand">Priority</th>
+                                        <th data-hide="expand">Indication</th>
                                         <th data-hide="expand" >Booking date</th>
                                         <th data-hide="expand">Lead Time(Days)</th>
 

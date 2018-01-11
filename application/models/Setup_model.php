@@ -19,9 +19,10 @@ class Setup_model extends MY_Model
         $this->db->where(array("facility_id" => $facilityid));
         $this->db->where('is_complete!=0');
         $query = $this->db->get('strack_facilities_setup');
-        if ($query->num_rows() >= 1)
+        if ($query->num_rows() >= 1){
+            $this->check_facility_repository($facilityid);
             return TRUE;
-        else
+        }else
             return FALSE;
     }
 
@@ -168,6 +169,36 @@ class Setup_model extends MY_Model
         return $procedures ;
     }
 
+
+    public function check_facility_repository($facilityid){
+        $codingfolderPath= OPCODING_REPOSITORY . $facilityid;
+        if(FALSE !== ($path = $this->folder_exist($codingfolderPath)))
+        {
+        }else{
+            mkdir($codingfolderPath, 0777, true) || chmod($codingfolderPath, 0777);
+        }
+
+
+        $notesfolderPath= OPNOTES_REPOSITORY . $facilityid;
+        if(FALSE !== ($notespath = $this->folder_exist($notesfolderPath)))
+        {
+        }else{
+            mkdir($notesfolderPath, 0777, true) || chmod($notesfolderPath, 0777);
+        }
+
+
+    }
+
+
+
+    private function folder_exist($folder)
+    {
+        // Get canonicalized absolute pathname
+        $path = realpath($folder);
+
+        // If it exist, check if it's a directory
+        return ($path !== false AND is_dir($path)) ? $path : false;
+    }
 
 
 
