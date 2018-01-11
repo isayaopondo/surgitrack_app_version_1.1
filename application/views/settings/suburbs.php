@@ -9,7 +9,7 @@
 
     <!-- breadcrumb -->
     <ol class="breadcrumb">
-        <li>Home</li><li>Department</li><li>Add/Edit</li>
+        <li>Home</li><li>Surburb</li>
     </ol>
     <!-- end breadcrumb -->
 
@@ -43,7 +43,7 @@
                 <i class="fa-fw fa fa-plus-square"></i> 
                 Suburb
                 <span>>  
-                    Add/Edit
+                    List
                 </span>
             </h1>
         </div>
@@ -69,123 +69,14 @@
 
         <div class="row">
 
+
             <!-- NEW COL START -->
-            <div class="col-sm-5 col-md-5 col-lg-4">
+            <div class="col-sm-7 col-md-7 col-lg-12">
 
                 <!-- Widget ID (each widget will need unique ID)-->
                 <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-deletebutton="false"
                      data-widget-fullscreenbutton="false">
-                    <!-- widget options:
-                            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-                            
-                            data-widget-colorbutton="false"	
-                            data-widget-editbutton="false"
-                            data-widget-togglebutton="false"
-                            data-widget-deletebutton="false"
-                            data-widget-fullscreenbutton="false"
-                            data-widget-custombutton="false"
-                            data-widget-collapsed="true" 
-                            data-widget-sortable="false"
-                            
-                    -->
-                    <header>
-                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                        <h2>Add/Edit Suburb Details </h2>				
 
-                    </header>
-
-                    <!-- widget div-->
-                    <div>
-
-                        <!-- widget edit box -->
-                        <div class="jarviswidget-editbox">
-                            <!-- This area used as dropdown edit box -->
-
-                        </div>
-                        <!-- end widget edit box -->
-
-                        <!-- widget content -->
-                        <div class="widget-body no-padding">
-                            <section>
-                                <div id="infoMessage"><?php echo $message; ?></div>
-                            </section>
-                            <form id="checkout-form"method="POST" action="<?= base_url('settings/create_suburbs') ?>" class="smart-form" novalidate="novalidate">
-                                <fieldset>
-                                    <section >
-                                        <input class="form-control rounded" type="hidden"  id="suburb_id" name="suburb_id" value="<?= isset($suburb->suburb_id) ? $suburb->suburb_id : '' ?>">
-                                        <label class="select">
-                                            <select name="city">
-                                                <option value="0" selected="" disabled="">City</option>
-                                                <?php
-                                                foreach ($facilities as $row) {
-                                                    $selected = isset($suburb->city_id) && $suburb->city_id == $row->city_id ? 'selected="selected"' : '';
-                                                    echo '<option ' . $selected . ' value="' . $row->city_id . '">' . $row->city_name . '</option>';
-                                                }
-                                                ?>
-                                            </select> <i></i> </label>
-                                    </section>
-                                    <section>
-                                        <label for="Suburb Name" class="input">
-                                            <input type="text" name="suburb_name" id="suburb_name" placeholder="Suburb Name" value="<?= isset($suburb->suburb_name) ? $suburb->suburb_name : '' ?>">
-                                        </label>
-                                    </section>
-                                    <section >
-                                        <label for="address2" class="input">
-                                            <input type="text" name="postal_code" id="postal_code" placeholder="Post Code" value="<?= isset($suburb->postal_code) ? $suburb->postal_code : '' ?>">
-                                        </label>
-                                    </section>
-                                    <section >
-                                        <label for="address2" class="input">
-                                            <input type="text" name="street_code" id="street_code" placeholder="Street Code" value="<?= isset($suburb->street_code) ? $suburb->street_code : '' ?>">
-                                        </label>
-                                    </section>
-                                </fieldset>
-                                
-
-                                <footer>
-                                    <button type="reset" class="btn btn-warning">
-                                        Clear
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">
-                                        Save
-                                    </button>
-                                </footer>
-                            </form>
-
-                        </div>
-                        <!-- end widget content -->
-
-                    </div>
-                    <!-- end widget div -->
-
-                </div>
-                <!-- end widget -->
-
-
-
-
-            </div>
-            <!-- END COL -->
-
-            <!-- NEW COL START -->
-            <div class="col-sm-7 col-md-7 col-lg-8">
-
-                <!-- Widget ID (each widget will need unique ID)-->
-                <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-deletebutton="false"
-                     data-widget-fullscreenbutton="false">
-                    <!-- widget options:
-                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-                    data-widget-colorbutton="false"
-                    data-widget-editbutton="false"
-                    data-widget-togglebutton="false"
-                    data-widget-deletebutton="false"
-                    data-widget-fullscreenbutton="false"
-                    data-widget-custombutton="false"
-                    data-widget-collapsed="true"
-                    data-widget-sortable="false"
-
-                    -->
                     <header>
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                         <h2>Suburbs </h2>
@@ -217,14 +108,12 @@
                                         
                                         <th class="hasinput" style="width:15%"><input type="text" class="form-control" placeholder="Post Code" /></th>
                                         <th style="width:20%"></th>
-                                        <th></th>
                                     </tr>
                                     <tr>
+                                        <th >Country</th>
                                         <th>Suburb Name</th>
-                                        <th >City</th>
                                         <th >Post code</th>
                                         <th >Street Code</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
 

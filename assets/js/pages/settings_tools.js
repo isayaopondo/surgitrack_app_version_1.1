@@ -339,20 +339,11 @@ $(document).ready(function () {
         },
         "deferLoading": 57,
         "columns": [
+            {"width": "20%", "orderable": false, data: "country_name"},
             {"width": "30%", "orderable": true, data: "suburb_name"},
-            {"width": "20%", "orderable": false, data: "city_name"},
             {"width": "20%", "orderable": false, data: "postal_code"},
             {"width": "20%", "orderable": false, data: "street_code"},
-            {
-                "width": "10%",
-                targets: -1,
-                data: 'suburb_id',
-                render: function (data, type, full, meta) {
-                    return '<a href="' + jsonPath + '/settings/suburbs/' + data + '"  class="indicatoritem btn btn-success btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a> \n\
-<a href="' + jsonPath + '/settings/delete_suburbs/' + data + '"  class="indicatoritem btn btn-danger btn-xs rounded" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>';
-                }
 
-            }
         ],
         dom: 'Bfrtip',
         buttons: [

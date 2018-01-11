@@ -1361,7 +1361,7 @@ class Settings extends MY_Controller
         if ($id != "" && is_numeric($id)) {
             $this->data['suburb'] = $this->settings_model->get_suburb_by_id($id);
         }
-        $this->data['city'] = $this->settings_model->get_cities_list();
+        $this->data['countries'] = $this->settings_model->get_countries_list();
 
         $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
