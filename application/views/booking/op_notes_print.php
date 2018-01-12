@@ -33,4 +33,4 @@ $file_name =$filename;
 $content = $body;
 ob_end_clean();
 $obj_pdf->writeHTML($content, true, false, true, false, '');
-$obj_pdf->Output(OPNOTES_REPOSITORY.$file_name, 'F');
+$obj_pdf->Output(OPNOTES_REPOSITORY.$facility.'/'.$file_name, 'F');

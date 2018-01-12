@@ -1080,7 +1080,7 @@ class Settings extends MY_Controller
     public function create_departments()
     {
         $this->data['title'] = "Create Theatre";
-        $id = $this->input->post('theatre_id');
+        $id = $this->input->post('department_id');
         // validate form input
 
         $this->form_validation->set_rules('facility', 'Facility', 'required');
@@ -1126,13 +1126,27 @@ class Settings extends MY_Controller
     }
 
     //delete Procedures
-    public function delete_departments()
+    public function delete_departments($id)
     {
-        $id = $this->uri->segment(3);
-        if ($this->settings_model->delete_departments($id) == 1) {
-            $this->session->set_flashdata('message', "You cannot delete this department has firms");
+        if ($this->settings_model->delete_departments($id) == '1') {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
+                                                            <button class="close" data-dismiss="alert">
+                                                                    ×
+                                                            </button>
+                                                            <i class="fa-fw fa fa-check"></i>
+                                                            <strong>Error</strong> You cannot delete this department has firms 
+                                                    </div>');
         } else {
-            $this->settings_model->delete_departments($id);
+           if($this->settings_model->delete_departments($id)) {
+               $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                                            <button class="close" data-dismiss="alert">
+                                                                    ×
+                                                            </button>
+                                                            <i class="fa-fw fa fa-check"></i>
+                                                            <strong>Succes</strong> You have deleted this department  
+                                                    </div>');
+           }
+
         }
         redirect('settings/departments');
     }
@@ -1144,6 +1158,8 @@ class Settings extends MY_Controller
     {
         if ($id != "" && is_numeric($id)) {
             $this->data['firm'] = $this->settings_model->get_firms_by_id($id);
+        }else{
+            $this->data['firm']='';
         }
         $this->data['departments'] = $this->settings_model->get_departments_list();
 
@@ -1238,7 +1254,7 @@ class Settings extends MY_Controller
                 'firm_phone' => $this->input->post('firm_phone'),
                 'firm_info' => $this->input->post('firm_info')
             );
-            $this->data['theatre'] = $data;
+            $this->data['firm'] = $data;
             // set the flash data error message if there is one
             $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools;
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
@@ -1247,10 +1263,10 @@ class Settings extends MY_Controller
     }
 
     //delete Procedures
-    public function delete_firms()
+    public function delete_firms($id)
     {
-        $id = $this->uri->segment(3);
-        if ($this->settings_model->delete_firms($id) == 1) {
+        //$id = $this->uri->segment(3);
+        if ($this->settings_model->delete_firms($id) == '1') {
             $this->session->set_flashdata('message', "You cannot delete this firms has cases");
         } else {
             $this->settings_model->delete_firms($id);
@@ -1395,7 +1411,7 @@ class Settings extends MY_Controller
     public function create_suburb()
     {
         $this->data['title'] = "Create Theatre";
-        $id = $this->input->post('theatre_id');
+        $id = $this->input->post('suburb_id');
         // validate form input
 
         $this->form_validation->set_rules('facility', 'Facility', 'required');
@@ -1432,7 +1448,7 @@ class Settings extends MY_Controller
                 'department_phone' => $this->input->post('department_phone'),
                 'department_info' => $this->input->post('department_info')
             );
-            $this->data['department'] = $data;
+            $this->data['suburb_id'] = $data;
             // set the flash data error message if there is one
             $this->data['pagescripts'] = $this->pagescripts . $this->settings_tools;
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
