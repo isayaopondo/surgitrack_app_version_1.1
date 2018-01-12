@@ -21,11 +21,7 @@ Dear  <?php if (strlen($username) > 0) { ?>Dr. <?php echo $username; ?><br /><?p
                 <br />
                 
                 Your email address/Username: <?php echo $email; ?><br />
-                <?php if (isset($password)) { ?> Your password: <?php echo $password; ?>
-                    <?php
-                }
-                ?>
-                <br />
+                <?php if (isset($password)){?> Your password: <?php echo $password;?><?php }?><br />
                 <br />
                 <br />
                 Kind Regards!<br />

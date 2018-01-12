@@ -47,6 +47,7 @@ class Booking extends MY_Controller
                 <script src="' . base_url() . 'assets/js/pages/filters.js"></script> ';
         $this->general_tools = '<!-- JQUERY SELECT2 INPUT -->
                     <script src="' . base_url() . 'assets/js/plugin/select2/js/select2.js"></script>'
+            .'<script src="' . base_url() . 'assets/js/pages/general_tools.js"></script>'
             . '<script src="' . base_url() . 'assets/js/pages/booking_tools.js"></script> ';
 
 
@@ -95,7 +96,7 @@ class Booking extends MY_Controller
             $patient_id = $this->booking_model->get_patient_id_by($booking_id)->patient_id;
             $log_action = 'Patient Moved back to Waiting List';
             $log_info = 'Patient Moved back to waiting list on ' . date('Y-m-d H:i:s', strtotime('now'));
-            $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                                             <button class="close" data-dismiss="alert">
@@ -114,7 +115,7 @@ class Booking extends MY_Controller
             $patient_id = $this->booking_model->get_patient_id_by($booking_id)->patient_id;
             $log_action = 'Patient Moved back to Admission List';
             $log_info = 'Patient Moved back to Admission list on ' . date('Y-m-d H:i:s', strtotime('now'));
-            $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                                                 <button class="close" data-dismiss="alert">
@@ -133,7 +134,7 @@ class Booking extends MY_Controller
             $patient_id = $this->booking_model->get_patient_id_by($booking_id)->patient_id;
             $log_action = 'Patient removed';
             $log_info = 'Patient removed from lists on ' . date('Y-m-d H:i:s', strtotime('now'));
-            $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                                             <button class="close" data-dismiss="alert">
@@ -219,6 +220,7 @@ class Booking extends MY_Controller
         $this->form_validation->set_rules('theatre', 'theatre', 'required');
         $this->form_validation->set_rules('booking_date', 'Booking Date', 'required');
         $this->form_validation->set_rules('surgery_indication', 'Surgery Indication', 'required');
+        $this->form_validation->set_rules('duration', 'Estimated Duration of Surgery', 'required');
 
 
         if ($this->form_validation->run() == true) {
@@ -236,10 +238,10 @@ class Booking extends MY_Controller
                 'anesthesia' => $this->input->post('anesthesia'),
 
                 'postopbed' => $this->input->post('postopbed'),
-                'booked_by' => $this->user_id,
+                'booked_by' => $this->auth_user_id,
                 'surgery_indication' => $this->input->post('surgery_indication'),
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'created_by' => $this->user_id
+                'created_by' => $this->auth_user_id
             );
 
             if (isset($bookingstatus) && $bookingstatus != '0') {
@@ -248,7 +250,7 @@ class Booking extends MY_Controller
                         'ward_id' => $this->input->post('ward'),
                         'admission_date' => $this->input->post('admission_date'),
                         'booking_status' => $this->input->post('booking_status'),
-                        'admitted_by' => $this->user_id,
+                        'admitted_by' => $this->auth_user_id,
                     );
                 } else {
                     $data2 = array(
@@ -281,7 +283,7 @@ class Booking extends MY_Controller
                 if (is_numeric($booking_id)) {
                     $log_action = 'Waiting List';
                     $log_info = 'Added to waiting list on ' . date('Y-m-d H:i:s', strtotime('now') . ' BOOKINGID:' . $booking_id);
-                    $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+                    $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
                     $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
                                             ×
@@ -305,7 +307,7 @@ class Booking extends MY_Controller
             if ($this->form_validation->run() == true && $this->booking_model->booking_update($data, $id)) {
                 $log_action = 'Waiting List';
                 $log_info = 'Editted to waiting list on ' . date('Y-m-d H:i:s', strtotime('now'));
-                $this->writelog->patientlog($this->user_id, $id, $log_action, $log_info);
+                $this->writelog->patientlog($this->auth_user_id, $id, $log_action, $log_info);
 
                 $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
@@ -358,7 +360,7 @@ class Booking extends MY_Controller
                 if ($this->booking_model->booking_update($data, $booking_id)) {
                     $log_action = 'Added Surgeon Assistants';
                     $log_info = 'Added Surgeon Assistants ' . date('Y-m-d H:i:s', strtotime('now'));
-                    $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+                    $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
                     $this->session->set_flashdata('message', "You have succesfully Added Surgeon Assistants '" . serialize($data) . "' details");
                     $return = array('booking_id' => $booking_id,
@@ -455,7 +457,7 @@ class Booking extends MY_Controller
         $patient_id = $this->input->post('patient_id');
         $firm_id = isset($firm) && $firm !== '' ? $firm : '';
         if ($this->is_role('doctor') || $this->is_role('nurse')) {
-            $user_id = $this->user_id;
+            $user_id = $this->auth_user_id;
             $department = $this->user_model->get_users_department($user_id);
             $firm = $this->settings_model->get_myfirm($user_id);
             $department_id = $department ? $department->department_id : '';
@@ -478,7 +480,7 @@ class Booking extends MY_Controller
         $patient_id = $this->input->post('patient_id');
 
         if ($this->is_role('doctor') || $this->is_role('nurse')) {
-            $user_id = $this->user_id;
+            $user_id = $this->auth_user_id;
             $department = $this->user_model->get_users_department($user_id);
             $firm = $this->settings_model->get_myfirm($user_id);
             $department_id = $department ? $department->department_id : '';
@@ -501,7 +503,7 @@ class Booking extends MY_Controller
         $patient_id = $this->input->post('patient_id');
 
         if (!$this->verify_role('doctor,nurse')) {
-            $user_id = $this->user_id;
+            $user_id = $this->auth_user_id;
             $department = $this->user_model->get_users_department($user_id);
             $firm = $this->settings_model->get_myfirm($user_id);
             $department_id = $department ? $department->department_id : '';
@@ -519,7 +521,7 @@ class Booking extends MY_Controller
     public function mylogbook_data()
     {
 
-        $user_id = $this->user_id;
+        $user_id = $this->auth_user_id;
         $json = $this->booking_model->get_log_book_data($user_id);
 
 
@@ -549,7 +551,7 @@ class Booking extends MY_Controller
                 'anethesia_end' => $this->input->post('anethesia_end'),
                 'op_notes' => $this->input->post('op_notes'),
                 'op_recorded_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'op_recorded_by' => $this->user_id
+                'op_recorded_by' => $this->auth_user_id
             );
 
             $data_surgeons = array(
@@ -557,7 +559,7 @@ class Booking extends MY_Controller
                 'op_user_id' => $this->input->post('surgeon_uid'),
                 'booking_id' => $id,
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'created_by' => $this->user_id
+                'created_by' => $this->auth_user_id
             );
             $this->booking_model->surgeon_insert($data_surgeons);
             $data_surgeonssupervisor = array(
@@ -565,7 +567,7 @@ class Booking extends MY_Controller
                 'op_user_id' => $this->input->post('surgeon_supervisor'),
                 'booking_id' => $id,
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'created_by' => $this->user_id
+                'created_by' => $this->auth_user_id
             );
             $this->booking_model->surgeon_insert($data_surgeonssupervisor);
 
@@ -577,7 +579,7 @@ class Booking extends MY_Controller
                         'op_user_id' => $assistant,
                         'booking_id' => $id,
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                        'created_by' => $this->user_id
+                        'created_by' => $this->auth_user_id
                     );
                     $this->booking_model->surgeon_insert($data_assistant);
                 }
@@ -586,7 +588,7 @@ class Booking extends MY_Controller
             if ($this->booking_model->booking_update($data, $id)) {
                 $log_action = 'PostOP';
                 $log_info = 'Added PostOP details on ' . date('Y-m-d H:i:s', strtotime('now'));
-                $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+                $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
                 $this->session->set_flashdata('message', "you have succesifully Updated '" . $this->input->post('procedure_name') . "' details");
                 redirect('patients/patient_page/' . $patient_id);
@@ -616,7 +618,7 @@ class Booking extends MY_Controller
                 'surgeon_uid' => $this->input->post('surgeon_uid'),
                 'op_notes' => $this->input->post('op_notes'),
                 'op_recorded_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'op_recorded_by' => $this->user_id
+                'op_recorded_by' => $this->auth_user_id
             );
             //Clear all existing Surgeons
             $this->booking_model->delete_existing_booking_surgeon($id);
@@ -626,7 +628,7 @@ class Booking extends MY_Controller
                 'op_user_id' => $this->input->post('surgeon_uid'),
                 'booking_id' => $id,
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'created_by' => $this->user_id
+                'created_by' => $this->auth_user_id
             );
             if (!$this->booking_model->check_ifsurgeon_booking_exist($id, $this->input->post('surgeon_uid'))) {
                 $this->booking_model->surgeon_insert($data_surgeons);
@@ -636,7 +638,7 @@ class Booking extends MY_Controller
                 'op_user_id' => $this->input->post('surgeon_supervisor'),
                 'booking_id' => $id,
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'created_by' => $this->user_id
+                'created_by' => $this->auth_user_id
             );
             if (!$this->booking_model->check_ifsurgeon_booking_exist($id, $this->input->post('surgeon_supervisor'))) {
                 $this->booking_model->surgeon_insert($data_surgeonssupervisor);
@@ -650,7 +652,7 @@ class Booking extends MY_Controller
                         'op_user_id' => $assistant,
                         'booking_id' => $id,
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                        'created_by' => $this->user_id
+                        'created_by' => $this->auth_user_id
                     );
                     if (!$this->booking_model->check_ifsurgeon_booking_exist($id, $assistant)) {
                         $this->booking_model->surgeon_insert($data_assistant);
@@ -662,7 +664,7 @@ class Booking extends MY_Controller
             if ($this->booking_model->booking_update($data, $id)) {
                 $log_action = 'PostOP';
                 $log_info = 'Editted Op Notes on ' . date('Y-m-d H:i:s', strtotime('now'));
-                $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+                $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
                 $this->session->set_flashdata('message', "you have successfully Eddited Op Notes '" . $this->input->post('procedure_name') . "' details");
                 redirect('patients/patient_page/' . $patient_id);
@@ -687,9 +689,9 @@ class Booking extends MY_Controller
                 'booking_status' => '1',
                 'ward_id' => $this->input->post('ward'),
                 'admission_notes' => $this->input->post('admission_notes'),
-                'admitted_by' => $this->user_id,
+                'admitted_by' => $this->auth_user_id,
                 'last_modified_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'last_modified_by' => $this->user_id
+                'last_modified_by' => $this->auth_user_id
             );
         }
 
@@ -699,7 +701,7 @@ class Booking extends MY_Controller
 
             $log_action = 'Admission';
             $log_info = 'Added Patient Admission details on ' . date('Y-m-d H:i:s', strtotime('now'));
-            $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
 
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
@@ -720,11 +722,11 @@ class Booking extends MY_Controller
                                     <i class="fa-fw fa fa-check"></i>
                                     <strong>Success</strong> You have succesfully added a comment.
                             </div> ');
-            $this->writelog->writelog($this->user_id, 'Added a comment for bookingID:' . $id, "#" . serialize($return));
+            $this->writelog->writelog($this->auth_user_id, 'Added a comment for bookingID:' . $id, "#" . serialize($return));
 
             $log_action = 'Comments';
             $log_info = '<b>COMMENT:</b> ' . $this->input->post('admission_notes') . ' <b>TIME</b>: ' . date('Y-m-d H:i:s', strtotime('now')) . ' BookingID: ' . $id;
-            $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info, 'user_comment');
+            $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info, 'user_comment');
         }
         redirect('patients/patient_page/' . $patient_id);
     }
@@ -745,7 +747,7 @@ class Booking extends MY_Controller
                 'booking_status' => '2',
                 'surgery_notes' => $this->input->post('sugery_notes'),
                 'last_modified_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'last_modified_by' => $this->user_id
+                'last_modified_by' => $this->auth_user_id
             );
         }
 
@@ -753,7 +755,7 @@ class Booking extends MY_Controller
         if ($this->form_validation->run() == true && $this->booking_model->booking_update($data, $id)) {
             $log_action = 'Moved to Theatre List';
             $log_info = 'Added Patient on Theatre List  on ' . date('Y-m-d H:i:s', strtotime('now'));
-            $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
                                             ×
@@ -849,20 +851,24 @@ class Booking extends MY_Controller
                 $data2 = array(
                     'scoredate' => date('Y-m-d H:i:s', strtotime('now')),
                     'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                    'created_by' => $this->user_id
+                    'created_by' => $this->auth_user_id
                 );
                 $arr = $remaining_options + $data2;
+                $patient_id =$this->booking_model->get_patient_id_by($this->input->post('booking_id'))->patient_id;
 
                 $return = array('scoredate_id' => $this->booking_model->mapt_formfill_insert($arr),
                     'message' => 'You have succesifully created a new criteria',
                     'bookingID' => $this->input->post('booking_id'),
-                    'patient_id' => $this->booking_model->get_patient_id_by($this->input->post('booking_id'))->patient_id,
+                    'patient_id' => $patient_id,
                     'success' => 1);
                 $qid = $return['scoredate_id'];
                 $this->booking_model->mapt_formfill_scores_insert($options, $qid);
                 echo json_encode($return);
                 $this->session->set_flashdata('message', "You have succesfully Score this patient");
-                $this->writelog->writelog($this->user_id, 'Created MAPT Criteria score  for bookingID:' . $this->input->post('booking_id'), "#" . serialize($return));
+                $log_action = 'MAPT Score added';
+                $log_info = 'Created MAPT Criteria score  for bookingID:' . $this->input->post('booking_id').' on ' . date('Y-m-d H:i:s', strtotime('now')) ;
+                $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+                $this->writelog->writelog($this->auth_user_id, 'Created MAPT Criteria score  for bookingID:' . $this->input->post('booking_id'), "#" . serialize($return));
             }
         }
     }
@@ -995,8 +1001,8 @@ class Booking extends MY_Controller
         $this->session->set_flashdata('message', "You have succesfully Sent Admission SMS notification");
         $log_action = 'Admission Notification SMS';
         $log_info = 'Sent Admission Notification SMS [' . $message . '] on ' . date('Y-m-d H:i:s', strtotime('now')) . '  #' . serialize($return);
-        $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
-        $this->writelog->writelog($this->user_id, 'Sent Admission Notification SMS to :' . $patient_id . '(' . $folder_number . ')', "#" . serialize($return));
+        $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+        $this->writelog->writelog($this->auth_user_id, 'Sent Admission Notification SMS to :' . $patient_id . '(' . $folder_number . ')', "#" . serialize($return));
 
         echo json_encode($return);
     }
@@ -1017,8 +1023,8 @@ class Booking extends MY_Controller
         $this->session->set_flashdata('message', "You have succesfully Sent SMS ");
         $log_action = 'Sent SMS SMS';
         $log_info = 'Sent general message(SMS)[' . $message . '] on ' . date('Y-m-d H:i:s', strtotime('now')) . '  #' . serialize($return);
-        $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info);
-        $this->writelog->writelog($this->user_id, 'Sent message to :' . $patient_id . '(' . $folder_number . ')', "#" . serialize($return));
+        $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+        $this->writelog->writelog($this->auth_user_id, 'Sent message to :' . $patient_id . '(' . $folder_number . ')', "#" . serialize($return));
 
         echo json_encode($return);
     }
@@ -1079,11 +1085,11 @@ class Booking extends MY_Controller
                     'success' => 1);
 
                 $this->session->set_flashdata('message', "You have succesfully added a comment");
-                $this->writelog->writelog($this->user_id, 'Added a comment for bookingID:' . $booking_id, "#" . serialize($return));
+                $this->writelog->writelog($this->auth_user_id, 'Added a comment for bookingID:' . $booking_id, "#" . serialize($return));
 
                 $log_action = 'Comments';
                 $log_info = '<b>COMMENT:</b> ' . $comment . ' <b>TIME</b>: ' . date('Y-m-d H:i:s', strtotime('now')) . ' BookingID: ' . $booking_id;
-                $this->writelog->patientlog($this->user_id, $patient_id, $log_action, $log_info, 'user_comment');
+                $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info, 'user_comment');
                 echo json_encode($return);
             }
         }
@@ -1159,7 +1165,7 @@ class Booking extends MY_Controller
                         'booking_id' => $booking_id,
                         'procedure_id' => $procedure,
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                        'created_by' => $this->user_id
+                        'created_by' => $this->auth_user_id
                     );
                     $this->booking_model->coding_booking_procedure_insert($data2);
                 }
@@ -1173,7 +1179,7 @@ class Booking extends MY_Controller
                     'bookingID' => $booking_id,
                     'procedure_id' => json_encode($procedures),
                     'success' => 1);
-                $this->writelog->writelog($this->user_id, 'Added a procedure for bookingID:' . $booking_id, "#" . serialize($return));
+                $this->writelog->writelog($this->auth_user_id, 'Added a procedure for bookingID:' . $booking_id, "#" . serialize($return));
                 echo json_encode($return);
             }
         }
@@ -1235,7 +1241,7 @@ class Booking extends MY_Controller
                 'consumable_id' => $consumable->consumable_id,
                 'price' => $consumable->price,
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                'created_by' => $this->user_id
+                'created_by' => $this->auth_user_id
             );
             if ($this->booking_model->checkif_booking_has_thisconsumables($booking_id, $consumable->consumable_id)) {
                 $j++;
@@ -1277,7 +1283,7 @@ class Booking extends MY_Controller
                         'consumable_id' => $consumable,
                         'price' => $consumable_details->price,
                         'created_on' => date('Y-m-d H:i:s', strtotime('now')),
-                        'created_by' => $this->user_id
+                        'created_by' => $this->auth_user_id
                     );
                     if ($this->booking_model->checkif_booking_has_thisconsumables($booking_id, $consumable)) {
                         $j++;
@@ -1303,7 +1309,7 @@ class Booking extends MY_Controller
                 $return2 = array('message' => $i . ' Consumables has been successfully added',
                     'bookingID' => $booking_id,
                     'success' => 1);
-                $this->writelog->writelog($this->user_id, 'Added a consumable for bookingID:' . $booking_id, "#" . serialize($return2));
+                $this->writelog->writelog($this->auth_user_id, 'Added a consumable for bookingID:' . $booking_id, "#" . serialize($return2));
                 echo json_encode($return);
             }
         }
@@ -1357,7 +1363,7 @@ class Booking extends MY_Controller
                         'price' => $option['price'],
                         'quantity' => $option['quantity'],
                         'modified_on' => date('Y-m-d H:i:s', strtotime('now')),
-                        'modified_by' => $this->user_id
+                        'modified_by' => $this->auth_user_id
                     );
 
                     if ($this->booking_model->update_booking_consumables($data2, $booking_id, $option['booking_consumable_id'])) {
@@ -1377,7 +1383,7 @@ class Booking extends MY_Controller
                 $return2 = array('message' => $j . ' Consumables has been successfully updated',
                     'bookingID' => $booking_id,
                     'success' => 1);
-                $this->writelog->writelog($this->user_id, 'Updated a consumable for bookingID:' . $booking_id, "#" . serialize($return2));
+                $this->writelog->writelog($this->auth_user_id, 'Updated a consumable for bookingID:' . $booking_id, "#" . serialize($return2));
                 echo json_encode($return);
             }
         }

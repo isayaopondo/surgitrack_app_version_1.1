@@ -261,7 +261,7 @@ class Settings_model extends MY_Model
     {
         $this->db->select('*')
             ->from('strack_suburbs')
-            ->join('strack_cities', 'strack_cities.city_id=strack_suburbs.city_id', 'LEFT');
+            ->join('strack_countries', 'strack_countries.country_id=strack_suburbs.country_id', 'LEFT');
         $query = $this->db->get();
         $result = $query->result();
         return $result;
@@ -343,6 +343,15 @@ class Settings_model extends MY_Model
     {
         $this->db->select('*')
             ->from('strack_cities');
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+
+    public function get_countries_list()
+    {
+        $this->db->select('*')
+            ->from('strack_countries');
         $query = $this->db->get();
         $result = $query->result();
         return $result;

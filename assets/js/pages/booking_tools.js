@@ -203,7 +203,25 @@ $(document).ready(function () {
     });
     $('.select-multiple').multipleSelect();
     /*$(".select2").select2();*/
-
+    $('#savebookingmapt').on('click', function () {
+        $.ajax({
+            dataType: 'json',
+            type: "POST",
+            url: jsonPath + "/booking/save_booking_mapt",
+            data: $('#fill-mapt-form').serialize(),
+            beforeSend: function () {
+                $("#listsq").css("background", "#FFF url(" + jsonPath + "/assets/img/ajax-loader.gif) no-repeat 165px");
+            },
+            success: function (data) {
+                $("#message").html('');
+                $('#alertMessage').show();
+                $("#message").text(data.message);
+                $('#fill-mapt-form')[0].reset();
+                $('#myModalViewMAPT').modal('hide');
+                window.location.href = jsonPath + '/patients/patient_page/' + data.patient_id;
+            }
+        });
+    });
 
     $('#save_comment').on('click', function () {
         $.ajax({
