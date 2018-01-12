@@ -135,7 +135,7 @@
                                     <section>
                                         <label>Description </label>
                                         <label class="textarea"> 										
-                                            <textarea rows="3" name="firm_info" placeholder="Additional info"><?= isset($firm->firm_info) ? $department->firm_info : '' ?></textarea> 
+                                            <textarea rows="3" name="firm_info" placeholder="Additional info"><?= isset($firm->firm_info) ? $firm->firm_info : '' ?></textarea>
                                         </label>
                                     </section>
                                 </fieldset>

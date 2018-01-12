@@ -691,6 +691,7 @@ class Patients extends MY_Controller
         $this->data['filename'] = $filename;
         $this->data['title'] = $procedure_name . ' OP Notes';
         $this->data['body'] = $return;
+        $this->data['facility'] = $this->auth_facilityid;
         $folder_name = $this->booking_model->get_dropbox_folder_structure($booking_id);
         $data = array(
             'opnotes_file_name' => $filename,
@@ -790,6 +791,7 @@ class Patients extends MY_Controller
         $this->data['filename'] = $filename;
         $this->data['title'] = $foldernumber . '- ' . $booking_id . ' Coding';
         $this->data['body'] = $return;
+        $this->data['facility'] = $this->auth_facilityid;
         $folder_name = $this->booking_model->get_dropbox_folder_structure($booking_id);
         $data = array(
             'opcoding_file_name' => $filename,

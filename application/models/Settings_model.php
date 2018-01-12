@@ -1060,15 +1060,15 @@ class Settings_model extends MY_Model
         }
     }
 
-    function delete_firms($id)
+    public function delete_firms($id)
     {
 
         $this->db->where("firm_id", $id);
-        $q = $this->db->get('strack_members');
+        $q = $this->db->get('strack_booking');
         if ($q->num_rows() > 0) {
-            return 1;
+            return '1';
         } else {
-            $this->db->update('strack_department_firms', array('isdeleted' => '1'), array('firm_id' => $id));
+            $this->db->delete('strack_department_firms', array('firm_id' => $id));
             if ($this->db->affected_rows() >= 1) {
                 return true;
             } else {
@@ -1229,11 +1229,11 @@ class Settings_model extends MY_Model
     {
 
         $this->db->where("department_id", $id);
-        $q = $this->db->get('strack_members');
-        if ($q->num_rows() > 0) {
-            return 1;
+        $q = $this->db->get('strack_department_firms');
+       if ($q->num_rows() > 0) {
+            return '1';
         } else {
-            $this->db->update('strack_departments', array('isdeleted' => '1'), array('department_id' => $id));
+            $this->db->delete('strack_departments', array('department_id' => $id));
             if ($this->db->affected_rows() >= 1) {
                 return true;
             } else {
