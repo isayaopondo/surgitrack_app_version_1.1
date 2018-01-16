@@ -32,6 +32,20 @@
                          style="width:210px">
 
                 </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <h5 class="about-heading">About SurgiTrack </h5>
+                        <p>
+                            SurgiTrack is  a surgical workflow System
+                        </p>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <h5 class="about-heading">For Facility Admin</h5>
+                        <p>
+                            To create a facility account click <a href="https://accounts.surgitrack.co.za">HERE</a>
+                        </p>
+                    </div>
+                </div>
 
             </div>
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
