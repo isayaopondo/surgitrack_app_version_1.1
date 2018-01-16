@@ -44,7 +44,7 @@ class Users extends REST_Controller
         $this->load->model(array('api_model'));
         $this->load->model('Authorization/authorization_model');
         $this->load->model('Authorization/validation_callables');
-        $this->load->library('notificationmanager');
+        $this->load->library(array('writelog','notificationmanager'));
         $this->load->helper('password');
     }
 
@@ -64,15 +64,17 @@ class Users extends REST_Controller
         $user_data['username'] = NULL;
         $user_data['passwd'] = $this->authentication->hash_passwd($password);
         $user_data['user_id'] = $this->authorization_model->get_unused_id();
-        $user_data['created_at'] = date('Y-m-d H:i:s');
+        $user_data['created_at'] = date('Y-m-d H:i:s', strtotime('now'));
 
 
         $stmt = $this->api_model->admin_user_insert($user_data,$password, $admin['facility_id']);
 
         if ($stmt) {
-            $this->response($stmt, 200);
+            $this->writelog->writelog(0, 'Admin User '.$admin['email'].' details was created:' . date('Y-m-d H:i:s', strtotime('now'));
+$this->response($stmt, 200);
         } else {
-            $this->response(array('error' => 'Admin User creation failed'), 404);
+            $this->writelog->writelog(0, 'Admin User '.$admin['email'].' details creation failed:' . date('Y-m-d H:i:s', strtotime('now'));
+ $this->response(array('error' => 'Admin User creation failed'), 404);
         }
     }
 
