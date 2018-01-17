@@ -1,4 +1,4 @@
-1<?php
+<?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -16,7 +16,7 @@ class Booking extends MY_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->library(array('form_validation', 'writelog', 'BulkSMS'));
+        $this->load->library(array('form_validation', 'writelog', 'BulkSMS','Freshdesk'));
         $this->load->helper(array('url', 'language', 'form'));
         //$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
         //$this->lang->load('auth');
@@ -78,6 +78,13 @@ class Booking extends MY_Controller
             }
 
         }
+    }
+    public function create_ticket(){
+        $this->freshdesk->create_ticket();
+    }
+
+    public function get_tickets(){
+        $this->freshdesk->get_tickets();
     }
 
     public function index()
