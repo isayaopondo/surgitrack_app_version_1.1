@@ -1,8 +1,8 @@
 <body class="pace-done smart-style-3 fixed-header fixed-navigation fixed-ribbon">
     <!--<body class="pace-done smart-style-3 fixed-header fixed-navigation fixed-ribbon menu-on-top">-->
-    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
+    <script type="text/javascript" src="https://s3.amazonaws.com/assets.freshdesk.com/widget/freshwidget.js"></script>
     <script type="text/javascript">
-        FreshWidget.init("", {"queryString": "&widgetType=popup&formTitle=Help+and+Support&submitTitle=Send+feedback", "utf8": "✓", "widgetType": "popup", "buttonType": "text", "buttonText": "Support", "buttonColor": "white", "buttonBg": "#630831", "alignment": "4", "offset": "235px", "formHeight": "500px", "url": "https://surgitrack.freshdesk.com"} );
+        FreshWidget.init("", {"queryString": "&widgetType=popup&formTitle=Help+and+Support+tickets&submitTitle=Send+feedback&submitThanks=Thank+you+for+the+ticket.", "utf8": "✓", "widgetType": "popup", "buttonType": "text", "buttonText": "Support", "buttonColor": "white", "buttonBg": "#630831", "alignment": "2", "offset": "235px", "submitThanks": "Thank you for the ticket.", "formHeight": "500px", "url": "https://surgitrack.freshdesk.com"} );
     </script>
 
     <!-- #HEADER -->
