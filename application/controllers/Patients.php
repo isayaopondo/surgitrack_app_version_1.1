@@ -215,6 +215,7 @@ class Patients extends MY_Controller
                 $log_action = 'Patient Registration';
                 $log_info = 'Created new patient on ' . date('Y-m-d H:i:s', strtotime('now'));
                 $this->writelog->patientlog($this->auth_user_id, $patientid, $log_action, $log_info);
+                $this->writelog->writelog($this->auth_user_id, $log_info);
                 $this->session->set_flashdata('message', "You have successfully created a new patient");
                 redirect('patients/add_patient/' . $patientid);
             }
@@ -227,7 +228,7 @@ class Patients extends MY_Controller
                     $log_action = 'Patient Details Edit';
                     $log_info = 'Edited patient details on ' . date('Y-m-d H:i:s', strtotime('now'));
                     $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
-
+                    $this->writelog->writelog($this->auth_user_id, $log_info);
                     $this->session->set_flashdata('message', "You have successfully Updated Patient: '" . $this->input->post('surname') . "' details");
                     !empty($this->input->post('postal_code')) ? $this->calculate_distance($patient_id) : '';
                     redirect('patients/add_patient/' . $patient_id);
@@ -701,6 +702,7 @@ class Patients extends MY_Controller
         );
 
         $this->booking_model->save_opnotes_name($booking_id, $data);
+        $this->writelog->writelog($this->auth_user_id, 'Viewed OP Notes for BookingID:'.$booking_id.' on '.date('Y-m-d H:i:s', strtotime('now')));
         $this->load->view('booking/op_notes_print', $this->data);
     }
 

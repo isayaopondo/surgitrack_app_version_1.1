@@ -16,7 +16,7 @@ class Booking extends MY_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->library(array('form_validation', 'writelog', 'BulkSMS'));
+        $this->load->library(array('form_validation', 'writelog', 'BulkSMS','Freshdesk'));
         $this->load->helper(array('url', 'language', 'form'));
         //$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
         //$this->lang->load('auth');
@@ -79,6 +79,13 @@ class Booking extends MY_Controller
 
         }
     }
+    public function create_ticket(){
+        $this->freshdesk->create_ticket();
+    }
+
+    public function get_tickets(){
+        $this->freshdesk->get_tickets();
+    }
 
     public function index()
     {
@@ -97,6 +104,7 @@ class Booking extends MY_Controller
             $log_action = 'Patient Moved back to Waiting List';
             $log_info = 'Patient Moved back to waiting list on ' . date('Y-m-d H:i:s', strtotime('now'));
             $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->writelog($this->auth_user_id, 'Moved Patient\'s bookingID:' . $booking_id. ' back to Waiting list');
 
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                                             <button class="close" data-dismiss="alert">
@@ -105,6 +113,7 @@ class Booking extends MY_Controller
                                                             <i class="fa-fw fa fa-check"></i>
                                                             <strong>Success</strong> You have succesfully moved patient back to waiting list
                                                     </div>');
+
         }
     }
 
@@ -116,6 +125,7 @@ class Booking extends MY_Controller
             $log_action = 'Patient Moved back to Admission List';
             $log_info = 'Patient Moved back to Admission list on ' . date('Y-m-d H:i:s', strtotime('now'));
             $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->writelog($this->auth_user_id, 'Moved Patient\'s booking:' . $booking_id. ' back to admission list');
 
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                                                 <button class="close" data-dismiss="alert">
@@ -132,9 +142,10 @@ class Booking extends MY_Controller
         $booking_id = $this->input->post('booking_id');
         if ($this->booking_model->remove_booking($booking_id)) {
             $patient_id = $this->booking_model->get_patient_id_by($booking_id)->patient_id;
-            $log_action = 'Patient removed';
-            $log_info = 'Patient removed from lists on ' . date('Y-m-d H:i:s', strtotime('now'));
+            $log_action = 'Patient\'s booking removed';
+            $log_info = 'Patient\'s booking removed from lists on ' . date('Y-m-d H:i:s', strtotime('now'));
             $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->writelog($this->auth_user_id, 'Removed Patient\'s booking:' . $booking_id);
 
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                                             <button class="close" data-dismiss="alert">
@@ -143,6 +154,7 @@ class Booking extends MY_Controller
                                                             <i class="fa-fw fa fa-check"></i>
                                                             <strong>Success</strong> You have succesfully removed the patient
                                                     </div> ');
+
         }
     }
 
@@ -284,6 +296,8 @@ class Booking extends MY_Controller
                     $log_action = 'Waiting List';
                     $log_info = 'Added to waiting list on ' . date('Y-m-d H:i:s', strtotime('now') . ' BOOKINGID:' . $booking_id);
                     $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+                    $this->writelog->writelog($this->auth_user_id, 'Added Patient\'s booking:' . $booking_id.' to waiting  list');
+
                     $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
                                             ×
@@ -292,6 +306,8 @@ class Booking extends MY_Controller
                                     <strong>Success</strong> You have succesfully Added booking details
                             </div> ');
                 } else {
+                    $this->writelog->writelog($this->auth_user_id, 'Failed to add Patient\'s booking to waiting  list');
+
                     $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
                                     <button class="close" data-dismiss="alert">
                                             ×
@@ -308,6 +324,7 @@ class Booking extends MY_Controller
                 $log_action = 'Waiting List';
                 $log_info = 'Editted to waiting list on ' . date('Y-m-d H:i:s', strtotime('now'));
                 $this->writelog->patientlog($this->auth_user_id, $id, $log_action, $log_info);
+                $this->writelog->writelog($this->auth_user_id, 'Updated Patient\'s booking details bookingID:' . $booking_id.' on waiting  list');
 
                 $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
@@ -344,6 +361,8 @@ class Booking extends MY_Controller
     public function delete_booking($patient_id, $booking_id)
     {
         $this->booking_model->delete_booking($booking_id);
+        $this->writelog->writelog($this->auth_user_id, 'Deleted patient\'s booking, bookingID:' . $booking_id.' ');
+
         redirect('patients/patient_page/' . $patient_id);
     }
 
@@ -361,6 +380,7 @@ class Booking extends MY_Controller
                     $log_action = 'Added Surgeon Assistants';
                     $log_info = 'Added Surgeon Assistants ' . date('Y-m-d H:i:s', strtotime('now'));
                     $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+                    $this->writelog->writelog($this->auth_user_id, 'Added surgeon assistants:' . $booking_id.' ');
 
                     $this->session->set_flashdata('message', "You have succesfully Added Surgeon Assistants '" . serialize($data) . "' details");
                     $return = array('booking_id' => $booking_id,
@@ -374,6 +394,7 @@ class Booking extends MY_Controller
                         'success' => 1);
                     echo json_encode($return);
                 } else {
+                    $this->writelog->writelog($this->auth_user_id, 'Failed to add surgeon assistants: BookingID:' . $booking_id.' ');
                     $return = array('booking_id' => $booking_id,
                         'message' => '<div class="alert alert-danger fade in">
                                     <button class="close" data-dismiss="alert">
@@ -589,7 +610,7 @@ class Booking extends MY_Controller
                 $log_action = 'PostOP';
                 $log_info = 'Added PostOP details on ' . date('Y-m-d H:i:s', strtotime('now'));
                 $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
-
+                $this->writelog->writelog($this->auth_user_id, 'Added PostOP details on for BookingID:' . $id.' ');
                 $this->session->set_flashdata('message', "you have succesifully Updated '" . $this->input->post('procedure_name') . "' details");
                 redirect('patients/patient_page/' . $patient_id);
             }
@@ -665,7 +686,7 @@ class Booking extends MY_Controller
                 $log_action = 'PostOP';
                 $log_info = 'Editted Op Notes on ' . date('Y-m-d H:i:s', strtotime('now'));
                 $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
-
+                $this->writelog->writelog($this->auth_user_id, 'Editted PostOP notes for BookingID:' . $id.' ');
                 $this->session->set_flashdata('message', "you have successfully Eddited Op Notes '" . $this->input->post('procedure_name') . "' details");
                 redirect('patients/patient_page/' . $patient_id);
             }
@@ -702,7 +723,7 @@ class Booking extends MY_Controller
             $log_action = 'Admission';
             $log_info = 'Added Patient Admission details on ' . date('Y-m-d H:i:s', strtotime('now'));
             $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
-
+            $this->writelog->writelog($this->auth_user_id, $log_info);
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
                                             ×
@@ -727,6 +748,7 @@ class Booking extends MY_Controller
             $log_action = 'Comments';
             $log_info = '<b>COMMENT:</b> ' . $this->input->post('admission_notes') . ' <b>TIME</b>: ' . date('Y-m-d H:i:s', strtotime('now')) . ' BookingID: ' . $id;
             $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info, 'user_comment');
+
         }
         redirect('patients/patient_page/' . $patient_id);
     }
@@ -756,6 +778,8 @@ class Booking extends MY_Controller
             $log_action = 'Moved to Theatre List';
             $log_info = 'Added Patient on Theatre List  on ' . date('Y-m-d H:i:s', strtotime('now'));
             $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
+            $this->writelog->writelog($this->auth_user_id, $log_info);
+
             $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
                                             ×

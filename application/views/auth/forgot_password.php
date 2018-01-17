@@ -5,7 +5,7 @@
         <span id="logo"> <img src="<?= base_url() ?>assets/img/logo.png" alt="SurgiTrack"> </span>
     </div>
 
-    <span id="extr-page-header-space"> <span class="hidden-mobile hiddex-xs">Need an account?</span> <a
+    <span id="extr-page-header-space"> <span class="hidden-mobile hiddex-xs"></span> <a
                 href="<?= base_url('auth/login') ?>" class="btn btn-danger">Login</a> </span>
 
 </header>
@@ -34,6 +34,20 @@
 
                 </div>
 
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <h5 class="about-heading">About SurgiTrack </h5>
+                        <p>
+                            SurgiTrack is  a surgical workflow System
+                        </p>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <h5 class="about-heading">For Facility Admin</h5>
+                        <p>
+                            To create a facility account click <a href="https://accounts.surgitrack.co.za">HERE</a>
+                        </p>
+                    </div>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
                 <section>
@@ -73,19 +87,7 @@
 
                 </div>
 
-                <h5 class="text-center"> - Or sign in using -</h5>
 
-                <ul class="list-inline text-center">
-                    <li>
-                        <a href="<?= base_url('hauth/login/Facebook') ?>" class="btn btn-primary btn-circle"><i class="fa fa-facebook"></i></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url('hauth/login/Google') ?>" class="btn btn-danger btn-circle"><i class="fa fa-google"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="btn btn-warning btn-circle"><i class="fa fa-linkedin"></i></a>
-                    </li>
-                </ul>
 
             </div>
         </div>

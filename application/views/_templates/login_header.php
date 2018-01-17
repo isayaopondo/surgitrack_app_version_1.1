@@ -53,3 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</head>
 	
 	<body class="animated fadeInDown">
+    <script type="text/javascript" src="http://assets.freshdesk.com/widget/freshwidget.js"></script>
+    <script type="text/javascript">
+        FreshWidget.init("", {"queryString": "&widgetType=popup&formTitle=Help+and+Support&submitTitle=Send+feedback", "utf8": "✓", "widgetType": "popup", "buttonType": "text", "buttonText": "Support", "buttonColor": "white", "buttonBg": "#630831", "alignment": "4", "offset": "235px", "formHeight": "500px", "url": "https://surgitrack.freshdesk.com"} );
+    </script>

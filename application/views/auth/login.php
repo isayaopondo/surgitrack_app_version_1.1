@@ -4,7 +4,7 @@
         <span id="logo"> <img src="<?= base_url() ?>assets/img/logo.png" alt="SurgiTrack"> </span>
     </div>
 
-    <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">Need an account?</span> <a
+    <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs"></span> <a
                 href="<?= base_url('auth/login') ?>" class="btn btn-danger">Login</a> </span>
 
 </header>
@@ -26,30 +26,27 @@
                     <div class="pull-left login-desc-box-l">
                         <h4 class="paragraph-header">It's Okay to be Smart. Experience the simplicity of SurgiTrack,
                             everywhere you go!</h4>
-
                     </div>
 
                     <img src="<?= base_url() ?>assets/img/demo/iphoneview.png" class="pull-right display-image" alt=""
                          style="width:210px">
 
                 </div>
-
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <h5 class="about-heading">About SurgiTrack - Are you up to date?</h5>
+                        <h5 class="about-heading">About SurgiTrack </h5>
                         <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-                            laudantium, totam rem aperiam, eaque ipsa.
+                            SurgiTrack is  a surgical workflow System
                         </p>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <h5 class="about-heading">Not just your average template!</h5>
+                        <h5 class="about-heading">For Facility Admin</h5>
                         <p>
-                            Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
-                            nobis est eligendi voluptatem accusantium!
+                            To create a facility account click <a href="https://accounts.surgitrack.co.za">HERE</a>
                         </p>
                     </div>
                 </div>
+
 
             </div>
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
@@ -140,24 +137,7 @@
 
                 </div>
 
-                <h5 class="text-center"> - Or sign in using -</h5>
 
-                <ul class="list-inline text-center">
-                    <li>
-                        <a href="<?= base_url('hauth/login/Facebook') ?>" class="btn btn-primary btn-circle"><i
-                                    class="fa fa-facebook"></i></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url('hauth/login/Google') ?>" class="btn btn-danger btn-circle"><i
-                                    class="fa fa-google"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="btn btn-warning btn-circle"><i class="fa fa-linkedin"></i></a>
-                    </li>
-                </ul>
-                <div class="list-inline text-center">
-
-                </div>
             </div>
         </div>
     </div>
