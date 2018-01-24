@@ -72,6 +72,16 @@ class Settings_model extends MY_Model
         return $result;
     }
 
+    public function get_procedure_bydepartment($department){
+        $this->db->where(array('p.department_id' => $department, 'p.isdeleted' => '1'));
+        $this->db->select('*')
+            ->from('strack_facility_procedures p');
+        $this->db->order_by("procedure_name", "asc");
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+
     public function get_rplprocedures($facility_id = '')
     {
 //        if (isset($facility_id) && $facility_id != null) {
