@@ -72,7 +72,7 @@ class Settings_model extends MY_Model
         return $result;
     }
 
-    public function get_procedure_department($department){
+    public function get_procedure_bydepartment($department){
         $this->db->where(array('p.department_id' => $department, 'p.isdeleted' => '1'));
         $this->db->select('*')
             ->from('strack_facility_procedures p');
