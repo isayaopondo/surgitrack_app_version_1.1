@@ -111,7 +111,7 @@ class Patients extends MY_Controller
                 $this->data['bookedby'] = $this->settings_model->get_department_users($department->department_id);
                 $this->data['firms'] = $this->settings_model->get_firms_list($department->department_id);
             }
-            $this->data['procedures'] = $this->settings_model->get_procedure();
+            $this->data['procedures'] = $this->settings_model->get_procedure_department($department->department_id);
             $this->data['theatre'] = $this->settings_model->get_theatres();
             $this->data['insuranceco'] = $this->settings_model->get_insurance_companies();
             $this->data['priorities'] = $this->settings_model->get_priorities();
@@ -156,7 +156,7 @@ class Patients extends MY_Controller
 
             $this->data['rplprocedures'] = $this->settings_model->get_rplprocedures();
 
-            $this->data['procedures'] = $this->settings_model->get_procedure();
+            $this->data['procedures'] = $this->settings_model->get_procedure_department($department->department_id);
             $this->data['theatre'] = $this->settings_model->get_theatres();
             $this->data['insuranceco'] = $this->settings_model->get_insurance_companies();
             $this->data['priorities'] = $this->settings_model->get_priorities();
