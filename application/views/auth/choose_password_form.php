@@ -105,7 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
 			</p>
 			<p>
-				You can now <a href="'.base_url().'/auth/login">login</a>
+				You can now <a href="'.base_url().'auth/login">login</a>
 			</p>
 		</div>
 	';
@@ -209,6 +209,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         echo form_password($input_data);
                                         ?>
                                             </label>
+                                        </section>
+                                    </div>
+                                    <div>
+                                        <section>
+                                            <small>
+                                                <b>NOTE: Password MUST be;</b>
+                                                <ul>
+                                                    <li>At least 8 characters long.</li>
+                                                    <li>A mix of Upper Case and Lower Case letters.</li>
+                                                    <li> Add Numbers or Special Characters [#,$,%,&...] to make it strong. [Optional] </li>
+                                                </ul>
+                                            </small>
                                         </section>
                                     </div>
                                 </fieldset>
