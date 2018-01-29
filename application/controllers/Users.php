@@ -228,12 +228,17 @@ class Users extends MY_Controller
 
 
         }
+        else{
+            redirect('users/index', 'refresh');
+        }
 
 
         $this->data['roles'] = config_item('levels_and_roles');
         $id = $this->uri->segment(3);
         if ($id != "" && is_numeric($id)) {
             $this->data['user'] = $this->setup_model->get_User_by_id($id);
+        }else{
+            redirect('users/index', 'refresh');
         }
 
         $this->data['users'] = $this->setup_model->get_users($this->auth_facilityid);
@@ -484,8 +489,14 @@ class Users extends MY_Controller
     function delete_user()
     {
         $id = $this->uri->segment(3);
-        $this->user_model->delete_user($id);
-        redirect("users");
+        if($this->user_model->delete_user($id)){
+            $this->session->set_flashdata('message', 'User was succesfully deleted');
+            redirect("users");
+        }else{
+            $this->session->set_flashdata('message', 'User was not deleted');
+            redirect("users");
+        }
+
     }
 
     function ajaxgetuser()

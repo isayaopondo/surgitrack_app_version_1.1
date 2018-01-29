@@ -146,8 +146,14 @@ class User_model extends MY_Model
 
     function delete_user($id)
     {
-        $this->db->update($this->table, array('isdelete' => '1'), array('user_id' => $id));
-
+       // $this->db->update($this->table, array('isdelete' => '1'), array('user_id' => $id));
+        $this->db->where("user_id", $id);
+        $this->db->delete($this->table);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -233,7 +239,6 @@ class User_model extends MY_Model
     {
         $this->db->select('*')
             ->from('users u')
-            ->where('d.isdeleted', '0')
             ->join("strack_department_users du", "u.user_id=du.user_id", 'LEFT')
             ->join("strack_departments d", "du.department_id=d.department_id", 'LEFT');
         $query = $this->db->get();
