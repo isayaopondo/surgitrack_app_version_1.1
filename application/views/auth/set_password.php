@@ -93,22 +93,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                     if (isset($validation_passed)) {
                         echo '
-		<div style="border:1px solid green;">
-			<p>
-				
-				<div class="alert alert-success fade in">
-                                    <button class="close" data-dismiss="alert">
-                                            ×
-                                    </button>
-                                    <i class="fa-fw fa fa-check"></i>
-                                    <strong>Success!</strong> You have successfully changed your password.
+                            <div style="border:1px solid green;">
+                                <p>
+                                    
+                                    <div class="alert alert-success fade in">
+                                                        <button class="close" data-dismiss="alert">
+                                                                ×
+                                                        </button>
+                                                        <i class="fa-fw fa fa-check"></i>
+                                                        <strong>Success!</strong> You have successfully changed your password.
+                                                </div>
+                                </p>
+                                <p>
+                                    You can now <a href="'.base_url().'auth/login">login</a>
+                                </p>
                             </div>
-			</p>
-			<p>
-				You can now <a href="'.base_url().'auth/login">login</a>
-			</p>
-		</div>
-	';
+                        ';
 
                         $showform = 0;
                     }
@@ -164,7 +164,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					Please write this down, and change your password now:
 				</p>';
                                 } else {
-                                    echo '<p>Please change your password now:</p>';
+                                    echo '<p>Please set your password now:</p>';
                                 }
                                 echo '</div>';
                             }
@@ -173,41 +173,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div id="form">
                                 <?php echo form_open('',array('class'=>'smart-form')); ?>
                                 <fieldset>
-                                    <legend>Step 2 - Choose your new password</legend>
+                                    <legend>Set your  password</legend>
                                     <div>
-                                            <section>
-                                                <label class="input">
-                                        <?php
-                                        // PASSWORD LABEL AND INPUT ********************************
-                                        echo form_label('Password', 'passwd', ['class' => 'form_label']);
+                                        <section>
+                                            <label class="input">
+                                                <?php
+                                                // PASSWORD LABEL AND INPUT ********************************
+                                                echo form_label('Password', 'passwd', ['class' => 'form_label']);
 
-                                        $input_data = [
-                                            'name' => 'passwd',
-                                            'id' => 'passwd',
-                                            'class' => 'form_input password',
-                                            'max_length' => config_item('max_chars_for_password')
-                                        ];
-                                        echo form_password($input_data);
-                                        ?>
-                                                </label>
+                                                $input_data = [
+                                                    'name' => 'passwd',
+                                                    'id' => 'passwd',
+                                                    'class' => 'form_input password',
+                                                    'max_length' => config_item('max_chars_for_password')
+                                                ];
+                                                echo form_password($input_data);
+                                                ?>
+                                            </label>
 
-                                            </section>
+                                        </section>
                                     </div>
                                     <div>
                                         <section>
                                             <label class="input">
-                                            <?php
-                                        // CONFIRM PASSWORD LABEL AND INPUT ******************************
-                                        echo form_label('Confirm Password', 'passwd_confirm', ['class' => 'form_label']);
+                                                <?php
+                                                // CONFIRM PASSWORD LABEL AND INPUT ******************************
+                                                echo form_label('Confirm Password', 'passwd_confirm', ['class' => 'form_label']);
 
-                                        $input_data = [
-                                            'name' => 'passwd_confirm',
-                                            'id' => 'passwd_confirm',
-                                            'class' => 'form_input password',
-                                            'max_length' => config_item('max_chars_for_password')
-                                        ];
-                                        echo form_password($input_data);
-                                        ?>
+                                                $input_data = [
+                                                    'name' => 'passwd_confirm',
+                                                    'id' => 'passwd_confirm',
+                                                    'class' => 'form_input password',
+                                                    'max_length' => config_item('max_chars_for_password')
+                                                ];
+                                                echo form_password($input_data);
+                                                ?>
                                             </label>
                                         </section>
                                     </div>
@@ -218,7 +218,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                                 <ul>
                                                     <li>At least 8 characters long.</li>
                                                     <li>A mix of Upper Case and Lower Case letters.</li>
-                                                    <li> Add Numbers or Special Characters [#,$,%,&...] to make it strong. [Optional] </li>
+                                                    <li>Add Numbers or Special Characters [#,$,%,&...] to make it strong. [Optional] </li>
                                                 </ul>
                                             </small>
                                         </section>
@@ -228,22 +228,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <div>
                                         <footer>
 
-                                        <?php
-                                        // RECOVERY CODE *****************************************************************
-                                        echo form_hidden('recovery_code', $recovery_code);
+                                            <?php
+                                            // RECOVERY CODE *****************************************************************
+                                            echo form_hidden('recovery_code', $recovery_code);
 
-                                        // USER ID *****************************************************************
-                                        echo form_hidden('user_identification', $user_id);
+                                            // USER ID *****************************************************************
+                                            echo form_hidden('user_identification', $user_id);
 
-                                        // SUBMIT BUTTON **************************************************************
-                                        $input_data = [
-                                            'name' => 'form_submit',
-                                            'id' => 'submit_button',
-                                            'value' => 'Change Password',
-                                            'class'=>"btn btn-primary"
-                                        ];
-                                        echo form_submit($input_data);
-                                        ?>
+                                            // SUBMIT BUTTON **************************************************************
+                                            $input_data = [
+                                                'name' => 'form_submit',
+                                                'id' => 'submit_button',
+                                                'value' => 'Set Password',
+                                                'class'=>"btn btn-primary"
+                                            ];
+                                            echo form_submit($input_data);
+                                            ?>
                                         </footer>
                                     </div>
                                 </div>
