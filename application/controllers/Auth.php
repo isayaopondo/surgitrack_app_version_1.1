@@ -332,7 +332,7 @@ class Auth extends MY_Controller
             [
                 'field' => 'auth_level',
                 'label' => 'auth_level',
-                'rules' => 'required|integer|in_list[0,1,6,9]'
+                'rules' => 'required|integer|in_list[99,1,6,9]'
             ]
         ];
 

@@ -59,7 +59,7 @@ class Auth_model extends MY_Model
             } else {
                 unset($row['auth_level']);
                 // FACILITIES is added
-                $facl = $this->add_facilities_to_auth_data($row['user_id'], $facility);
+                $facl = $this->add_facilities_to_auth_data($row['user_id']);
 
                 $multi_facl = $this->add_multi_facilities_to_auth_data($row['user_id']);
                 return (object)array_merge($row, $acl, $facl, $multi_facl);

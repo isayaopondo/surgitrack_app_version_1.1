@@ -14,9 +14,10 @@ class Setup_model extends MY_Model
         parent::__construct();
     }
 
-    public function is_setup_complete($facilityid)
+    public function is_setup_complete()
     {
-        if($this->auth_level==99){
+        $facilityid = $this->auth_facilityid;
+        if($this->auth_level=='99' && $facilityid=='0' ){
             return TRUE;
         }
         $this->db->where(array("facility_id" => $facilityid));

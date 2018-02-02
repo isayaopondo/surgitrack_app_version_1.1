@@ -611,7 +611,7 @@ class Settings_model extends MY_Model
     public function get_myfacilities_list($user_id)
     {
         $this->db->where('user_id', $user_id);
-        $this->db->select('strack_facilities.facility_id,facility_name, facility_town,facility_phone,facility_address');
+        $this->db->select('strack_facilities.facility_id,facility_name, facility_town,facility_phone,facility_address,auth_level,current_user,user_id');
         $this->db->order_by("facility_name", "asc");
         $this->db->from('strack_facilities')
             ->join("strack_facility_users", "strack_facilities.facility_id=strack_facility_users.facility_id");

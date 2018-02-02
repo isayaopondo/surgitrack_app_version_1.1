@@ -67,7 +67,7 @@ class Dashboard extends MY_Controller
                 $this->data['default_firm_color'] = '#000000';
             }
         //CHECK IF FACILITY IS SETUP
-            if (!$this->setup_model->is_setup_complete($this->auth_facilityid)) {
+            if (!$this->setup_model->is_setup_complete()) {
 
                 if ($this->usergroup == 'admin') {
                    redirect('setup/my_setup', 'refresh');

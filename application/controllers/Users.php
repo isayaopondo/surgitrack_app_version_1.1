@@ -76,6 +76,9 @@ class Users extends MY_Controller
 
     public function index()
     {
+        if ($this->auth_level == '99') {
+            redirect('users/all', 'refresh');
+        }
         $this->data['roles'] = config_item('levels_and_roles');
         $id = $this->uri->segment(3);
         if ($id != "" && is_numeric($id)) {
@@ -92,6 +95,21 @@ class Users extends MY_Controller
         $this->_smart_render('users/index', $this->data, true);
 
     }
+
+    public function all()
+    {
+        if ($this->auth_level != '99') {
+            redirect('users', 'refresh');
+        }
+        $this->data['roles'] = config_item('levels_and_roles');
+        $this->data['users'] = $this->setup_model->get_all_users();
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools.$this->settings_tools;
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('users/all', $this->data, true);
+
+    }
+
+
 
     public function create_user()
     {
@@ -499,6 +517,21 @@ class Users extends MY_Controller
 
     }
 
+    function ban_user()
+    {
+        $id = $this->uri->segment(3);
+        if($this->user_model->ban_user($id)){
+            $this->session->set_flashdata('message', 'User was succesfully banned');
+            redirect("users/all");
+        }else{
+            $this->session->set_flashdata('message', 'User was not banned');
+            redirect("users/all");
+        }
+
+    }
+
+
+
     function ajaxgetuser()
     {
         $id = $this->input->post('id');
@@ -608,6 +641,40 @@ class Users extends MY_Controller
 
         $this->_smart_render('users/user_manage', $this->data, true);
     }
+
+    public function user_manage()
+    {
+        $id = $this->uri->segment(3);
+        $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
+        $this->data['facilities'] = $this->settings_model->get_facilities_list($this->auth_facilityid);
+        $this->data['departments'] = $this->settings_model->get_departments_list($this->auth_facilityid);
+        $this->data['user'] = $this->user_model->get_Users($this->auth_facilityid);
+        $this->data['users'] = $this->user_model->get_user($id);
+        $this->data['roles'] = config_item('levels_and_roles');
+        $departments = $this->user_model->get_users_department($id);
+        if (!empty($departments)) {
+            $department_id = $departments->department_id;
+            $this->data['myfirms'] = $this->settings_model->get_mydefault_firms($id, $department_id);
+        } else {
+            $this->data['myfirms'] = array();
+        }
+        $this->data['myfacilities'] = $this->settings_model->get_myfacilities_list($id);
+        $this->data['mydepartments'] = $this->settings_model->get_mydepartments_list($id);
+
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools . $this->general_tools;
+
+        $this->_smart_render('users/admin_usermanage', $this->data, true);
+    }
+
+    public function user_facility_unlink()
+    {
+        $id = $this->uri->segment(3);
+        redirect('users/all');
+    }
+
+
+
+
 
     public function user_unassign_unit()
     {
