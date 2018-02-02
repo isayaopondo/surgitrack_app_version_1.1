@@ -519,7 +519,7 @@ class Auth_Controller extends CI_Controller
         $this->auth_user_id = $this->auth_data->user_id;
         $this->auth_username = $this->auth_data->username;
         $this->auth_name = $this->auth_data->first_name .' '.$this->auth_data->last_name;
-       // $this->auth_level = $this->auth_data->auth_level;
+        $this->auth_level = $this->auth_data->auth_level;
         $this->auth_role = $this->authentication->roles[$this->auth_data->auth_level];
         $this->auth_email = $this->auth_data->email;
 
@@ -547,8 +547,30 @@ class Auth_Controller extends CI_Controller
             $data['acl'] = $this->acl;
             $this->config->set_item('acl', $this->acl);
         }
+        if(isset($this->auth_level) &&$this->auth_level=='99'){
+            $data['auth_level']=$this->auth_level ;
+            $this->config->set_item('auth_level', $this->auth_level);
 
-        if (config_item('add_facility_check')) {//add_facility_check
+
+            $this->auth_facilityid = '0';
+            $this->auth_facilityname = 'SUPERADMIN';
+
+
+            $data['auth_facilityid'] = '0';
+            $data['auth_facilityname'] = 'SUPERADMIN';
+
+            $this->config->set_item('auth_facilityid', '0');
+            $this->config->set_item('auth_facilityname', 'SUPERADMIN');
+
+            $data['auth_departmentname'] = 'none';
+            $data['auth_departmentid'] = '0';
+            $this->config->set_item('auth_departmentname', 'none');
+            $this->config->set_item('auth_departmentid', '0');
+
+
+        }
+
+        if (config_item('add_facility_check') && !isset($this->auth_level)) {//add_facility_check
             $this->facl = $this->auth_data->facl;
             $data['facl'] = $this->facl;
             $this->config->set_item('facl', $this->facl);

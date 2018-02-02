@@ -36,7 +36,8 @@ class Auth_model extends MY_Model {
             'email',
             'passwd',
             'user_id',
-            'banned'
+            'banned',
+            'auth_level'
         ];
         // User table query
         $query = $this->db->select( $selected_columns )
@@ -52,11 +53,16 @@ class Auth_model extends MY_Model {
 
             // ACL is added
             $acl = $this->add_acl_to_auth_data( $row['user_id'] );
-            // FACILITIES is added
-            $facl =$this->add_facilities_to_auth_data( $row['user_id'] );
+            if ($row['auth_level'] == '99') {
+                return (object)array_merge($row, $acl);
+            } else {
+                unset($row['auth_level']);
+                // FACILITIES is added
+                $facl = $this->add_facilities_to_auth_data($row['user_id'], $facility);
 
-            $multi_facl=$this->add_multi_facilities_to_auth_data( $row['user_id'] );
-            return (object) array_merge( $row,   $acl,$facl,$multi_facl );
+                $multi_facl = $this->add_multi_facilities_to_auth_data($row['user_id']);
+                return (object)array_merge($row, $acl, $facl, $multi_facl);
+            }
         }
 
         return FALSE;
@@ -143,7 +149,8 @@ class Auth_model extends MY_Model {
             'u.username',
             'u.email',
             'u.user_id',
-            'u.banned'
+            'u.banned',
+            'u.auth_level'
         ];
         $this->db->select( $selected_columns )
             ->from( $this->db_table('user_table') . ' u' )
@@ -170,14 +177,20 @@ class Auth_model extends MY_Model {
         {
             $row = $query->row_array();
 
-            // ACL is added
+           // ACL is added
             $acl = $this->add_acl_to_auth_data( $row['user_id'] );
 
-            // FACILITIES is added
-            $facl =$this->add_facilities_to_auth_data( $row['user_id'] ,$facility);
+            if ($row['auth_level'] == '99') {
 
-            $multi_facl=$this->add_multi_facilities_to_auth_data( $row['user_id'] );
- return (object) array_merge( $row, $acl,$facl,$multi_facl );
+                return (object)array_merge($row, $acl);
+            } else {
+                unset($row['auth_level']);
+                // FACILITIES is added
+                $facl = $this->add_facilities_to_auth_data($row['user_id'], $facility);
+
+                $multi_facl = $this->add_multi_facilities_to_auth_data($row['user_id']);
+                return (object)array_merge($row, $acl, $facl, $multi_facl);
+            }
         }
 
         return FALSE;

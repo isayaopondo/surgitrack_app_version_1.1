@@ -683,13 +683,24 @@ class Settings extends MY_Controller
 
             if ($id == 0) {
                 if ($this->form_validation->run() == true && $this->settings_model->facilities_insert($data)) {
-
-                    $this->session->set_flashdata('message', "You have succesfully created a new Facility");
+                         $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Success!</strong> You have succesfully created a new Facility
+                            </div');
                 }
             } else {
                 if ($this->form_validation->run() == true && $this->settings_model->facilities_update($data, $id)) {
 
-                    $this->session->set_flashdata('message', "you have succesfully Updated '" . $this->input->post('facility_name') . "' details");
+                    $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Success!</strong> You have succesfully Updated ' . $this->input->post('facility_name') . ' details.
+                            </div');
                 }
             }
             redirect('settings/facilities');
@@ -724,9 +735,22 @@ class Settings extends MY_Controller
     {
         $id = $this->uri->segment(3);
         if ($this->settings_model->delete_facilities($id) == 1) {
-            $this->session->set_flashdata('message', "You cannot delete this Facility has theatres");
+           $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Success!</strong> You cannot delete this Facility has Patients registered under it
+                            </div');
         } else {
             $this->settings_model->delete_facilities($id);
+            $this->session->set_flashdata('message', '<div class="alert alert-success fade in">
+                                    <button class="close" data-dismiss="alert">
+                                            ×
+                                    </button>
+                                    <i class="fa-fw fa fa-times"></i>
+                                    <strong>Success!</strong> The facility has successfully been deleted.
+                            </div');
         }
         redirect('settings/facilities');
     }

@@ -577,7 +577,7 @@ class Settings_model extends MY_Model
     //===================================
     public function get_facilities()
     {
-        $this->db->where('ispublic', '1');
+        $this->db->where(array('isdeleted' => '0'));
         $this->db->select('*')
             ->from('strack_facilities');
         $query = $this->db->get();
@@ -587,6 +587,7 @@ class Settings_model extends MY_Model
 
     public function get_facilities_by_id($id)
     {
+        $this->db->where(array('isdeleted' => '0'));
         $this->db->where("facility_id", $id);
         $q = $this->db->get('strack_facilities');
         if ($q->num_rows() > 0) {
@@ -597,6 +598,7 @@ class Settings_model extends MY_Model
 
     public function get_facilities_list($id)
     {
+        $this->db->where(array('isdeleted' => '0'));
         $this->db->where('facility_id', $id);
         $this->db->select('facility_id,facility_name, facility_town,facility_phone,facility_address');
         $this->db->order_by("facility_name", "asc");
@@ -638,7 +640,7 @@ class Settings_model extends MY_Model
     {
 
         $this->db->where("facility_id", $id);
-        $q = $this->db->get('strack_booking');
+        $q = $this->db->get('strack_patients_list');
         if ($q->num_rows() > 0) {
             return 1;
         } else {

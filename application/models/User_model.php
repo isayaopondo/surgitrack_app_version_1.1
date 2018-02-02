@@ -157,6 +157,20 @@ class User_model extends MY_Model
 
     }
 
+    function ban_user($id)
+    {
+        $this->db->update($this->table, array('banned' => '1'), array('user_id' => $id));
+        $this->db->where("user_id", $id);
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+
+
     public function get_users_department($user_id)
     {
         $this->db->select('*')

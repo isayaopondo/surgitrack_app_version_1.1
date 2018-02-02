@@ -135,8 +135,7 @@ class Api_model extends CI_Model
                 $message['success'] = '1';
                 $message['message'] = "User has been successfully invited.";
             } else {
-                $this->db->set($data)
-                    ->insert('users');
+                $this->db->set($data)->insert('users');
                 if ($this->db->affected_rows() >= 1) {
                     $this->add_facility_users($data['user_id'], $facilityid, $data['auth_level']);
                     $this->send_invite_mail($password, $data['email'], $facility_name, '_createinvite');
