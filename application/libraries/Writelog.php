@@ -9,7 +9,7 @@ class Writelog {
         
     }
 
-    public function writelog($user_id, $log_action, $log_info) {
+    public function writelog($user_id='', $log_action='', $log_info='') {
         $this->CI = & get_instance();
         $this->CI->load->database();
         $access_agent = substr($this->CI->input->user_agent(), 0, 120);

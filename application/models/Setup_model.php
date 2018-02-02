@@ -14,8 +14,12 @@ class Setup_model extends MY_Model
         parent::__construct();
     }
 
-    public function is_setup_complete($facilityid)
+    public function is_setup_complete()
     {
+        $facilityid = $this->auth_facilityid;
+        if($this->auth_level=='99' && $facilityid=='0' ){
+            return TRUE;
+        }
         $this->db->where(array("facility_id" => $facilityid));
         $this->db->where('is_complete!=0');
         $query = $this->db->get('strack_facilities_setup');
@@ -28,7 +32,7 @@ class Setup_model extends MY_Model
 
     public function get_Users($facilityid)
     {
-        $this->db->select('DISTINCT(`u`.`user_id`) as user_id,u.first_name,u.email,u.last_name,fu.auth_level,d.department_name,')
+        $this->db->select('DISTINCT(`u`.`user_id`) as user_id,u.banned,u.first_name,u.email,u.last_name,fu.auth_level,d.department_name,')
             ->from('users u')
             ->where('fu.facility_id', $facilityid)
             ->join("strack_department_users du", "u.user_id=du.user_id AND current_user='1'", 'LEFT')
@@ -38,6 +42,20 @@ class Setup_model extends MY_Model
         $result = $query->result();
         return $result;
     }
+
+    public function get_all_users()
+    {
+        $this->db->select('DISTINCT(`u`.`user_id`) as user_id,banned,u.first_name,u.email,u.last_name,fu.auth_level,d.facility_name,')
+            ->from('users u')
+            ->join("strack_facility_users fu", "u.user_id=fu.user_id", 'INNER')
+            ->join("strack_facilities d", "fu.facility_id=d.facility_id");
+        $query = $this->db->get();
+        $result = $query->result();
+        return $result;
+    }
+
+
+
 
     public function get_User_by_id($userid)
     {

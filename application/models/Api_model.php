@@ -135,11 +135,66 @@ class Api_model extends CI_Model
                 $message['success'] = '1';
                 $message['message'] = "User has been successfully invited.";
             } else {
-                $this->db->set($data)
-                    ->insert('users');
+                $this->db->set($data)->insert('users');
                 if ($this->db->affected_rows() >= 1) {
                     $this->add_facility_users($data['user_id'], $facilityid, $data['auth_level']);
-                    $this->send_invite_mail($password, $data['email'], $facility_name, '_createinvite');
+
+                    if ($data['email']) {
+
+                        $email= $data['email'];
+                        if ($user_data = $this->authorization_model->get_recovery_data($email)) {
+                            // Check if user is banned
+                            if ($user_data->banned == '1') {
+                                // Log an error if banned
+                                $this->authentication->log_error($email);
+
+                                // Show special message for banned user
+                                // $view_data['banned'] = 1;
+                            } else {
+                                /**
+                                 * Use the authentication libraries salt generator for a random string
+                                 * that will be hashed and stored as the password recovery key.
+                                 * Method is called 4 times for a 88 character string, and then
+                                 * trimmed to 72 characters
+                                 */
+                                $recovery_code = substr($this->authentication->random_salt()
+                                    . $this->authentication->random_salt()
+                                    . $this->authentication->random_salt()
+                                    . $this->authentication->random_salt(), 0, 72);
+
+                                // Update user record with recovery code and time
+                                $this->authorization_model->update_user_raw_data(
+                                    $user_data->user_id,
+                                    [
+                                        'passwd_recovery_code' => $this->authentication->hash_passwd($recovery_code),
+                                        'passwd_recovery_date' => date('Y-m-d H:i:s')
+                                    ]
+                                );
+
+                                // Set the link protocol
+                                $link_protocol = USE_SSL ? 'https' : NULL;
+
+                                // Set URI of link
+                                $link_uri = 'auth/set_password_verification/' . $user_data->user_id . '/' . $recovery_code;
+                                $special_link = anchor(
+                                    site_url($link_uri, $link_protocol),
+                                    site_url($link_uri, $link_protocol),
+                                    'target ="_blank"'
+                                );
+
+                            }
+                        } // There was no match, log an error, and display a message
+                        else {
+                            // Log the error
+                            $this->authentication->log_error($this->input->post('email', TRUE));
+
+                            //  $view_data['no_match'] = 1;
+                        }
+                    }
+                    // $this->send_invite_mail($password, $data['email'], $facility_name, '_userinvite');
+                    $this->send_admininvite_mail($special_link, $email,$facility_name);
+
+                    //$this->send_invite_mail($password, $data['email'], $facility_name, '_createinvite');
                     $message['success'] = '1';
                     $message['user_id'] = $data['user_id'];
                     $message['message'] = "User created and invited successfully.";
@@ -317,6 +372,23 @@ class Api_model extends CI_Model
             'email' => $user->email,
         );
         $this->notificationmanager->sendMail(0, $mailtype, SYSTEM_NAME.' Password Setup', $email, $info);
+
+    }
+
+
+    private function send_admininvite_mail($special_link, $email, $facility_name, $mailtype = '_createinvite')
+    {
+        //  $this->load->library('notificationmanager');
+        $user = $this->get_user($email);
+
+        $info = array(
+            'special_link' => $special_link,
+            'username'=>$user->first_name . ' ' . $user->last_name,
+            'site_name' => SYSTEM_NAME,
+            'facilityname' => $facility_name,
+            'email' => $user->email,
+        );
+        $this->notificationmanager->sendMail(0, $mailtype, SYSTEM_NAME.' Account Invite', $email, $info);
 
     }
 

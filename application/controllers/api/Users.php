@@ -70,11 +70,11 @@ class Users extends REST_Controller
         $stmt = $this->api_model->admin_user_insert($user_data,$password, $admin['facility_id']);
 
         if ($stmt) {
-            $this->writelog->writelog(0, 'Admin User '.$admin['email'].' details was created:' . date('Y-m-d H:i:s', strtotime('now'));
-$this->response($stmt, 200);
+            $this->writelog->writelog(0, 'Admin User '.$admin['email'].' details was created:' . date('Y-m-d H:i:s', strtotime('now')),'Admin user account creation successfull');
+            $this->response($stmt, 200);
         } else {
-            $this->writelog->writelog(0, 'Admin User '.$admin['email'].' details creation failed:' . date('Y-m-d H:i:s', strtotime('now'));
- $this->response(array('error' => 'Admin User creation failed'), 404);
+            $this->writelog->writelog(0, 'Admin User '.$admin['email'].' details creation failed:' . date('Y-m-d H:i:s', strtotime('now')),'Admin User creation failed');
+            $this->response(array('error' => 'Admin User creation failed'), 404);
         }
     }
 

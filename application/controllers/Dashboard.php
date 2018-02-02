@@ -67,7 +67,7 @@ class Dashboard extends MY_Controller
                 $this->data['default_firm_color'] = '#000000';
             }
         //CHECK IF FACILITY IS SETUP
-            if (!$this->setup_model->is_setup_complete($this->auth_facilityid)) {
+            if (!$this->setup_model->is_setup_complete()) {
 
                 if ($this->usergroup == 'admin') {
                    redirect('setup/my_setup', 'refresh');
@@ -151,7 +151,13 @@ class Dashboard extends MY_Controller
 
             $this->_smart_render('dashboard/calendar', $this->data, true, true);
 
-        } else {
+        } elseif($this->auth_level=='99'){
+            $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+            $this->data['pagescripts'] = $this->pagescripts . $this->calendar . $this->dashboard . $this->general_tools;
+            $this->_smart_render('dashboard/superadmin', $this->data, true);
+        }
+
+        else {
             $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department();
             $this->data['dashstats'] = $this->dashboard_model->dashstats();
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');

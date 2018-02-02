@@ -169,11 +169,37 @@
                 </li>
 
             <?php } ?>
+
+
+            <?php if ($usergroup == 'superadmin') { ?>
+
+                <li class="<?= ($this->router->fetch_class() == 'settings' ) && ($this->router->fetch_method() == 'facilities' ) ? 'active' : '' ?>">
+                    <a href="<?= base_url() ?>settings/facilities"><i class="fa fa-lg fa-fw fa-hospital-o"></i> Facilities</a>
+                </li>
+                <li class="<?= ($this->router->fetch_class() == 'settings' ) && ($this->router->fetch_method() == 'suburbs' ) ? 'active' : '' ?>">
+                    <a href="<?= base_url() ?>settings/suburbs"><i class="fa fa-lg fa-fw fa-map-marker"></i> Location-Suburbs</a>
+                </li>
+
+                <li class=" <?= ($this->router->fetch_class() == 'users' ) ? 'active' : '' ?>">
+                    <a href="#"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">Users Management</span></a>
+                    <ul>
+                        <li class="<?= ($this->router->fetch_class() == 'users' ) && ($this->router->fetch_method() == 'all' )  ? 'active' : '' ?>">
+                            <a href="<?= base_url() ?>users/all"><i class="fa fa-lg fa-fw fa-users"></i> Users List</a>
+                        </li>
+
+
+
+                        <li class="<?= ($this->router->fetch_class() == 'users' ) && ($this->router->fetch_method() == 'audit_trail' ) ? 'active' : '' ?>">
+                            <a href="<?= base_url() ?>users/audit_trail"><i class="fa fa-lg fa-fw fa-clock-o"></i> Audit Trail</a>
+                        </li>
+
+                    </ul>
+                </li>
+            <?php } ?>
             <li class="<?= ($this->router->fetch_class() == 'support' ) && ($this->router->fetch_method() == 'help' ) ? 'active' : '' ?>">
                 <a href="<?= base_url() ?>support/help" title="Help"><i class="fa fa-lg fa-fw fa-question-circle"></i> Help</a>
             </li>
-            <li>                
-            </li>
+
         </ul>
 
     </nav>

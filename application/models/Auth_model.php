@@ -12,8 +12,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @license     BSD - http://www.opensource.org/licenses/BSD-3-Clause
  * @link        http://community-auth.com
  */
-
-class Auth_model extends MY_Model {
+class Auth_model extends MY_Model
+{
 
     /**
      * Check the user table to see if a user exists by username or email address.
@@ -24,7 +24,7 @@ class Auth_model extends MY_Model {
      * @param   string  either the username or email address of a user
      * @return  mixed   either query data as object or FALSE
      */
-    public function get_auth_data( $user_string )
+    public function get_auth_data($user_string)
     {
 
 
@@ -36,27 +36,36 @@ class Auth_model extends MY_Model {
             'email',
             'passwd',
             'user_id',
-            'banned'
+            'banned',
+            'auth_level'
         ];
         // User table query
-        $query = $this->db->select( $selected_columns )
-            ->from( $this->db_table('user_table') )
-            ->where( 'LOWER( username ) =', strtolower( $user_string ) )
-            ->or_where( 'LOWER( email ) =', strtolower( $user_string ) )
+        $query = $this->db->select($selected_columns)
+            ->from($this->db_table('user_table'))
+            ->where('LOWER( username ) =', strtolower($user_string))
+            ->or_where('LOWER( email ) =', strtolower($user_string))
             ->limit(1)
             ->get();
 
-        if( $query->num_rows() == 1 )
-        {
+        if ($query->num_rows() == 1) {
             $row = $query->row_array();
 
             // ACL is added
-            $acl = $this->add_acl_to_auth_data( $row['user_id'] );
-            // FACILITIES is added
-            $facl =$this->add_facilities_to_auth_data( $row['user_id'] );
+            $acl = $this->add_acl_to_auth_data($row['user_id']);
 
-            $multi_facl=$this->add_multi_facilities_to_auth_data( $row['user_id'] );
-            return (object) array_merge( $row,   $acl,$facl,$multi_facl );
+            if ($row['auth_level'] == '99') {
+
+                return (object)array_merge($row, $acl);
+            } else {
+                unset($row['auth_level']);
+                // FACILITIES is added
+                $facl = $this->add_facilities_to_auth_data($row['user_id']);
+
+                $multi_facl = $this->add_multi_facilities_to_auth_data($row['user_id']);
+                return (object)array_merge($row, $acl, $facl, $multi_facl);
+            }
+
+
         }
 
         return FALSE;
@@ -71,27 +80,26 @@ class Auth_model extends MY_Model {
      * @param  string  the login time in MySQL format
      * @param  array  the session ID
      */
-    public function login_update( $user_id, $login_time, $session_id )
+    public function login_update($user_id, $login_time, $session_id)
     {
-        if( config_item('disallow_multiple_logins') === TRUE )
-        {
-            $this->db->where( 'user_id', $user_id )
-                ->delete( $this->db_table('auth_sessions_table') );
+        if (config_item('disallow_multiple_logins') === TRUE) {
+            $this->db->where('user_id', $user_id)
+                ->delete($this->db_table('auth_sessions_table'));
         }
 
         $data = ['last_login' => $login_time];
 
-        $this->db->where( 'user_id' , $user_id )
-            ->update( $this->db_table('user_table') , $data );
+        $this->db->where('user_id', $user_id)
+            ->update($this->db_table('user_table'), $data);
         $data = [
-            'id'         => is_null($session_id) ? $this->session->session_id : $session_id,
-            'user_id'    => $user_id,
+            'id' => is_null($session_id) ? $this->session->session_id : $session_id,
+            'user_id' => $user_id,
             'login_time' => $login_time,
             'ip_address' => $this->input->ip_address(),
             'user_agent' => $this->_user_agent()
         ];
 
-        $this->db->insert( $this->db_table('auth_sessions_table') , $data );
+        $this->db->insert($this->db_table('auth_sessions_table'), $data);
     }
 
     // --------------------------------------------------------------
@@ -103,13 +111,13 @@ class Auth_model extends MY_Model {
     {
         $this->load->library('user_agent');
 
-        if( $this->agent->is_browser() ){
+        if ($this->agent->is_browser()) {
             $agent = $this->agent->browser() . ' ' . $this->agent->version();
-        }else if( $this->agent->is_robot() ){
+        } else if ($this->agent->is_robot()) {
             $agent = $this->agent->robot();
-        }else if( $this->agent->is_mobile() ){
+        } else if ($this->agent->is_mobile()) {
             $agent = $this->agent->mobile();
-        }else{
+        } else {
             $agent = 'Unidentified User Agent';
         }
 
@@ -133,7 +141,7 @@ class Auth_model extends MY_Model {
      * @param   int     the user ID
      * @return  string  the login time in MySQL format
      */
-    public function check_login_status( $user_id, $login_time,$facility='' )
+    public function check_login_status($user_id, $login_time, $facility = '')
     {
         // Selected user table data
         $selected_columns = [
@@ -142,41 +150,43 @@ class Auth_model extends MY_Model {
             'u.username',
             'u.email',
             'u.user_id',
-            'u.banned'
+            'u.banned',
+            'u.auth_level'
         ];
-        $this->db->select( $selected_columns )
-            ->from( $this->db_table('user_table') . ' u' )
-            ->join( $this->db_table('auth_sessions_table') . ' s', 'u.user_id = s.user_id' )
-            ->where( 's.user_id', $user_id )
-            ->where( 's.login_time', $login_time );
+        $this->db->select($selected_columns)
+            ->from($this->db_table('user_table') . ' u')
+            ->join($this->db_table('auth_sessions_table') . ' s', 'u.user_id = s.user_id')
+            ->where('s.user_id', $user_id)
+            ->where('s.login_time', $login_time);
 
         // If the session ID was NOT regenerated, the session IDs should match
-        if( is_null( $this->session->regenerated_session_id ) )
-        {
-            $this->db->where( 's.id', $this->session->session_id );
-        }
-
-        // If it was regenerated, we can only compare the old session ID for this request
-        else
-        {
-            $this->db->where( 's.id', $this->session->pre_regenerated_session_id );
+        if (is_null($this->session->regenerated_session_id)) {
+            $this->db->where('s.id', $this->session->session_id);
+        } // If it was regenerated, we can only compare the old session ID for this request
+        else {
+            $this->db->where('s.id', $this->session->pre_regenerated_session_id);
         }
 
         $this->db->limit(1);
         $query = $this->db->get();
 
-        if( $query->num_rows() == 1 )
-        {
+        if ($query->num_rows() == 1) {
             $row = $query->row_array();
 
-            // ACL is added
-            $acl = $this->add_acl_to_auth_data( $row['user_id'] );
+     // ACL is added
+            $acl = $this->add_acl_to_auth_data($row['user_id']);
+            if ($row['auth_level'] == '99') {
 
-            // FACILITIES is added
-            $facl =$this->add_facilities_to_auth_data( $row['user_id'] ,$facility);
+                return (object)array_merge($row, $acl);
+            } else {
+                unset($row['auth_level']);
+                // FACILITIES is added
+                $facl = $this->add_facilities_to_auth_data($row['user_id'], $facility);
 
-            $multi_facl=$this->add_multi_facilities_to_auth_data( $row['user_id'] );
-            return (object) array_merge( $row, $acl,$facl,$multi_facl );
+                $multi_facl = $this->add_multi_facilities_to_auth_data($row['user_id']);
+                return (object)array_merge($row, $acl, $facl, $multi_facl);
+            }
+
         }
 
         return FALSE;
@@ -194,32 +204,29 @@ class Auth_model extends MY_Model {
      * @param   int     the user ID
      * @return  string  the login time in MySQL format
      */
-    public function add_facilities_to_auth_data( $user_id ,$facility='')
+    public function add_facilities_to_auth_data($user_id, $facility = '')
     {
 
-        $facl= [];
+        $facl = [];
 
         // Add FACL query check only if turned on in authentication config
-        if( config_item('add_facility_check') )
-        {
+        if (config_item('add_facility_check')) {
 
-            if($this->multi_facilities_query( $user_id, TRUE )=='1' && $facility==''){
-                $facl = $this->facilities_query( $user_id, TRUE );
+            if ($this->multi_facilities_query($user_id, TRUE) == '1' && $facility == '') {
+                $facl = $this->facilities_query($user_id, TRUE);
 
-                $return=  ['facl' => $facl,'auth_level'=>$facl->auth_level,'auth_facilityid'=>'none','auth_facilityname'=>'none','auth_departmentid'=>'none','auth_facilityname'=>'none'] ;
-            }
-            else{
-                if (isset($facility) && $facility != null){
-                    $facl = $this->facilities_query( $user_id, TRUE ,$facility);
-                }
-                else
-                    $facl = $this->facilities_query( $user_id, TRUE );
+                $return = ['facl' => $facl, 'auth_level' => $facl->auth_level, 'auth_facilityid' => 'none', 'auth_facilityname' => 'none', 'auth_departmentid' => 'none', 'auth_facilityname' => 'none'];
+            } else {
+                if (isset($facility) && $facility != null) {
+                    $facl = $this->facilities_query($user_id, TRUE, $facility);
+                } else
+                    $facl = $this->facilities_query($user_id, TRUE);
 
 
-                if(!empty($facl)){
-                    $return=  ['facl' => $facl,'auth_level'=>$facl->auth_level,'auth_facilityid'=>$facl->facility_id,'auth_facilityname'=>$facl->facility_name,'auth_departmentid'=>$facl->department_id,'auth_departmentname'=>$facl->department_name];
-                }else{
-                    $return=  ['facl' => $facl,'auth_level'=>$facl->auth_level,'auth_facilityid'=>"0",'auth_facilityname'=>"none",'auth_departmentid'=>"0",'auth_departmentname'=>"none"];
+                if (!empty($facl)) {
+                    $return = ['facl' => $facl, 'auth_level' => $facl->auth_level, 'auth_facilityid' => $facl->facility_id, 'auth_facilityname' => $facl->facility_name, 'auth_departmentid' => $facl->department_id, 'auth_departmentname' => $facl->department_name];
+                } else {
+                    $return = ['facl' => $facl, 'auth_level' => $facl->auth_level, 'auth_facilityid' => "0", 'auth_facilityname' => "none", 'auth_departmentid' => "0", 'auth_departmentname' => "none"];
                 }
 
             }
@@ -229,14 +236,13 @@ class Auth_model extends MY_Model {
         return $return;
     }
 
-    public function add_multi_facilities_to_auth_data( $user_id )
+    public function add_multi_facilities_to_auth_data($user_id)
     {
-        $multi_facl= 0;
+        $multi_facl = 0;
 
         // Add FACL query check only if turned on in authentication config
-        if( config_item('add_facility_check') )
-        {
-            $multi_facl = $this->multi_facilities_query( $user_id, TRUE );
+        if (config_item('add_facility_check')) {
+            $multi_facl = $this->multi_facilities_query($user_id, TRUE);
         }
 
 
@@ -254,14 +260,13 @@ class Auth_model extends MY_Model {
      *
      * @param  int  the logged in user's user ID
      */
-    public function add_acl_to_auth_data( $user_id )
+    public function add_acl_to_auth_data($user_id)
     {
         $acl = [];
 
         // Add ACL query only if turned on in authentication config
-        if( config_item('add_acl_query_to_auth_functions') )
-        {
-            $acl = $this->acl_query( $user_id, TRUE );
+        if (config_item('add_acl_query_to_auth_functions')) {
+            $acl = $this->acl_query($user_id, TRUE);
         }
 
         return ['acl' => $acl];
@@ -272,13 +277,12 @@ class Auth_model extends MY_Model {
     /**
      * Update a user's user record session ID if it was regenerated
      */
-    public function update_user_session_id( $user_id )
+    public function update_user_session_id($user_id)
     {
 
-        if( ! is_null( $this->session->regenerated_session_id ) )
-        {
-            $this->db->where( 'user_id', $user_id )
-                ->where( 'id', $this->session->pre_regenerated_session_id )
+        if (!is_null($this->session->regenerated_session_id)) {
+            $this->db->where('user_id', $user_id)
+                ->where('id', $this->session->pre_regenerated_session_id)
                 ->update(
                     $this->db_table('auth_sessions_table'),
                     ['id' => $this->session->regenerated_session_id]
@@ -294,11 +298,11 @@ class Auth_model extends MY_Model {
      */
     public function clear_expired_holds()
     {
-        $expiration = date('Y-m-d H:i:s', time() - config_item('seconds_on_hold') );
+        $expiration = date('Y-m-d H:i:s', time() - config_item('seconds_on_hold'));
 
-        $this->db->delete( $this->db_table('IP_hold_table'), ['time <' => $expiration] );
+        $this->db->delete($this->db_table('IP_hold_table'), ['time <' => $expiration]);
 
-        $this->db->delete( $this->db_table('username_or_email_hold_table'), ['time <' => $expiration] );
+        $this->db->delete($this->db_table('username_or_email_hold_table'), ['time <' => $expiration]);
     }
 
     // --------------------------------------------------------------
@@ -308,9 +312,9 @@ class Auth_model extends MY_Model {
      */
     public function clear_login_errors()
     {
-        $expiration = date('Y-m-d H:i:s', time() - config_item('seconds_on_hold') );
+        $expiration = date('Y-m-d H:i:s', time() - config_item('seconds_on_hold'));
 
-        $this->db->delete( $this->db_table('errors_table'), ['time <' => $expiration] );
+        $this->db->delete($this->db_table('errors_table'), ['time <' => $expiration]);
     }
 
     // --------------------------------------------------------------
@@ -321,13 +325,13 @@ class Auth_model extends MY_Model {
      * @param   bool   if check is from recovery (FALSE if from login)
      * @return  bool
      */
-    public function check_holds( $recovery )
+    public function check_holds($recovery)
     {
         $ip_hold = $this->check_ip_hold();
 
-        $string_hold = $this->check_username_or_email_hold( $recovery );
+        $string_hold = $this->check_username_or_email_hold($recovery);
 
-        if( $ip_hold === TRUE OR $string_hold === TRUE )
+        if ($ip_hold === TRUE OR $string_hold === TRUE)
             return TRUE;
 
         return FALSE;
@@ -347,7 +351,7 @@ class Auth_model extends MY_Model {
             ['ip_address' => $this->input->ip_address()]
         );
 
-        if( $ip_hold->num_rows() > 0 )
+        if ($ip_hold->num_rows() > 0)
             return TRUE;
 
         return FALSE;
@@ -361,21 +365,20 @@ class Auth_model extends MY_Model {
      * @param   bool   if check is from recovery (FALSE if from login)
      * @return  bool
      */
-    public function check_username_or_email_hold( $recovery )
+    public function check_username_or_email_hold($recovery)
     {
-        $posted_string = ( ! $recovery )
-            ? $this->input->post( 'login_string' )
-            : $this->input->post( 'email', TRUE );
+        $posted_string = (!$recovery)
+            ? $this->input->post('login_string')
+            : $this->input->post('email', TRUE);
 
         // Check posted string for basic validity.
-        if( ! empty( $posted_string ) && strlen( $posted_string ) < 256 )
-        {
+        if (!empty($posted_string) && strlen($posted_string) < 256) {
             $string_hold = $this->db->get_where(
                 $this->db_table('username_or_email_hold_table'),
                 ['username_or_email' => $posted_string]
             );
 
-            if( $string_hold->num_rows() > 0 )
+            if ($string_hold->num_rows() > 0)
                 return TRUE;
         }
 
@@ -389,10 +392,10 @@ class Auth_model extends MY_Model {
      *
      * @param  array  the details of the login attempt
      */
-    public function create_login_error( $data )
+    public function create_login_error($data)
     {
-        $this->db->set( $data )
-            ->insert( $this->db_table('errors_table') );
+        $this->db->set($data)
+            ->insert($this->db_table('errors_table'));
     }
 
     // --------------------------------------------------------------
@@ -403,50 +406,45 @@ class Auth_model extends MY_Model {
      *
      * @param  string  the supplied username or email address
      */
-    public function check_login_attempts( $string )
+    public function check_login_attempts($string)
     {
         $ip_address = $this->input->ip_address();
 
         // Check if this IP now has too many login attempts
-        $count1 = $this->db->where( 'ip_address', $ip_address )
-            ->count_all_results( $this->db_table('errors_table') );
+        $count1 = $this->db->where('ip_address', $ip_address)
+            ->count_all_results($this->db_table('errors_table'));
 
-        if( $count1 == config_item('max_allowed_attempts') )
-        {
+        if ($count1 == config_item('max_allowed_attempts')) {
             // Place the IP on hold
             $data = [
                 'ip_address' => $ip_address,
-                'time'       => date('Y-m-d H:i:s')
+                'time' => date('Y-m-d H:i:s')
             ];
 
-            $this->db->set( $data )
-                ->insert( $this->db_table('IP_hold_table') );
-        }
-
-        /**
+            $this->db->set($data)
+                ->insert($this->db_table('IP_hold_table'));
+        } /**
          * If for some reason login attempts exceed
          * the max_allowed_attempts number, we have
          * the option of banning the user by IP address.
          */
-        else if(
+        else if (
             $count1 > config_item('max_allowed_attempts') &&
             $count1 >= config_item('deny_access_at')
-        )
-        {
+        ) {
             /**
              * Send email to admin here ******************
              */
 
-            if( config_item('deny_access_at') > 0 )
-            {
+            if (config_item('deny_access_at') > 0) {
                 // Log the IP address in the denied_access database
                 $data = [
-                    'ip_address'  => $ip_address,
-                    'time'        => date('Y-m-d H:i:s'),
+                    'ip_address' => $ip_address,
+                    'time' => date('Y-m-d H:i:s'),
                     'reason_code' => '1'
                 ];
 
-                $this->_insert_denial( $data );
+                $this->_insert_denial($data);
 
                 // Output white screen of death
                 header('HTTP/1.1 403 Forbidden');
@@ -461,25 +459,23 @@ class Auth_model extends MY_Model {
         $count2 = 0;
 
         // Check to see if this username/email-address has too many login attempts
-        if( $string != '' )
-        {
-            $count2 = $this->db->where( 'username_or_email', $string )
-                ->count_all_results( $this->db_table('errors_table') );
+        if ($string != '') {
+            $count2 = $this->db->where('username_or_email', $string)
+                ->count_all_results($this->db_table('errors_table'));
 
-            if( $count2 == config_item('max_allowed_attempts') )
-            {
+            if ($count2 == config_item('max_allowed_attempts')) {
                 // Place the username/email-address on hold
                 $data = [
                     'username_or_email' => $string,
-                    'time'              => date('Y-m-d H:i:s')
+                    'time' => date('Y-m-d H:i:s')
                 ];
 
-                $this->db->set( $data )
-                    ->insert( $this->db_table('username_or_email_hold_table') );
+                $this->db->set($data)
+                    ->insert($this->db_table('username_or_email_hold_table'));
             }
         }
 
-        return max( $count1, $count2 );
+        return max($count1, $count2);
     }
 
     // --------------------------------------------------------------
@@ -488,14 +484,14 @@ class Auth_model extends MY_Model {
      * Get all data from the denied access table,
      * or set the field parameter to retrieve a single field.
      */
-    public function get_deny_list( $field = FALSE )
+    public function get_deny_list($field = FALSE)
     {
-        if( $field !== FALSE )
-            $this->db->select( $field );
+        if ($field !== FALSE)
+            $this->db->select($field);
 
-        $query = $this->db->from( $this->db_table('denied_access_table') )->get();
+        $query = $this->db->from($this->db_table('denied_access_table'))->get();
 
-        if( $query->num_rows() > 0 )
+        if ($query->num_rows() > 0)
             return $query->result();
 
         return FALSE;
@@ -506,13 +502,13 @@ class Auth_model extends MY_Model {
     /**
      * Add a record to the denied access table
      */
-    protected function _insert_denial( $data )
+    protected function _insert_denial($data)
     {
-        if( $data['ip_address'] == '0.0.0.0' )
+        if ($data['ip_address'] == '0.0.0.0')
             return FALSE;
 
-        $this->db->set( $data )
-            ->insert( $this->db_table('denied_access_table') );
+        $this->db->set($data)
+            ->insert($this->db_table('denied_access_table'));
 
         $this->_rebuild_deny_list();
     }
@@ -524,22 +520,21 @@ class Auth_model extends MY_Model {
      * This method is not used by any action in Community Auth's
      * example controllers. It has been left here for convenience.
      */
-    protected function _remove_denial( $ips )
+    protected function _remove_denial($ips)
     {
         $i = 0;
 
-        foreach( $ips as $ip)
-        {
-            if( $i == 0 ){
-                $this->db->where('ip_address', $ip );
-            }else{
-                $this->db->or_where('ip_address', $ip );
+        foreach ($ips as $ip) {
+            if ($i == 0) {
+                $this->db->where('ip_address', $ip);
+            } else {
+                $this->db->or_where('ip_address', $ip);
             }
 
             $i++;
         }
 
-        $this->db->delete( $this->db_table('denied_access_table') );
+        $this->db->delete($this->db_table('denied_access_table'));
 
         $this->_rebuild_deny_list();
     }
@@ -555,13 +550,11 @@ class Auth_model extends MY_Model {
         $query_result = $this->get_deny_list('ip_address');
 
         // If we have denials
-        if( $query_result !== FALSE )
-        {
+        if ($query_result !== FALSE) {
             // Create the denial list to be inserted into the Apache config file
             $deny_list = '<Limit GET POST>' . "\n" . 'order deny,allow';
 
-            foreach( $query_result as $row )
-            {
+            foreach ($query_result as $row) {
                 $deny_list .= "\n" . 'deny from ' . $row->ip_address;
             }
 
@@ -574,32 +567,31 @@ class Auth_model extends MY_Model {
         $this->load->helper('file');
 
         // Store the file permissions so we can reset them after writing to the file
-        $initial_file_permissions = fileperms( $htaccess );
+        $initial_file_permissions = fileperms($htaccess);
 
         // Change the file permissions so we can read/write
-        @chmod( $htaccess, 0644);
+        @chmod($htaccess, 0644);
 
         // Read in the contents of the Apache config file
-        $string = read_file( $htaccess );
+        $string = read_file($htaccess);
 
         // Remove the original deny list
-        $arr = explode( 'END DENY LIST --', $string );
+        $arr = explode('END DENY LIST --', $string);
 
         // Add the new deny list to the top of the file contents
         $string = "# MAKE SURE TO LEAVE THE DENY LIST AT THE TOP OF THE FILE !!!\n" .
             "# BEGIN DENY LIST --\n" .
             $deny_list .
             "# END DENY LIST --\n\n" .
-            trim( $arr[1] ) . "\n";
+            trim($arr[1]) . "\n";
 
         // Write the new file contents
-        if ( ! write_file( $htaccess, $string ) )
-        {
+        if (!write_file($htaccess, $string)) {
             die('Could not write to Apache configuration file');
         }
 
         // Change the file permissions back to what they were before the read/write
-        @chmod( $htaccess, $initial_file_permissions );
+        @chmod($htaccess, $initial_file_permissions);
     }
 
     // --------------------------------------------------------------
@@ -611,7 +603,7 @@ class Auth_model extends MY_Model {
      * @param  int  the number of failed login attempts as
      *              determined by check_login_attempts()
      */
-    public function failed_login_attempt_hook( $login_errors_count )
+    public function failed_login_attempt_hook($login_errors_count)
     {
         return;
     }
@@ -624,11 +616,11 @@ class Auth_model extends MY_Model {
      * @param  int  the user's ID
      * @param  string  the session ID
      */
-    public function logout( $user_id, $session_id )
+    public function logout($user_id, $session_id)
     {
-        $this->db->where( 'user_id' , $user_id )
-            ->where( 'id', $session_id )
-            ->delete( $this->db_table('auth_sessions_table') );
+        $this->db->where('user_id', $user_id)
+            ->where('id', $session_id)
+            ->delete($this->db_table('auth_sessions_table'));
     }
 
     // --------------------------------------------------------------
@@ -643,8 +635,7 @@ class Auth_model extends MY_Model {
     public function auth_sessions_gc()
     {
         // GC for database based sessions
-        if( config_item('sess_driver') == 'database' )
-        {
+        if (config_item('sess_driver') == 'database') {
             // Immediately delete orphaned auth sessions
             $this->db->query('
 				DELETE a
@@ -656,8 +647,7 @@ class Auth_model extends MY_Model {
         }
 
         // GC for sessions not expiring on browser close
-        if( config_item('sess_expiration') != 0 )
-        {
+        if (config_item('sess_expiration') != 0) {
             $this->db->query('
 				DELETE FROM `' . $this->db_table('auth_sessions_table') . '` 
 				WHERE modified_at < CURDATE() - INTERVAL ' . config_item('sess_expiration') . ' SECOND

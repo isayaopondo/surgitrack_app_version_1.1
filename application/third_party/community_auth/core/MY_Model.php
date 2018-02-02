@@ -189,18 +189,11 @@ class MY_Model extends CI_Model
             ->get();
 
         $facilities = $query->row();
+
         $department=$this->get_mydefault_department($user_id, $facilities->facility_id);
         $facl= array_merge($facilities,$department);
 
-       /* if ($query->num_rows() > 1) {
-            $facl = $query->result();
-
-        } else {
-
-        }*/
-
-
-        if ($called_during_auth OR $user_id == config_item('auth_user_id'))
+         if ($called_during_auth OR $user_id == config_item('auth_user_id'))
             $this->facl = $facl;
 
         return $facl;
