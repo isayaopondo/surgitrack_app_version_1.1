@@ -33,7 +33,7 @@
             <!-- NEW WIDGET START -->
             <article class="col-sm-12 col-md-12 col-lg-12">
                 <!-- new widget -->
-                <div class="jarviswidget jarviswidget-color-orange">
+                <div class="jarviswidget jarviswidget-color-blueDark">
 
                     <header>
                         <span class="widget-icon"> <i class="fa fa-users"></i> </span>

@@ -248,7 +248,7 @@ class Settings extends MY_Controller
     public function delete_department_procedure()
     {
         $procedure_id = $this->input->post('procedure_id');
-        if ($this->settings_model->delete_procedure($procedure_id)) {
+        if ($this->settings_model->delete_procedure($procedure_id, $this->auth_user_id)) {
             $return = array('procedure_id' => $procedure_id,
                 'message' => '<div class="alert alert-success fade in">
                                     <button class="close" data-dismiss="alert">
@@ -364,6 +364,8 @@ class Settings extends MY_Controller
         $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
 
     }
+
+
     //====================================
     //     Catergory
     //===================================

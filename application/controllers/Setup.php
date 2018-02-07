@@ -63,7 +63,7 @@ class Setup extends MY_Controller
                 $this->user_id = $this->auth_user_id;
                 $this->usergroup = $this->auth_role;
 
-            }elseif($this->auth_role!='admin'){
+            } elseif ($this->auth_role != 'admin') {
                 redirect('auth/errors', 'refresh');
             } else {
                 redirect('auth', 'refresh');
@@ -94,7 +94,7 @@ class Setup extends MY_Controller
 
         $this->data['departments'] = $this->settings_model->get_departments($this->auth_facilityid);
         $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_facilityid);
-        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools.$this->settings_tools;
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools . $this->settings_tools;
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
         $this->_render_setup('setup/users', $this->data, true);
 
@@ -280,8 +280,8 @@ class Setup extends MY_Controller
                 // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
 
                 foreach ($procedure_dual as $val) {
-                    $procedures= $this->settings_model->get_global_procedure_by_id($val);
-                    $procedure=$procedures['data'];
+                    $procedures = $this->settings_model->get_global_procedure_by_id($val);
+                    $procedure = $procedures['data'];
                     $data = array(
                         'facility_id' => $this->auth_facilityid,
                         'department_id' => $department_id,
@@ -346,6 +346,10 @@ class Setup extends MY_Controller
         $this->_render_setup('setup/procedures', $this->data, true);
     }
 
+    public function remove_procedure_department($procedure_id)
+    {
+        $this->settings_model->delete_procedure_department($procedure_id, $this->auth_user_id);
+    }
 
     public function assign_departmental_procedures()
     {
@@ -363,8 +367,8 @@ class Setup extends MY_Controller
                 // $this->settings_model->reset_procedure_department($department_id, $this->auth_user_id);
 
                 foreach ($procedure_dual as $val) {
-                    $procedures= $this->settings_model->get_global_procedure_by_id($val);
-                    $procedure=$procedures['data'];
+                    $procedures = $this->settings_model->get_global_procedure_by_id($val);
+                    $procedure = $procedures['data'];
                     $data = array(
                         'facility_id' => $this->auth_facilityid,
                         'department_id' => $department_id,

@@ -173,34 +173,27 @@ class Settings_model extends MY_Model
         $this->db->update('strack_facility_procedures', $data);
     }
 
-    function delete_procedure($id)
-    {
-        $this->db->where("procedure_id", $id);
-        $q = $this->db->get('strack_booking');
-        if ($q->num_rows() > 0) {
-            return false;
-        } else {
-            $this->db->delete('strack_facility_procedures', array('procedure_id' => $id));
-            if ($this->db->affected_rows() >= 1) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+
 
     public function procedure_department_insert($data, $procedure_id, $department_id)
     {
 
-        $this->db->where(array('procedure_id' => $procedure_id, 'department_id' => $department_id));
+        $this->db->where(array('procedure_fk_id' => $procedure_id, 'department_id' => $department_id));
         $q = $this->db->get('strack_facility_procedures');
         if ($q->num_rows() > 0) {
-            $this->db->update('strack_facility_procedures', array('isdeleted' => '0', 'modified' => date('Y-m-d H:i:s', strtotime('now'))), array('department_id' => $department_id));
-            if ($this->db->affected_rows() >= 1) {
-                return true;
-            } else {
+            $res=$q->row();
+            if($res->isdeleted == '0'){
+                $this->db->update('strack_facility_procedures', array('isdeleted' => '1', 'modified' => date('Y-m-d H:i:s', strtotime('now'))), array('procedure_fk_id' => $procedure_id));
+                if ($this->db->affected_rows() >= 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            else{
                 return false;
             }
+
         } else {
             $this->db->insert('strack_facility_procedures', $data);
             if ($this->db->affected_rows() >= 1) {
@@ -222,9 +215,19 @@ class Settings_model extends MY_Model
         }
     }
 
-    public function delete_procedure_department($department_id, $modified_by)
+    public function delete_procedure($procedure_id,$modified_by)
     {
-        $this->db->update('strack_facility_procedures', array('isdeleted' => '1', 'deleted_on' => date('Y-m-d H:i:s', strtotime('now')), 'modified_by' => $modified_by), array('department_id' => $department_id));
+        $this->db->update('strack_facility_procedures', array('isdeleted' => '0', 'modified' => date('Y-m-d H:i:s', strtotime('now'))), array('procedure_id' => $procedure_id));
+        if ($this->db->affected_rows() >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function delete_procedure_department($department_id,$modified_by)
+    {
+        $this->db->update('strack_facility_procedures', array('isdeleted' => '0', 'modified' => date('Y-m-d H:i:s', strtotime('now'))), array('department_id' => $department_id));
         if ($this->db->affected_rows() >= 1) {
             return true;
         } else {
