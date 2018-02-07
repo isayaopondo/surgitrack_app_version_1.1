@@ -23,7 +23,7 @@ class Patients extends MY_Controller
         $this->load->library(array('writelog'));
 
         $this->lang->load('auth');
-        $this->load->model(array('settings_model', 'booking_model', 'patients_model', 'user_model','setup_model'));
+        $this->load->model(array('settings_model', 'booking_model', 'patients_model', 'user_model', 'setup_model'));
         $this->load->helper(array('url', 'form', 'language'));
 
         $this->is_logged_in();
@@ -79,7 +79,7 @@ class Patients extends MY_Controller
 
     public function lists()
     {
-        if( in_array( $this->auth_role, ['admin','doctor','nurse'] ) ) {
+        if (in_array($this->auth_role, ['admin', 'doctor', 'nurse'])) {
             $this->data['pagescripts'] = $this->pagescripts . $this->table_tools . $this->case_list . $this->general_tools;
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             $this->_smart_render('patients/lists', $this->data, true);
@@ -89,7 +89,7 @@ class Patients extends MY_Controller
     public function add_patient($patient_id = '', $booking_id = '')
     {
 
-        if( in_array( $this->auth_role, ['doctor'] ) ) {
+        if (in_array($this->auth_role, ['doctor'])) {
             $user_id = $this->auth_user_id;
             $this->data['patient_id'] = $patient_id;
             if (isset($patient_id) && $patient_id != '') {
@@ -107,11 +107,13 @@ class Patients extends MY_Controller
 
 
             $department = $this->settings_model->get_mydepartment($this->auth_user_id);
-            if (!empty($department)) {
-                $this->data['bookedby'] = $this->settings_model->get_department_users($department->department_id);
-                $this->data['firms'] = $this->settings_model->get_firms_list($department->department_id);
+
+            //$department = $this->user_model->get_users_department($this->auth_user_id);
+            if (!empty($this->auth_departmentid)) {
+                $this->data['bookedby'] = $this->settings_model->get_department_users($this->auth_departmentid);
+                $this->data['firms'] = $this->settings_model->get_firms_list($this->auth_departmentid);
             }
-            $this->data['procedures'] = $this->settings_model->get_procedure_bydepartment($department->department_id);
+            $this->data['procedures'] = $this->settings_model->get_procedure_bydepartment($this->auth_departmentid);
             $this->data['theatre'] = $this->settings_model->get_theatres();
             $this->data['insuranceco'] = $this->settings_model->get_insurance_companies();
             $this->data['priorities'] = $this->settings_model->get_priorities();
@@ -129,7 +131,7 @@ class Patients extends MY_Controller
 
     public function patient_page($patient_id = '', $booking = '')
     {
-        if( in_array( $this->auth_role, ['admin','doctor'] ) ) {
+        if (in_array($this->auth_role, ['admin', 'doctor'])) {
             $this->data['patient_id'] = $patient_id;
             if (isset($patient_id) && $patient_id != '') {
                 $this->data['patient_details'] = $this->patients_model->get_patient_details($patient_id);
@@ -143,11 +145,11 @@ class Patients extends MY_Controller
             $department = $this->user_model->get_users_department($user_id);
             $this->data['myuserid'] = $user_id;
 
-            (!empty($department))?$this->data['mydepartmentid'] = $department->department_id:$this->data['mydepartmentid']='';
+            (!empty($department)) ? $this->data['mydepartmentid'] = $this->auth_departmentid : $this->data['mydepartmentid'] = '';
             if (!empty($department)) {
-                $this->data['my_departmentalfirms'] = $this->settings_model->get_mydefault_firms($user_id, $department->department_id);
-                $this->data['leadsurgeon'] = $this->settings_model->get_department_users($department->department_id);
-                $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($department->department_id);
+                $this->data['my_departmentalfirms'] = $this->settings_model->get_mydefault_firms($user_id, $this->auth_departmentid);
+                $this->data['leadsurgeon'] = $this->settings_model->get_department_users($this->auth_departmentid);
+                $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($this->auth_departmentid);
 
             } else {
                 $this->data['my_departmentalfirms'] = '';
@@ -156,7 +158,7 @@ class Patients extends MY_Controller
 
             $this->data['rplprocedures'] = $this->settings_model->get_rplprocedures();
 
-            $this->data['procedures'] = $this->settings_model->get_procedure_bydepartment($department->department_id);
+            $this->data['procedures'] = $this->settings_model->get_procedure_bydepartment($this->auth_departmentid);
             $this->data['theatre'] = $this->settings_model->get_theatres();
             $this->data['insuranceco'] = $this->settings_model->get_insurance_companies();
             $this->data['priorities'] = $this->settings_model->get_priorities();
@@ -324,34 +326,64 @@ class Patients extends MY_Controller
             . '<th>Theatre:</th><td>' . $patient_details->theatre_name . '</td> <th>Firm:</th><td>' . $patient_details->firm_name . '</td> <th>Duration:</th><td>' . $patient_details->slot_name . '</td>'
             . '</tr>'
             . '</table>';
+
+        echo $return;
+    }
+
+
+    public function search_patients_admission_details_with_mapt()
+    {
+        $booking_id = $this->input->post('booking_id');
+        $procedure_id = $this->booking_model->booking_procedure_id($booking_id);
+        $mapts = $this->booking_model->get_mapt_by_procedure($procedure_id);
+
+        $patient_details = $this->booking_model->get_mycase_details($booking_id);
+        $return = '<input type="hidden" name="booking_id" id="booking_id" value="' . $booking_id . '" >';
+
+        $return .= '<input type="hidden" name="procedure_id" id="procedure_id" value="' . $procedure_id . '" >';
+        $return .= '<div class="alert alert-info no-margin fade in">
+			<i class="fa-fw fa fa-info"></i>
+			Patient Admission Details
+		</div>'
+            . '<table width="100%" class="table">'
+            . '<tr class="success">'
+            . '<th>Folder Number:</th> <td>' . $patient_details->folder_number . '</td> <th>Surname:</th> <td>' . $patient_details->surname . '</td> <th>Phone:</th><td>' . $patient_details->phone . '</td>'
+            . '</tr>'
+            . '<tr class="danger">'
+            . '<th>Booked Procedure:</th><td>' . $patient_details->procedure_name . '</td> <th>Admission Date:</th><td>' . $patient_details->admission_date . '</td> <th>Lead Time(DAYS):</th><td>' . $patient_details->leadtime . '</td>'
+            . '</tr>'
+            . '<tr class="success">'
+            . '<th>Theatre:</th><td>' . $patient_details->theatre_name . '</td> <th>Firm:</th><td>' . $patient_details->firm_name . '</td> <th>Duration:</th><td>' . $patient_details->slot_name . '</td>'
+            . '</tr>'
+            . '</table>';
         if (!empty($mapts)) {
             $mapt_id = $mapts->mapt_id;
             $maptcriteria = $this->booking_model->get_mapt_criteria_details($mapt_id);
 
             $return .= '<div class="alert alert-info no-margin fade in">
-			<i class="fa-fw fa fa-info"></i>
-			MAPT CRITERIA
-		</div>';
+         <i class="fa-fw fa fa-info"></i>
+         MAPT CRITERIA
+     </div>';
             $return .= '<div class="well padding-10">'
                 . '<div class="  alert alert-warning semi-bold">';
             $return .= '<input type="hidden" name="mapt_id" id="mapt_id" value="' . $mapt_id . '" >';
             foreach ($maptcriteria as $criteria_details) {
                 $return .= '<fieldset>
-                <section>
-                            <label class="label">' . $criteria_details->criteria_name . '</label>
-                            <div class="inline-group">';
+             <section>
+                         <label class="label">' . $criteria_details->criteria_name . '</label>
+                         <div class="inline-group">';
                 $criteria = $this->booking_model->get_mapt_criteria_score($criteria_details->criteria_id);
                 foreach ($criteria as $score) {
                     //$return .= '<b>' . $score->score_text . '</b> = ' . $score->score_value . ', ';
                     $return .= '<label class="radio">
-                                <input type="radio" name="optmapt[' . $criteria_details->criteria_id . ']" value="' . $score->score_id . '" requiere>
-                                <i></i>' . $score->score_text . '
-                        </label>';
+                             <input type="radio" name="optmapt[' . $criteria_details->criteria_id . ']" value="' . $score->score_id . '" requiere>
+                             <i></i>' . $score->score_text . '
+                     </label>';
                 }
                 $return .= ' </div>
-                    </section>
-                    </fieldset>
-                    ';
+                 </section>
+                 </fieldset>
+                 ';
             }
 
 
@@ -361,10 +393,10 @@ class Patients extends MY_Controller
             $return .= '';
         } else {
             $return .= '<input type="hidden" name="nonmapt" id="nonmapt" value="1" >
-                     <br><div class="alert alert-danger no-margin fade in">
-			<i class="fa-fw fa fa-info"></i>
-			This procedure has no MAP Score
-		</div>';
+                  <br><div class="alert alert-danger no-margin fade in">
+         <i class="fa-fw fa fa-info"></i>
+         This procedure has no MAP Score
+     </div>';
         }
         echo $return;
     }
@@ -394,7 +426,7 @@ class Patients extends MY_Controller
             . '</table>';
         $return .= '</form>';
 
-        $return .= '<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-deletebutton="false"
+        $return .= '<div class="jarviswidget jarviswidget-color-orange" id="wid-id-1" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-deletebutton="false"
                      data-widget-fullscreenbutton="false">
                     <header >
                         <span class="widget-icon"> <i class="fa fa-clock-o"></i> </span>
@@ -676,11 +708,11 @@ class Patients extends MY_Controller
 
         $filename = preg_replace('/\s+/', '', $patient_details->surname . '_' . preg_replace('/[^a-zA-Z0-9\-\._]/', '', $patient_details->folder_number) . '_' . $patient_details->procedure_name . '_' . date('d_m_Y') . '.pdf');
         $this->preview_op_notes($booking_id, $filename, $patient_details->procedure_name, $return);
-        $file_path = base_url() . 'folder/opnotes/' .$this->auth_facilityid.'/'. $filename;
+        $file_path = base_url() . 'folder/opnotes/' . $this->auth_facilityid . '/' . $filename;
         $iframe = '<iframe src="' . $file_path . '" id="iView" style="width:100%;min-height:500px;border:dotted 1px red" frameborder="0"></iframe>';
         $returns = array(
             'file_iframe' => $iframe,
-            'file_path' => OPNOTES_REPOSITORY .$this->auth_facilityid.'/'. $filename
+            'file_path' => OPNOTES_REPOSITORY . $this->auth_facilityid . '/' . $filename
         );
         echo json_encode($returns);
     }
@@ -702,7 +734,7 @@ class Patients extends MY_Controller
         );
 
         $this->booking_model->save_opnotes_name($booking_id, $data);
-        $this->writelog->writelog($this->auth_user_id, 'Viewed OP Notes for BookingID:'.$booking_id.' on '.date('Y-m-d H:i:s', strtotime('now')));
+        $this->writelog->writelog($this->auth_user_id, 'Viewed OP Notes for BookingID:' . $booking_id . ' on ' . date('Y-m-d H:i:s', strtotime('now')));
         $this->load->view('booking/op_notes_print', $this->data);
     }
 
@@ -777,11 +809,11 @@ class Patients extends MY_Controller
 
         $filename = preg_replace('/\s+/', '', $patient_details->surname . '_' . preg_replace('/[^a-zA-Z0-9\-\._]/', '', $patient_details->folder_number) . '_' . $patient_details->procedure_name . '_' . date('d_m_Y') . '.pdf');
         $this->preview_patient_coding($booking_id, $filename, $patient_details->folder_number, $return);
-        $file_path = base_url() . 'folder/opcoding/' .$this->auth_facilityid.'/'. $filename;
+        $file_path = base_url() . 'folder/opcoding/' . $this->auth_facilityid . '/' . $filename;
         $iframe = '<iframe src="' . $file_path . '" id="iView" style="width:100%;min-height:500px;border:dotted 1px red" frameborder="0"></iframe>';
         $returns = array(
             'file_iframe' => $iframe,
-            'file_path' => OPCODING_REPOSITORY . $this->auth_facilityid.'/'.$filename
+            'file_path' => OPCODING_REPOSITORY . $this->auth_facilityid . '/' . $filename
         );
         echo json_encode($returns);
     }

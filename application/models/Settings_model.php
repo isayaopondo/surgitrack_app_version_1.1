@@ -1188,6 +1188,21 @@ class Settings_model extends MY_Model
         return $result;
     }
 
+    public function get_users_department($user_id)
+    {
+        $this->db->select('*')
+            ->from('strack_department_users')
+            ->join("strack_departments", "strack_department_users.department_id=strack_departments.department_id", 'LEFT')
+            ->where('current_user', '1');
+        $this->db->where(array("user_id" => $user_id));
+        $q = $this->db->get();
+
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
     public function check_user_has_department($user_id)
     {
         $this->db->select('department_id');

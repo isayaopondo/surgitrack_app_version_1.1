@@ -174,7 +174,7 @@ class Booking extends MY_Controller
         $department = $this->settings_model->get_mydepartment($this->auth_user_id);
         if (!empty($department)) {
 
-            $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($department->department_id);
+            $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($this->auth_departmentid);
         } else {
             $this->data['department_firms'] = '';
         }
@@ -198,8 +198,8 @@ class Booking extends MY_Controller
 
         $department = $this->settings_model->get_mydepartment($this->auth_user_id);
         if (!empty($department)) {
-            $this->data['my_departmentalfirms'] = $this->settings_model->get_mydefault_firms($this->auth_user_id, $department->department_id);
-            $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($department->department_id);
+            $this->data['my_departmentalfirms'] = $this->settings_model->get_mydefault_firms($this->auth_user_id, $this->auth_departmentid);
+            $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($this->auth_departmentid);
         } else {
             $this->data['my_departmentalfirms'] = '';
         }
@@ -418,7 +418,7 @@ class Booking extends MY_Controller
             $department = $this->settings_model->get_mydepartment($this->auth_user_id);
 
             if (!empty($department)) {
-                $json = $this->booking_model->get_mybooking_data($department->department_id);
+                $json = $this->booking_model->get_mybooking_data($this->auth_departmentid);
             } else {
                 $json = '';
             }
@@ -459,7 +459,7 @@ class Booking extends MY_Controller
             $user_id = $this->auth_user_id;
             $department = $this->user_model->get_users_department($user_id);
             $firm = $this->settings_model->get_myfirm($user_id);
-            $department_id = $department ? $department->department_id : '';
+            $department_id = $department ? $this->auth_departmentid : '';
             $firm_id = $firm ? $firm->firm_id : '';
             $json = $this->booking_model->get_booking_list_data($department_id, $patient_id, '0', $firm_id);
         } else {
@@ -481,7 +481,7 @@ class Booking extends MY_Controller
             $user_id = $this->auth_user_id;
             $department = $this->user_model->get_users_department($user_id);
             $firm = $this->settings_model->get_myfirm($user_id);
-            $department_id = $department ? $department->department_id : '';
+            $department_id = $department ? $this->auth_departmentid : '';
             $firm_id = $firm ? $firm->firm_id : '';
             $json = $this->booking_model->get_booking_list_data($department_id, $patient_id, '1', $firm_id);
         } else {
@@ -504,7 +504,7 @@ class Booking extends MY_Controller
             $user_id = $this->auth_user_id;
             $department = $this->user_model->get_users_department($user_id);
             $firm = $this->settings_model->get_myfirm($user_id);
-            $department_id = $department ? $department->department_id : '';
+            $department_id = $department ? $this->auth_departmentid : '';
             $firm_id = $firm ? $firm->firm_id : '';
             $json = $this->booking_model->get_booking_list_data($department_id, $patient_id, '2', $firm_id);
         } else {
@@ -527,7 +527,7 @@ class Booking extends MY_Controller
             $user_id = $this->auth_user_id;
             $department = $this->user_model->get_users_department($user_id);
             $firm = $this->settings_model->get_myfirm($user_id);
-            $department_id = $department ? $department->department_id : '';
+            $department_id = $department ? $this->auth_departmentid : '';
             $firm_id = $firm ? $firm->firm_id : '';
             $json = $this->booking_model->get_caselog_list_data($department_id, $patient_id, '3', $firm_id);
         } else {
@@ -806,8 +806,8 @@ class Booking extends MY_Controller
 
         $department = $this->settings_model->get_mydepartment($this->auth_user_id);
         if (!empty($department)) {
-            $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($department->department_id);
-            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($department->department_id);
+            $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($this->auth_departmentid);
+            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($this->auth_departmentid);
         } else {
             $this->data['department_firms'] = '';
         }
@@ -927,7 +927,7 @@ class Booking extends MY_Controller
     {
         $department = $this->settings_model->get_mydepartment($this->auth_user_id);
         if (!empty($department)) {
-            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($department->department_id);
+            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($this->auth_departmentid);
         } else {
             $this->data['leadsurgeon'] = '';
         }
@@ -948,7 +948,7 @@ class Booking extends MY_Controller
 
         $department = $this->settings_model->get_mydepartment($this->auth_user_id);
         if (!empty($department)) {
-            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($department->department_id);
+            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($this->auth_departmentid);
         } else {
             $this->data['leadsurgeon'] = '';
         }
@@ -1130,7 +1130,7 @@ class Booking extends MY_Controller
 
         $department = $this->settings_model->get_mydepartment($this->auth_user_id);
         if (!empty($department)) {
-            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($department->department_id);
+            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($this->auth_departmentid);
         } else {
             $this->data['leadsurgeon'] = '';
         }
@@ -1158,7 +1158,7 @@ class Booking extends MY_Controller
 
         $department = $this->settings_model->get_mydepartment($this->auth_user_id);
         if (!empty($department)) {
-            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($department->department_id);
+            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($this->auth_departmentid);
         } else {
             $this->data['leadsurgeon'] = '';
         }

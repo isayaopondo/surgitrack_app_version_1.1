@@ -444,7 +444,7 @@ function add_mapt(d, procedure) {
     $(".modal-body #booking_id").val(d);
     $.ajax({
         type: "POST",
-        url: jsonPath + "/patients/search_patients_admission_details",
+        url: jsonPath + "/patients/search_patients_admission_details_with_mapt",
         data: {booking_id: d, procedure_id: procedure},
         success: function (data) {
             $(".modal-body #admissiondetails").html(data);
