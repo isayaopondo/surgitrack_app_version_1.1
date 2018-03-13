@@ -77,7 +77,6 @@ class Patients_model extends MY_Model
             . 'additional_info,strack_patients_list.insuranceco_id,insuranceco_name,insurance_number,strack_patients_list.firm_id')
             ->from('strack_patients_list');
         $this->db->join('strack_department_firms', 'strack_patients_list.firm_id=strack_department_firms.firm_id', 'LEFT');
-        $this->db->join('strack_insurance_companies', 'strack_patients_list.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
 
         $query = $this->db->get();
         $result = $query->result();

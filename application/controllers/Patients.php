@@ -88,6 +88,13 @@ class Patients extends MY_Controller
 
     public function add_patient($patient_id = '', $booking_id = '')
     {
+        if(isset($_GET['st'])){
+            $this->data['st'] =$_GET['st'];
+        }
+        else
+        {
+            $this->data['st']='';
+        }
 
         if (in_array($this->auth_role, ['doctor'])) {
             $user_id = $this->auth_user_id;
@@ -174,7 +181,7 @@ class Patients extends MY_Controller
         }
     }
 
-    public function create_new_patient($id = '')
+    public function create_new_patient($id = '',$st='')
     {
 
         $this->form_validation->set_rules('folder_number', 'Folder Number', 'required');
@@ -219,7 +226,7 @@ class Patients extends MY_Controller
                 $this->writelog->patientlog($this->auth_user_id, $patientid, $log_action, $log_info);
                 $this->writelog->writelog($this->auth_user_id, $log_info);
                 $this->session->set_flashdata('message', "You have successfully created a new patient");
-                redirect('patients/add_patient/' . $patientid);
+                redirect('patients/add_patient/' . $patientid.'?st='.$st);
             }
         } else {
 
@@ -233,7 +240,7 @@ class Patients extends MY_Controller
                     $this->writelog->writelog($this->auth_user_id, $log_info);
                     $this->session->set_flashdata('message', "You have successfully Updated Patient: '" . $this->input->post('surname') . "' details");
                     !empty($this->input->post('postal_code')) ? $this->calculate_distance($patient_id) : '';
-                    redirect('patients/add_patient/' . $patient_id);
+                    redirect('patients/add_patient/' . $patient_id.'?st='.$st);
                 }
             }
         }

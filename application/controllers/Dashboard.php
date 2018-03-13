@@ -102,7 +102,8 @@ class Dashboard extends MY_Controller
         $this->general_tools = ''
             . ' <script src="' . base_url() . 'assets/js/plugin/select2/js/select2.js"></script>';
         $this->dashboard = '<script src="' . base_url() . 'assets/js/pages/dashboard_data.js"></script> '
-            . ' <script src="' . base_url() . 'assets/js/pages/dashboard_tools.js"></script> ';
+            . ' <script src="' . base_url() . 'assets/js/pages/dashboard_tools.js"></script> 
+<script src="' . base_url() . 'assets/js/pages/patients_module_tools.js"></script>';
     }
 
     /**

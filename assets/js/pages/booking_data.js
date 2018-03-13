@@ -302,6 +302,172 @@ $(document).ready(function () {
     });
     /* END COLUMN FILTER */
 
+//EMERGENCY LIST
+
+
+    /* Formatting function for row details - modify as you need */
+    function emergencylist_format(d) {
+        var side = '';
+        if (d.laterality !== 'None' && d.laterality !== "") {
+            side = '[' + d.laterality + ']';
+        }
+        // `d` is the original data object for the row
+        return '<table class="table table-condensed">' +
+            '<tr>' +
+            '<td width="45%">' +
+            '<table cellpadding="5" cellspacing="0" border="0" class="table table-hover table-condensed">' +
+            '<tr>' +
+            '<td width="30%"><b>Folder Number:</b></td>' +
+            '<td>' + d.folder_number + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Fullname:</b></td>' +
+            '<td>' + d.surname + ' ' + d.other_names + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Procedure:</b></td>' +
+            '<td>' + side + ' ' + d.procedure_name + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<tr>' +
+            '<td><b>Category:</b></td>' +
+            '<td>' + d.category_name + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Current MAPT Score:</b></td>' +
+            '<td>' + d.mapt + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Comments:</b></td>' +
+            '<td>' + d.additional_info + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Insurance:</b></td>' +
+            '<td>' + d.insuranceco_name + ' (#:' + d.insurance_number + ')</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td width="45%">' +
+            '<table cellpadding="5" cellspacing="0" border="0" class="table table-hover table-condensed">' +
+            '<tr>' +
+            '<td width="30%"><b>Anesthesia:</b></td>' +
+            '<td>' + d.anesthesia + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>PostOP Bed:</b></td>' +
+            '<td>' + d.postopbed + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td ><b>Indication:</b></td>' +
+            '<td>' + d.surgery_indication + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Booked By:</b></td>' +
+            '<td>' + d.bookedby + '</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td width="10%">' +
+            '<table cellpadding="5" cellspacing="0" border="0" class="table table-hover table-condensed">' +
+            '<tr>' +
+            '<td><a href="' + jsonPath + '/patients/patient_page/' + d.patient_id + '" style="margin-right:5px;margin-left:5px" class="btn btn-block btn-xs btn-info pull-right text-align-left"><i class="fa fa-search"></i> View Patient</a> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-success pull-right text-align-left" onclick="add_to_admission(' + d.booking_id + ');"><i class="fa fa-plus-circle"></i> Add to Admission </button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><a href="' + jsonPath + '/patients/add_patient/' + d.patient_id + '/' + d.booking_id + '" style="margin-left:5px;margin-right:5px"  class=" btn btn-block btn-info btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> Edit Booking</a></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-info pull-right text-align-left" onclick="add_mapt(' + d.booking_id + ',' + d.procedure_id + ');"><i class="fa fa-plus"></i> Add MAP Score </button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-warning pull-right text-align-left" onclick="view_mapt(' + d.booking_id + ',' + d.procedure_id + ');"><i class="fa fa-list"></i> View MAP Score</button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-default pull-right text-align-left" onclick="add_comments(' + d.booking_id + ');"><i class="fa fa-comment"></i> Add Comments</button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><a href="' + jsonPath + '/booking/patient_log/' + d.patient_id + '" style="margin-left:5px;margin-right:5px"  class="btn btn-block btn-primary btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td ><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-danger pull-right text-align-left" onclick="remove_booking(' + d.booking_id + ');"> <i class="fa fa-remove"></i> Remove Booking </button> ' +
+            '</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>' +
+            '</table>';
+    }
+
+    var emergency = $('#emergencylist_table').DataTable({
+        //"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-4 col-xs-12 hidden-xs'T><'col-sm-2 col-xs-12 hidden-xs'<'toolbar'>r>" +
+        "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+
+        "autoWidth": true,
+        "bDestroy": true,
+        "iDisplayLength": 15,
+        ajax:
+            {
+                "url": jsonPath + "/booking/emergency_list_data/",
+                "type": "POST",
+                "data": {patient_id: patient_id}
+            },
+        "deferLoading": 57,
+        "columns": [
+            {
+                "class": 'details-control',
+                "orderable": false,
+                "data": null,
+                "defaultContent": ''
+            },
+            {data: "folder_number"},
+            {data: "fullname"},
+            {data: "age"},
+            {data: "procedure_name"},
+            {data: "surgery_indication"},
+            {data: "booking_date"},
+            {data: "leadtime"},
+            {data: "mapt"},
+            {data: "cpscore"}
+        ],
+        "order": [[7, 'asc']]
+    });
+    // Add event listener for opening and closing details
+    $('#emergencylist_table tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = emergency.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(emergencylist_format(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
+
+    var searchText = getUrlParameter('procedure');
+    if (searchText !== undefined) {
+        emergency.search(searchText).draw();
+    }
+
+    // Apply the filter
+    $("#emergencylist_table thead th input[type=text]").on('keyup change', function () {
+
+        emergency
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
+
+    });
+    /* END COLUMN FILTER */
+
+
     /* Formatting function for row details - modify as you need */
     function admissionlist_format(d) {
         var side = '';

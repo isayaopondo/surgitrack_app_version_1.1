@@ -36,26 +36,14 @@
             <div class="jarviswidget " id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false"
                  data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false"
                  data-widget-custombutton="false" data-widget-sortable="false">
-                <!-- widget options:
-                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
-                data-widget-colorbutton="false"
-                data-widget-editbutton="false"
-                data-widget-togglebutton="false"
-                data-widget-deletebutton="false"
-                data-widget-fullscreenbutton="false"
-                data-widget-custombutton="false"
-                data-widget-collapsed="true"
-                data-widget-sortable="false"
-
-                -->
                 <header>
                     <span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
                     <h2>Patients Details: </h2>
                     <?php
                     if (!empty($patient_details)) {
                         ?>
-                        <a href="<?= base_url('patients/patient_page/' . $patient_details->patient_id) ?>"
+                        <a href="<?= base_url('patients/patient_page/' . $patient_details->patient_id.'?st='.$st) ?>"
                            style="margin:5px;margin-left:5px;"
                            class="btn  btn-xs btn-danger pull-right text-align-left"><i class="fa fa-arrow-left"></i> Go
                             to Patient's Page</a>
@@ -118,7 +106,7 @@
                              id="s1">
 
                             <form id="checkout-form" method="POST"
-                                  action="<?= base_url('patients/create_new_patient/' . $patient_id) ?>"
+                                  action="<?= base_url('patients/create_new_patient/' . $patient_id.'/'.$st) ?>"
                                   class="smart-form" novalidate="novalidate">
                                 <input type="hidden" name="patient_id" id="patient_id"
                                        value="<?= isset($patient_id) ? $patient_id : '' ?>">
@@ -257,6 +245,15 @@
                                     <fieldset>
                                         <div class="row">
                                             <section class="col col-3">
+                                                <label>Surgery Type</label>
+                                                <label class="select">
+                                                    <select name="surgery_type" id="surgery_type">
+                                                        <option value="" >Unspecified</option>
+                                                        <option value="1" <?= $st="emergency"?'selected':''?>>Emergency</option>
+                                                        <option value="2">Elective</option>
+                                                    </select> <i></i> </label>
+                                            </section>
+                                            <section class="col col-3">
                                                 <label>Side</label>
                                                 <label class="select">
                                                     <select name="laterality" id="laterality" required="required">
@@ -300,6 +297,12 @@
                                             </section>
 
 
+
+
+
+                                        </div>
+
+                                        <div class="row">
                                             <section class="col col-3">
                                                 <label>Theatre</label>
                                                 <label class="select">
@@ -315,11 +318,6 @@
                                                         ?>
                                                     </select> <i></i> </label>
                                             </section>
-
-
-                                        </div>
-
-                                        <div class="row">
 
                                             <section class="col col-3">
                                                 <label>Firm</label>

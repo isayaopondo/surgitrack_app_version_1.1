@@ -168,6 +168,33 @@ class Booking extends MY_Controller
 
     }
 
+
+
+    public function emergency_list()
+    {
+
+        $department = $this->settings_model->get_mydepartment($this->auth_user_id);
+        if (!empty($department)) {
+
+            $this->data['department_firms'] = $this->settings_model->get_all_firms_by_department($this->auth_departmentid);
+        } else {
+            $this->data['department_firms'] = '';
+        }
+
+        $this->data['procedures'] = $this->settings_model->get_procedure();
+        $this->data['category'] = $this->settings_model->get_category();
+        $this->data['theatre'] = $this->settings_model->get_theatres();
+        $this->data['insuranceco'] = $this->settings_model->get_insurance_companies();
+        $this->data['priorities'] = $this->settings_model->get_priorities();
+
+        $this->data['firms'] = $this->settings_model->get_firms_list();
+        $this->data['wards'] = $this->settings_model->get_wards_list();
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools . $this->general_tools;
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('booking/emergency_list', $this->data, true, true);
+
+    }
+
     public function waiting_list()
     {
 
@@ -233,12 +260,15 @@ class Booking extends MY_Controller
         $this->form_validation->set_rules('booking_date', 'Booking Date', 'required');
         $this->form_validation->set_rules('surgery_indication', 'Surgery Indication', 'required');
         $this->form_validation->set_rules('duration', 'Estimated Duration of Surgery', 'required');
+        $this->form_validation->set_rules('surgery_type', 'Type of Surgery', 'required');
+
 
 
         if ($this->form_validation->run() == true) {
             $bookingstatus = $this->input->post('booking_status');
             $data1 = array(
                 'patient_id' => $patient_id,
+                'surgery_type' => $this->input->post('surgery_type'),
                 'procedure_id' => $this->input->post('procedure'),
                 'laterality' => $this->input->post('laterality'),
                 'category_id' => $this->input->post('category'),
@@ -294,7 +324,7 @@ class Booking extends MY_Controller
                 $booking_id = $this->booking_model->booking_insert($data);
                 if (is_numeric($booking_id)) {
                     $log_action = 'Waiting List';
-                    $log_info = 'Added to waiting list on ' . date('Y-m-d H:i:s', strtotime('now') . ' BOOKINGID:' . $booking_id);
+                    $log_info = 'Added to waiting list on ' . date('Y-m-d H:i:s', strtotime('now')). ' BOOKINGID:' . $booking_id;
                     $this->writelog->patientlog($this->auth_user_id, $patient_id, $log_action, $log_info);
                     $this->writelog->writelog($this->auth_user_id, 'Added Patient\'s booking:' . $booking_id.' to waiting  list');
 
@@ -447,6 +477,31 @@ class Booking extends MY_Controller
         $this->output->set_header("Cache-Control: no-store, no-cache");
         $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
     }
+//EMERGENCY
+
+    public function emergency_list_data($patient_id = '')
+    {
+        //Waiting=0
+        $firm = $this->input->post('firm_id');
+        $firm_id = isset($firm) && $firm !== '' ? $firm : '';
+        $patient_id = $this->input->post('patient_id');
+
+        if ($this->is_role('doctor') || $this->is_role('nurse')) {
+            $user_id = $this->auth_user_id;
+            $department = $this->user_model->get_users_department($user_id);
+            $firm = $this->settings_model->get_myfirm($user_id);
+            $department_id = $department ? $this->auth_departmentid : '';
+            $firm_id = $firm ? $firm->firm_id : '';
+            $json = $this->booking_model->get_emergencybooking_list_data($department_id, $patient_id, '0', $firm_id);
+        } else {
+            $json = $this->booking_model->get_emergencybooking_list_data('', $patient_id, '0', $firm_id);
+        }
+
+        $this->output->set_header("Pragma: no-cache");
+        $this->output->set_header("Cache-Control: no-store, no-cache");
+        $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
+    }
+
 
     public function mywaiting_list_data($patient_id = '')
     {

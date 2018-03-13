@@ -81,19 +81,22 @@
                 <li class=" <?= ($this->router->fetch_class() == 'patients' ) && ($this->router->fetch_method() == 'lists' ) ? 'active' : '' ?>">
                     <a href="<?= base_url() ?>patients/lists" ><i class="fa fa-lg fa-fw fa-child"></i>Patients List</a>
                 </li>
-                <li class=" <?= ($this->router->fetch_class() == 'theatre') && ($this->router->fetch_method() == 'waiting_list') ? 'active' : '' ?>">
-                    <a href="<?= base_url() ?>booking/waiting_list"><i class="fa fa-lg fa-fw fa-clock-o"></i>Waiting
+                <li class=" <?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'emergency_list') ? 'active' : '' ?>">
+                   <a href="<?= base_url() ?>booking/emergency_list"><i  style=" color:red;"class="fa fa-lg fa-fw fa-fire"></i><span style="font-weight:bold; color:red;">Emergency List</span></a>
+                </li>
+                <li class=" <?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'waiting_list') ? 'active' : '' ?>">
+                    <a href="<?= base_url() ?>booking/waiting_list"><i class="fa fa-lg fa-fw fa-clock-o"></i>Elective
                         List</a>
                 </li>
-                <li class=" <?= ($this->router->fetch_class() == 'theatre') && ($this->router->fetch_method() == 'admission_list') ? 'active' : '' ?>">
+                <li class=" <?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'admission_list') ? 'active' : '' ?>">
                     <a href="<?= base_url() ?>booking/admission_list"><i class="fa fa-lg fa-fw fa-hospital-o"></i>Admission
                         List</a>
                 </li>
-                <li class="<?= ($this->router->fetch_class() == 'theatre') && ($this->router->fetch_method() == 'theatrelists') ? 'active' : '' ?>">
+                <li class="<?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'theatrelists') ? 'active' : '' ?>">
                     <a href="<?= base_url() ?>booking/theatrelists" title="Theatre Lists"><i
                                 class="fa fa-lg fa-fw fa-list-alt"></i> Theatre List</a>
                 </li>
-                <li class="<?= ($this->router->fetch_class() == 'theatre') && ($this->router->fetch_method() == 'case_logs') ? 'active' : '' ?>">
+                <li class="<?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'case_logs') ? 'active' : '' ?>">
                     <a href="<?= base_url() ?>booking/case_logs" title="Case Log "><i
                                 class="fa fa-lg fa-fw fa-list"></i> Op Notes</a>
                 </li>
@@ -101,7 +104,7 @@
             }
 
             if ($usergroup == 'sadmin') { ?>
-                <li class="<?= ($this->router->fetch_class() == 'theatre' ) && ($this->router->fetch_method() == 'op_coding' ) ? 'active' : '' ?>">
+                <li class="<?= ($this->router->fetch_class() == 'booking' ) && ($this->router->fetch_method() == 'op_coding' ) ? 'active' : '' ?>">
                     <a href="<?= base_url() ?>booking/op_coding" title="Coding "><i class="fa fa-lg fa-fw fa-flask"></i> Patient's Coding</a>
                 </li>
                

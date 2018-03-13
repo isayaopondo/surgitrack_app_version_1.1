@@ -111,24 +111,105 @@ $(document).ready(function () {
         }
 
     });
-    $('#folder_number').on('keyup', function () {
 
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: jsonPath + "/booking/ajaxget_suburb_by_postcode/",
-            data: {postal_code: $(this).val()},
-            success: function (data) {
-                for (var i = 0; i < data.length; i++)
-                {
-                    $("<option />").val(data[i].suburb_id)
-                        .text(data[i].suburb_name)
-                        .appendTo($('select#suburb'));
+    if ($('#folder_number').length > 0) {
+        var options = {
+            url: function (phrase) {
+                return jsonPath + "/patients/search_patients";
+            },
+            getValue: function (element) {
+                return element.folder_number + ': ' + element.surname + ': ' + element.other_names;
+            },
+            list: {
+                match: {
+                    enabled: true
+                },
+                onSelectItemEvent: function () {
+
+                    var patient_id = $("#folder_number").getSelectedItemData().patient_id;
+                    //if (patient_id >= 1) {
+                    $('#existingpatient').show();
+                    $('#existingpatient2').show();
+                    //}
+                    var folder_number = $("#folder_number").getSelectedItemData().folder_number;
+                    var surname = $("#folder_number").getSelectedItemData().surname;
+                    var phone = $("#folder_number").getSelectedItemData().phone;
+                    var other_names = $("#folder_number").getSelectedItemData().other_names;
+                    var insuranceco_id = $("#folder_number").getSelectedItemData().insuranceco_id;
+                    var insurance_number = $("#folder_number").getSelectedItemData().insurance_number;
+                    var additional_info = $("#folder_number").getSelectedItemData().additional_info;
+                    $("#patient_id").val(patient_id).trigger("change");
+                    $("#folder_number").val(folder_number).trigger("change");
+                    $("#surname").val(surname).trigger("change");
+                    $("#phone").val(phone).trigger("change");
+                    $("#other_names").val(other_names).trigger("change");
+                    $("#insurance").val(insuranceco_id).trigger("change");
+                    $("#insurance_number").val(insurance_number).trigger("change");
+                    $("#additional_info").html(additional_info).trigger("change");
+                    $.ajax({
+                        type: "POST",
+                        url: jsonPath + "/patients/search_patients_details",
+                        data: {patient_id: patient_id},
+                        success: function (data) {
+                            $("#patientdetails").html(data);
+                        }
+
+                    });
                 }
-            }
+            },
+            ajaxSettings: {
+                dataType: "json",
+                method: "POST",
+                data: {
+                    dataType: "json",
+                }
+            },
+            preparePostData: function (data) {
+                data.phrase = $("#folder_number").val();
+                data.firm = $('#firm_id').val();
+                return data;
+            },
+            requestDelay: 100
+        };
+        $("#folder_number").easyAutocomplete(options);
+    }
 
-        });
-    });
+    if ($('#search_text').length > 0) {
+        var options = {
+            url: function (phrase) {
+                return jsonPath + "/patients/search_patient";
+            },
+            getValue: function (element) {
+                return element.folder_number + ': ' + element.surname + ': ' + element.other_names;
+            },
+            list: {
+                match: {
+                    enabled: false
+                },
+                onClickEvent: function () {
+                    var patient_id = $("#search_text").getSelectedItemData().patient_id;
+                    window.location.href = jsonPath + '/patients/patient_page/' + patient_id;
+                },
+                onSelectItemEvent: function () {
+
+                }
+            },
+            ajaxSettings: {
+                dataType: "json",
+                method: "POST",
+                data: {
+                    dataType: "json"
+                }
+            },
+            preparePostData: function (data) {
+                data.phrase = $("#search_text").val();
+                return data;
+            },
+            requestDelay: 600
+        };
+        $("#search_text").easyAutocomplete(options);
+    }
+
 
 });
 

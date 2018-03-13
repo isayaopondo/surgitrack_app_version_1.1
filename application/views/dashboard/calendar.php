@@ -52,11 +52,8 @@
                             </div>
                         </div>
                     </div>-->
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6"> 
-            <form class="form-horizontal">
-
-
-                <div class="well">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+               <div class="well">
                     <div class="input-group">
                         <div class="ui-widget">
                             <input class="form-control" type="text" name="search_text" id="search_text" placeholder="Search by Surname OR Name OR Folder Number ...">
@@ -69,13 +66,15 @@
                     </div>
                 </div>
 
-            </form>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-
             <div class="well">
-                <a href="<?= base_url('patients/add_patient') ?>" class="btn btn-block btn-default btn-danger" type="button">
+                <a href="<?= base_url('patients/add_patient') ?>" class="btn btn-block btn-default btn-success" type="button">
                     <i class="fa fa-plus-circle"></i> Add Patient
+                </a>
+
+                <a href="<?= base_url('patients/add_patient?st=emergency') ?>" class="btn btn-block btn-default btn-danger" type="button">
+                    <i class="fa fa-plus-circle"></i> Add Emergency
                 </a>
             </div>
 
