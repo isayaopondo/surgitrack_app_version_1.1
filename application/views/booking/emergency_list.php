@@ -16,17 +16,7 @@
     <span class="ribbon-button-alignment pull-right">
         <span id="default_firm" style="font-size:large;  background-color:  <?=$default_firm_color;?>;" class="label " data-title="search"> <i class="fa-grid"></i><?=$default_firm?></span>
     </span>
-    <!-- You can also add more buttons to the
-    ribbon for further usability
 
-
-    Example below:
-
-    <span class="ribbon-button-alignment pull-right">
-    <span id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa-grid"></i> Change Grid</span>
-    <span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa-plus"></i> Add</span>
-    <span id="search" class="btn btn-ribbon" data-title="search"><i class="fa-search"></i> <span class="hidden-mobile">Search</span></span>
-    </span> -->
 
 </div>
 <!-- END RIBBON -->
@@ -62,14 +52,14 @@
                             </div>
                             <div class="btn-group">
                                 <button class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-search"></i> Filter By Firms <span class="caret"></span>
+                                    <i class="fa fa-search"></i> Filter By Departments <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <?php
-                                        if (!empty($department_firms)) {
-                                            foreach ($department_firms as $key) {
-                                                echo "<a href=\"#\" onclick=\"filter_list_firm('waiting','" . $key->firm_id . "');\">" . $key->firm_name . "</a>";
+                                        if (!empty($departments)) {
+                                            foreach ($departments as $key) {
+                                                echo "<a href=\"#\" onclick=\"filter_list_department('emergency','" . $key->department_id . "');\">" . $key->department_name . "</a>";
                                             }
                                         }
                                         ?>
@@ -157,6 +147,20 @@
                                         <input type="text" class="form-control" placeholder=" CP" />
                                     </th>
 
+                                    <th class="hasinput" style="width:10%">
+                                        <input type="text" class="form-control" placeholder=" Department" />
+                                    </th>
+                                    <th class="hasinput" style="width:10%">
+                                        <input type="text" class="form-control" placeholder=" Ward" />
+                                    </th>
+
+                                    <th class="hasinput" style="width:10%">
+                                        <input type="text" class="form-control" placeholder=" Surgeon" />
+                                    </th>
+
+
+
+
                                 </tr>
                                 <tr>
                                     <th></th>
@@ -167,10 +171,11 @@
                                     <th data-hide="expand">Indication</th>
                                     <th data-hide="expand" >Booking date</th>
                                     <th data-hide="expand">Lead Time(hrs)</th>
-
-
                                     <th data-class="expand">MAP Score</th>
                                     <th data-class="expand">CP Score</th>
+                                    <th data-class="expand">Department</th>
+                                    <th data-class="expand">Ward</th>
+                                    <th data-class="expand">Surgeon</th>
 
                                 </tr>
                                 </thead>
@@ -451,6 +456,65 @@
 
                             <button type="button" id="download_firm_waiting_list" class="btn btn-danger">
                                 <i class="fa fa-download"></i> <i class="fa fa-file-pdf-o"></i> Download
+                            </button>
+                        </footer>
+                    </form>
+                </div>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModalPushRequest" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="<?= base_url() ?>assets/img/logo.png" width="150" alt="SurgiTrack">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-deletebutton="false"
+                     data-widget-fullscreenbutton="false">
+
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-clock-o"></i> </span>
+                        <h2>Make Push Request</h2>
+
+                    </header>
+
+                    <form id="push-request-form" method="POST" action="#" class="smart-form" novalidate="novalidate">
+
+
+                        <fieldset >
+                            <section >
+                                <label>Select the Case </label>
+                                <label class="select">
+                                    <select name="listofcases" id="listofcases">
+                                        <option value="0" selected="" disabled="">Select cases</option>
+                                        <?php
+                                        foreach ($listofcases as $row) {
+
+                                            echo '<option  value="' . $row->booking_id . '">' . $row->folder_number . ':'.$row->procedure_name.'</option>';
+                                        }
+                                        ?>
+                                    </select> <i></i> </label>
+                            </section>
+
+                        </fieldset>
+
+                        <footer>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true">
+                                Close
+                            </button>
+
+                            <button type="button" id="sendpush_request" class="btn btn-success">
+                                <i class="fa fa-send-o"></i> Send Request
                             </button>
                         </footer>
                     </form>

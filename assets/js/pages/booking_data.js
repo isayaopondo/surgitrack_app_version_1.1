@@ -370,6 +370,10 @@ $(document).ready(function () {
             '<td width="10%">' +
             '<table cellpadding="5" cellspacing="0" border="0" class="table table-hover table-condensed">' +
             '<tr>' +
+            '<td ><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-danger pull-right text-align-left" onclick="push_request(' + d.booking_id + ');"> <i class="fa fa-level-up"></i> Push Request </button> ' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
             '<td><a href="' + jsonPath + '/patients/patient_page/' + d.patient_id + '" style="margin-right:5px;margin-left:5px" class="btn btn-block btn-xs btn-info pull-right text-align-left"><i class="fa fa-search"></i> View Patient</a> </td>' +
             '</tr>' +
             '<tr>' +
@@ -431,7 +435,10 @@ $(document).ready(function () {
             {data: "booking_date"},
             {data: "leadtime"},
             {data: "mapt"},
-            {data: "cpscore"}
+            {data: "cpscore"},
+            {data: "department_name"},
+            {data: "ward_name"},
+            {data: "bookedby"},
         ],
         "order": [[7, 'asc']]
     });
@@ -1007,6 +1014,188 @@ $(document).ready(function () {
     $("#caselog_table thead th input[type=text]").on('keyup change', function () {
 
         caseloglisttable
+            .column($(this).parent().index() + ':visible')
+            .search(this.value)
+            .draw();
+
+    });
+
+    /* Formatting function for row details - modify as you need */
+    function dischargetable_format(d) {
+        // `d` is the original data object for the row
+        return '<table class="table table-condensed">' +
+            '<tr>' +
+            '<td width="45%">' +
+            '<table cellpadding="5" cellspacing="0" border="0" class="table table-hover table-condensed">' +
+            '<tr>' +
+            '<td width="35%"><b>Folder Number:</b></td>' +
+            '<td>' + d.folder_number + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Fullname:</b></td>' +
+            '<td>' + d.surname + ' ' + d.other_names + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Phone Number:</b></td>' +
+            '<td>' + d.phone + ' </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Booked Procedure:</b></td>' +
+            '<td>' + d.procedure_name + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Operation Done:</b></td>' +
+            '<td>' + d.operation_done + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<tr>' +
+            '<td><b>Category:</b></td>' +
+            '<td>' + d.category_name + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Comments:</b></td>' +
+            '<td>' + d.additional_info + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Booked By:</b></td>' +
+            '<td>' + d.bookedby + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Admitted By:</b></td>' +
+            '<td>' + d.admittedby + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Primary Surgeon:</b></td>' +
+            '<td>' + d.primary_surgeon + '</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td width="45%">' +
+            '<table cellpadding="5" cellspacing="0" border="0" class="table table-hover table-condensed">' +
+            '<tr>' +
+            '<td style="width:100px"><b>DOB:</b></td>' +
+            '<td>' + d.dateofbirth + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td style="width:100px"><b>Booking Date</b></td>' +
+            '<td>' + d.booking_date + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td style="width:100px"><b>Lead time:</b></td>' +
+            '<td>' + d.leadtime + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td style="width:100px"><b>Surgery Duration:</b></td>' +
+            '<td>' + d.surgery_time + '</td>' +
+            '</tr>' +
+
+            '<tr>' +
+            '<td style="width:100px"><b>Indication:</b></td>' +
+            '<td>' + d.surgery_indication + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Anesthesia:</b></td>' +
+            '<td>' + d.anesthesia + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>PostOP Bed:</b></td>' +
+            '<td>' + d.postopbed + '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><b>Surgeon Assistants</b></td>' +
+            '<td>' + d.assistant_surgeon + '</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td width="10%">' +
+            '<table cellpadding="5" cellspacing="0" border="0" class="table table-hover table-condensed">' +
+            '<tr>' +
+            '<td><a href="' + jsonPath + '/patients/patient_page/' + d.patient_id + '" style="margin-right:5px;margin-left:5px" class="btn btn-block btn-xs btn-info pull-right text-align-left"><i class="fa fa-search"></i> View Patient</a> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn  btn-block btn-xs btn-success pull-right text-align-left" onclick="view_opnotes(' + d.booking_id + ');"><i class="fa fa-file"></i> View OP Notes </button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-primary pull-right text-align-left" onclick="edit_optnotes(' + d.booking_id + ');"> <i class="fa fa-pencil"></i> Edit OP Notes </button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-warning pull-right text-align-left" onclick="view_mapt(' + d.booking_id + ',' + d.procedure_id + ');"><i class="fa fa-list"></i> View MAP Score</button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><button style="margin-left:5px;margin-right:5px" class="btn btn-block btn-xs btn-default pull-right text-align-left" onclick="add_comments(' + d.booking_id + ');"><i class="fa fa-comment"></i> Add Comments</button> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><a href="' + jsonPath + '/booking/patient_coding/' + d.booking_id + '" style="margin-left:5px;margin-right:5px"  class="btn btn-block btn-danger btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="Patient Coding"><i class="fa fa-flask"></i> Patient Coding</a></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><a href="' + jsonPath + '/booking/patient_log/' + d.patient_id + '" style="margin-left:5px;margin-right:5px"  class="btn btn-block btn-info btn-xs pull-right text-align-left" data-toggle="tooltip" data-placement="top" data-original-title="View Patient Log"><i class="fa fa-search"></i> View Patient Log</a></td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>' +
+            '</table>';
+
+    }
+
+    var dischargetable = $("#discharge_table").DataTable({
+        //"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>r>" +
+        "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>" +
+        "t" +
+        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        "autoWidth": true,
+        "bDestroy": true,
+        "iDisplayLength": 15,
+        ajax:
+            {
+                "url": jsonPath + "/booking/discharge_list_data/",
+                "type": "POST",
+                "data": {patient_id: patient_id}
+            },
+        "deferLoading": 57,
+        "columns": [
+            {
+                "class": 'details-control',
+                "orderable": false,
+                "data": null,
+                "defaultContent": ''
+            },
+            {
+                "class": 'details-control',
+                "orderable": false,
+                "data": null,
+                "defaultContent": ''
+            },
+            {data: "folder_number"},
+            {data: "fullname"},
+            {data: "age"},
+            {data: "gender"},
+            {data: "operationdate"},
+            {data: "operation_done"},
+            {data: "theatre_name"},
+            {data: "primary_surgeon"}
+        ],
+        "order": [[5, 'desc']]
+    });
+    // Add event listener for opening and closing details
+    $('#discharge_table tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = dischargetable.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(dischargetable_format(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
+
+    // Apply the filter
+    $("#discharge_table thead th input[type=text]").on('keyup change', function () {
+
+        dischargetable
             .column($(this).parent().index() + ':visible')
             .search(this.value)
             .draw();

@@ -441,7 +441,7 @@ class Booking_model extends MY_Model
 
         $this->db->select('pl.patient_id,booking_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)," ",SUBSTRING(SUBSTRING_INDEX(other_names, " ", -1),1,1)) as fullname,other_names,surname,dateofbirth,IF(gender = "1","Male","Female") AS gender,'
             . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,category_name,surgery_indication,booking_status,b.procedure_id,'
-            . 'procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,DATEDIFF( date(Now()),date(b.booking_date)) as leadtime,'
+            . 'procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,DATEDIFF( date(Now()),date(b.booking_date)) as leadtime,b.surgery_type,'
             . 'anesthesia,postopbed,laterality,b.firm_id,strack_department_firms.department_id,booked_by,admitted_by,'
             . 'ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25) as age,firm_name,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE) as end,'
             . 'slot_name,ward_name,department_name,' . $status_query)
@@ -457,7 +457,7 @@ class Booking_model extends MY_Model
         $this->db->join('strack_facility_procedure_categories pc', 'b.category_id=pc.category_id', 'LEFT');
         $this->db->join('strack_insurance_companies', 'pl.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
         // $this->db->join("users", "b.booked_by=users.user_id");
-
+        //$this->db->where("b.surgery_type = '2'");
         if ((isset($status) && $status != null) || $status != '') {
             $this->db->where(array("b.booking_status" => $status));
             if ($status == '0') {
@@ -498,6 +498,57 @@ class Booking_model extends MY_Model
         return $end_res;
     }
 
+
+    public function get_emergencybooking_list_push( $status = '')
+    {
+
+        $status_query = "(
+                CASE 
+                    WHEN b.booking_status = '0' THEN 'Waiting'
+                    WHEN b.booking_status = '1' THEN 'Admission'
+                    WHEN b.booking_status = '2' THEN 'Theatre'
+                    WHEN b.booking_status = '3' THEN 'Surgery'
+                    WHEN b.booking_status = '99' THEN 'Cancelled'
+                END) AS status_name";
+
+        $this->db->select('pl.patient_id,booking_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)," ",SUBSTRING(SUBSTRING_INDEX(other_names, " ", -1),1,1)) as fullname,other_names,surname,dateofbirth,IF(gender = "1","Male","Female") AS gender,'
+            . 'theatre_name,surgerydate,date(b.created_on) as bookingdate,booking_date,category_name,surgery_indication,booking_status,b.procedure_id,'
+            . 'procedure_name,admission_date,booking_info,insuranceco_name,insurance_number,TIMEDIFF( Now(),b.created_on) as leadtime,b.surgery_type,'
+            . 'anesthesia,postopbed,laterality,b.firm_id,strack_department_firms.department_id,booked_by,admitted_by,'
+            . 'ROUND(DATEDIFF(date(Now()), date(dateofbirth))/365.25) as age,firm_name,DATE_ADD(surgerydate,INTERVAL slot_value MINUTE) as end,'
+            . 'slot_name,ward_name,department_name,' . $status_query)
+            ->from('strack_booking b');
+        $this->db->join('strack_patients_list pl', 'b.patient_id=pl.patient_id');
+        $this->db->join('strack_facility_theatres t', 'b.theatre_id=t.theatre_id');
+        $this->db->join('strack_facility_procedures pr', 'b.procedure_id=pr.procedure_id');
+        $this->db->join('strack_facility_wards w', 'b.ward_id=w.ward_id', 'LEFT');
+        $this->db->join('strack_department_firms', 'b.firm_id=strack_department_firms.firm_id', 'LEFT');
+        $this->db->join('strack_departments', 'strack_departments.department_id=strack_department_firms.department_id', 'LEFT');
+        $this->db->join('strack_facility_time_slots ts', 'b.slot_id=ts.slot_id', 'LEFT');
+        $this->db->join('strack_facility_procedure_categories pc', 'b.category_id=pc.category_id', 'LEFT');
+        $this->db->join('strack_insurance_companies', 'pl.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
+
+        $this->db->where("b.surgery_type = '1'");
+        if ((isset($status) && $status != null) || $status != '') {
+            $this->db->where(array("b.booking_status" => $status));
+            if ($status == '0') {
+                $this->db->order_by('b.booking_date', 'DESC');
+            } elseif ($status == '1') {
+                $this->db->order_by('b.admission_date', 'DESC');
+            } elseif ($status == '2') {
+                $this->db->order_by('b.surgerydate', 'DESC');
+            }
+        } else {
+            $this->db->order_by('b.created_on', 'DESC');
+        }
+        $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.isdeleted" => '0'));
+
+        $this->db->where("b.booking_status != '99'");
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return $result;
+    }
 
     public function get_emergencybooking_list_data($department_id = '', $patient_id = '', $status = '', $firm_id = '')
     {
@@ -553,7 +604,7 @@ class Booking_model extends MY_Model
         }
         $this->db->where(array('pl.facility_id' => $this->auth_facilityid, "b.isdeleted" => '0'));
 
-        $this->db->where("b.booking_status != '99'");
+        //$this->db->where("b.booking_status != '99'");
         $query = $this->db->get();
         $result = $query->result();
         //echo $this->db->last_query();

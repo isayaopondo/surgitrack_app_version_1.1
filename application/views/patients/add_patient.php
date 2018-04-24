@@ -248,8 +248,8 @@
                                                 <label>Surgery Type</label>
                                                 <label class="select">
                                                     <select name="surgery_type" id="surgery_type">
-                                                        <option value="" >Unspecified</option>
-                                                        <option value="1" <?= $st="emergency"?'selected':''?>>Emergency</option>
+                                                        <option value="" <?= empty($st)? 'selected':'';?>>Unspecified</option>
+                                                        <option value="1" <?= $st=="emergency"?'selected':'';?>>Emergency</option>
                                                         <option value="2">Elective</option>
                                                     </select> <i></i> </label>
                                             </section>
@@ -395,6 +395,19 @@
                                                                 $selected = (isset($myuserid) && $myuserid == $row->userid) || $myuserid == $row->userid ? 'selected="selected"' : '';
                                                                 echo '<option ' . $selected . ' value="' . $row->userid . '">' . $row->surgeon . '</option>';
                                                             }
+                                                        }
+                                                        ?>
+                                                    </select> <i></i> </label>
+                                            </section>
+                                            <section class="col col-3" id="wardslist">
+                                                <label> Ward/Location</label>
+                                                <label class="select">
+                                                    <select name="ward">
+                                                        <option value="0" selected="" disabled="">Ward/Location</option>
+                                                        <?php
+                                                        foreach ($wards as $row) {
+                                                            $selected = isset($booking->ward_id) && $booking->ward_id == $row->ward_id ? 'selected="selected"' : '';
+                                                            echo '<option ' . $selected . ' value="' . $row->ward_id . '">' . $row->ward_name . '</option>';
                                                         }
                                                         ?>
                                                     </select> <i></i> </label>

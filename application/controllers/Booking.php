@@ -181,7 +181,9 @@ class Booking extends MY_Controller
             $this->data['department_firms'] = '';
         }
 
+        $this->data['departments'] = $this->settings_model->get_departments_list();
         $this->data['procedures'] = $this->settings_model->get_procedure();
+        $this->data['listofcases'] = $this->booking_model->get_emergencybooking_list_push('', '', '2', '');;
         $this->data['category'] = $this->settings_model->get_category();
         $this->data['theatre'] = $this->settings_model->get_theatres();
         $this->data['insuranceco'] = $this->settings_model->get_insurance_companies();
@@ -265,7 +267,7 @@ class Booking extends MY_Controller
 
 
         if ($this->form_validation->run() == true) {
-            $bookingstatus = $this->input->post('booking_status');
+
             $data1 = array(
                 'patient_id' => $patient_id,
                 'surgery_type' => $this->input->post('surgery_type'),
@@ -285,28 +287,38 @@ class Booking extends MY_Controller
                 'created_on' => date('Y-m-d H:i:s', strtotime('now')),
                 'created_by' => $this->auth_user_id
             );
-
-            if (isset($bookingstatus) && $bookingstatus != '0') {
-                if ($bookingstatus == '1') {
-                    $data2 = array(
-                        'ward_id' => $this->input->post('ward'),
-                        'admission_date' => $this->input->post('admission_date'),
-                        'booking_status' => $this->input->post('booking_status'),
-                        'admitted_by' => $this->auth_user_id,
-                    );
+            if($this->input->post('surgery_type')=='1'){
+                $data2 = array('ward_id' => $this->input->post('ward'),
+                'admission_date' => $this->input->post('booking_date'),
+                'surgerydate' => $this->input->post('booking_date'),
+                'booking_status' => "2",
+                );
+            }else{
+                $bookingstatus = $this->input->post('booking_status');
+                if (isset($bookingstatus) && $bookingstatus != '0') {
+                    if ($bookingstatus == '1') {
+                        $data2 = array(
+                            'ward_id' => $this->input->post('ward'),
+                            'admission_date' => $this->input->post('admission_date'),
+                            'booking_status' => $this->input->post('booking_status'),
+                            'admitted_by' => $this->auth_user_id,
+                        );
+                    } else {
+                        $data2 = array(
+                            'ward_id' => $this->input->post('ward'),
+                            'admission_date' => $this->input->post('admission_date'),
+                            'surgerydate' => $this->input->post('surgery_date'),
+                            'booking_status' => $this->input->post('booking_status'),
+                        );
+                    }
                 } else {
                     $data2 = array(
-                        'ward_id' => $this->input->post('ward'),
-                        'admission_date' => $this->input->post('admission_date'),
-                        'surgerydate' => $this->input->post('surgery_date'),
-                        'booking_status' => $this->input->post('booking_status'),
+                        'booking_status' => '0',
                     );
                 }
-            } else {
-                $data2 = array(
-                    'booking_status' => '0',
-                );
             }
+
+
             $data = array_merge($data1, $data2);
         } else {
             $this->session->set_flashdata('message', '<div class="alert alert-danger fade in">
@@ -492,9 +504,9 @@ class Booking extends MY_Controller
             $firm = $this->settings_model->get_myfirm($user_id);
             $department_id = $department ? $this->auth_departmentid : '';
             $firm_id = $firm ? $firm->firm_id : '';
-            $json = $this->booking_model->get_emergencybooking_list_data($department_id, $patient_id, '0', $firm_id);
+            $json = $this->booking_model->get_emergencybooking_list_data($department_id, $patient_id, '2', $firm_id);
         } else {
-            $json = $this->booking_model->get_emergencybooking_list_data('', $patient_id, '0', $firm_id);
+            $json = $this->booking_model->get_emergencybooking_list_data('', $patient_id, '2', $firm_id);
         }
 
         $this->output->set_header("Pragma: no-cache");
@@ -594,6 +606,29 @@ class Booking extends MY_Controller
         $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
     }
 
+
+    public function discharge_list_data($patient_id = '')
+    {
+        $firm = $this->input->post('firm_id');
+        $firm_id = isset($firm) && $firm !== '' ? $firm : '';
+
+        $patient_id = $this->input->post('patient_id');
+
+        if (!$this->verify_role('doctor,nurse')) {
+            $user_id = $this->auth_user_id;
+            $department = $this->user_model->get_users_department($user_id);
+            $firm = $this->settings_model->get_myfirm($user_id);
+            $department_id = $department ? $this->auth_departmentid : '';
+            $firm_id = $firm ? $firm->firm_id : '';
+            $json = $this->booking_model->get_caselog_list_data($department_id, $patient_id, '3', $firm_id);
+        } else {
+            $json = $this->booking_model->get_caselog_list_data('', $patient_id, '3');
+        }
+
+        $this->output->set_header("Pragma: no-cache");
+        $this->output->set_header("Cache-Control: no-store, no-cache");
+        $this->output->set_content_type('application/json')->set_output("{\"data\":" . json_encode($json) . "}");
+    }
     public function mylogbook_data()
     {
 
@@ -997,6 +1032,28 @@ class Booking extends MY_Controller
         $this->_smart_render('booking/case_logs', $this->data, true, true);
 
     }
+
+    public function discharge_summaries()
+    {
+        $department = $this->settings_model->get_mydepartment($this->auth_user_id);
+        if (!empty($department)) {
+            $this->data['leadsurgeon'] = $this->settings_model->get_department_users($this->auth_departmentid);
+        } else {
+            $this->data['leadsurgeon'] = '';
+        }
+        $this->data['myuserid'] = $this->auth_user_id;
+
+
+        $this->data['theatre'] = $this->settings_model->get_theatres();
+        $this->data['firms'] = $this->settings_model->get_firms_list();
+        $this->data['procedures'] = $this->settings_model->get_procedure();
+        $this->data['pagescripts'] = $this->pagescripts . $this->table_tools . $this->general_tools;
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        $this->_smart_render('booking/discharge_summaries', $this->data, true, true);
+
+    }
+
+
 
     public function my_logbook()
     {

@@ -962,7 +962,7 @@ class Patients extends MY_Controller
     {
         require(APPPATH . 'libraries/Requests.php');
         $patient_surburb = $this->patients_model->get_patient_details($patient_id);
-        $origins = $patient_surburb->latitude . ',' . $patient_surburb->longitude;
+        $origins = !empty($patient_surburb->latitude)?$patient_surburb->latitude . ',' . $patient_surburb->longitude : TYGERBERG_GEOCODES;
         $destination = !empty($my_destination) ? $my_destination : TYGERBERG_GEOCODES;
         $params = 'origins=' . $origins . '&destinations=' . $destination;
 

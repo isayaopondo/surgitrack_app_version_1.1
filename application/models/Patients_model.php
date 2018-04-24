@@ -74,7 +74,7 @@ class Patients_model extends MY_Model
         $this->db->or_like('folder_number', $search_phrase);
         $this->db->where(array('strack_patients_list.isdeleted' => '0'));
         $this->db->select('IF(gender = "1","Male","Female") AS gender,patient_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)) as fullname,other_names,surname,,dateofbirth,email,phone,phone2,phone3,'
-            . 'additional_info,strack_patients_list.insuranceco_id,insuranceco_name,insurance_number,strack_patients_list.firm_id')
+            . 'additional_info,strack_patients_list.firm_id')
             ->from('strack_patients_list');
         $this->db->join('strack_department_firms', 'strack_patients_list.firm_id=strack_department_firms.firm_id', 'LEFT');
 
@@ -92,10 +92,10 @@ class Patients_model extends MY_Model
         //$this->db->or_like('strack_patients_list.firm_id', $firm);
         $this->db->where(array('strack_patients_list.isdeleted' => '0'));
         $this->db->select('IF(gender = "1","Male","Female") AS gender,patient_id,folder_number,CONCAT("<b>",surname,"</b>"," ",SUBSTRING(other_names,1,1)) as fullname,other_names,surname,,dateofbirth,email,phone,phone2,phone3,'
-            . 'additional_info,strack_patients_list.insuranceco_id,insuranceco_name,insurance_number,strack_patients_list.firm_id')
+            . 'additional_info,strack_patients_list.firm_id')
             ->from('strack_patients_list');
         $this->db->join('strack_department_firms', 'strack_patients_list.firm_id=strack_department_firms.firm_id', 'LEFT');
-        $this->db->join('strack_insurance_companies', 'strack_patients_list.insuranceco_id=strack_insurance_companies.insuranceco_id', 'LEFT');
+
 
         $query = $this->db->get();
         $result = $query->result();

@@ -82,10 +82,10 @@
                     <a href="<?= base_url() ?>patients/lists" ><i class="fa fa-lg fa-fw fa-child"></i>Patients List</a>
                 </li>
                 <li class=" <?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'emergency_list') ? 'active' : '' ?>">
-                   <a href="<?= base_url() ?>booking/emergency_list"><i  style=" color:red;"class="fa fa-lg fa-fw fa-fire"></i><span style="font-weight:bold; color:red;">Emergency List</span></a>
+                   <a href="<?= base_url() ?>booking/emergency_list"><i  style=" color:red;" class="fa fa-lg fa-fw fa-ambulance "></i><span style="font-weight:bold; color:red;">Emergency List</span></a>
                 </li>
                 <li class=" <?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'waiting_list') ? 'active' : '' ?>">
-                    <a href="<?= base_url() ?>booking/waiting_list"><i class="fa fa-lg fa-fw fa-clock-o"></i>Elective
+                    <a href="<?= base_url() ?>booking/waiting_list"><i class="fa fa-lg fa-fw fa-clock-o"></i>Elective Waiting
                         List</a>
                 </li>
                 <li class=" <?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'admission_list') ? 'active' : '' ?>">
@@ -99,6 +99,10 @@
                 <li class="<?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'case_logs') ? 'active' : '' ?>">
                     <a href="<?= base_url() ?>booking/case_logs" title="Case Log "><i
                                 class="fa fa-lg fa-fw fa-list"></i> Op Notes</a>
+                </li>
+                <li class="<?= ($this->router->fetch_class() == 'booking') && ($this->router->fetch_method() == 'discharge_summaries') ? 'active' : '' ?>">
+                    <a href="<?= base_url() ?>booking/discharge_summaries" title="Discharge Summaries "><i
+                                style="color:green;" class="fa fa-lg fa-fw fa-external-link "></i> <span style="font-weight:bold; color:green;">Discharge Summaries</span></a>
                 </li>
                 <?php
             }

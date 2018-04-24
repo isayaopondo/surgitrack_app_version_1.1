@@ -5,6 +5,21 @@ $(document).ready(function () {
     $('#alertMessage').hide();
     $('#toadmissionlist').hide();
     $('#totheatrelist').hide();
+    $('#wardslist').hide();
+
+    $('#surgery_type').on('click', function () {
+        var surgery_type = $('#surgery_type').val();
+        if ($('#wardslist').length > 0) {
+            if (surgery_type == '1') {
+                $('#wardslist').show();
+            } else {
+                $('#wardslist').hide();
+            }
+
+        }
+
+    });
+
 
     $('#booking_status').on('change', function () {
         var booking_status = $('#booking_status').val();
@@ -300,6 +315,7 @@ $(document).ready(function () {
             }
         });
     });
+
     $('#send_generalsms').on('click', function () {
         var folder_number = $('#folder_number').val();
         $('#myModalSendGeneralSMS').modal('show');
@@ -457,6 +473,22 @@ function add_comments(d) {
     var jsonPath = SurgiTrack.handleBaseURL();
     $('#comment_alertMessage').hide();
     $('#myModalComments').modal('show');
+    $.ajax({
+        type: "POST",
+        url: jsonPath + "/patients/patients_booking_summary",
+        data: {booking_id: d},
+        success: function (data) {
+            $(".modal-body #booking_id").val(d);
+            $(".modal-body #admissiondetails").html(data);
+        }
+
+    });
+}
+
+function push_request(d) {
+    var jsonPath = SurgiTrack.handleBaseURL();
+    $('#comment_alertMessage').hide();
+    $('#myModalPushRequest').modal('show');
     $.ajax({
         type: "POST",
         url: jsonPath + "/patients/patients_booking_summary",
